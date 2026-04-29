@@ -1,0 +1,15 @@
+{
+  "name": "Changelog",
+  "description": "Page header only — append release notes as additional blocks.",
+  "thumbnail": "",
+  "blocks": [
+    {
+      "type": "page-header",
+      "fields": {
+        "sub": "Engineering notes from each release.",
+        "title": "What we shipped.",
+        "eyebrow": "§ changelog"
+      }
+    }
+  ]
+}

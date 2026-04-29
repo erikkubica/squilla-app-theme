@@ -1,0 +1,47 @@
+{{- /* Homepage extensions grid — first 6 featured extensions, pulled from
+       real extension nodes. The catalog page renders the full set. */ -}}
+{{- $exts := filter "list_extensions" (dict "limit" 6) -}}
+<section class="ext-grid">
+  <div class="container container-wide">
+    <div class="ext-grid__head">
+      <div>
+        <div class="h-eyebrow">{{.eyebrow}}</div>
+        <h2>{{ safeHTML .heading }}</h2>
+      </div>
+      <p class="ext-grid__lead">{{.lead}}</p>
+    </div>
+
+    <div class="ext-grid__cells" data-grid="3">
+      {{ range $exts }}
+        <div class="ext-grid__cell" data-color="{{.color}}">
+          <div class="ext-grid__row">
+            <div class="ext-grid__name">
+              <span class="ext-grid__chip"></span>
+              <span>{{.title}}</span>
+            </div>
+            <span class="tag ext-grid__tag">{{.source}}</span>
+          </div>
+          <p class="ext-grid__desc">{{.tagline}}</p>
+          <div class="ext-grid__stats">
+            <div class="ext-grid__stat"><div class="ext-grid__stat-lbl">kind</div>  <div class="ext-grid__stat-val">{{.kind}}</div></div>
+            <div class="ext-grid__stat"><div class="ext-grid__stat-lbl">ver</div>   <div class="ext-grid__stat-val">{{.version}}</div></div>
+            <div class="ext-grid__stat"><div class="ext-grid__stat-lbl">tables</div><div class="ext-grid__stat-val">{{ if gt .tables_count 0 }}{{.tables_count}}{{ else }}—{{ end }}</div></div>
+            <div class="ext-grid__stat"><div class="ext-grid__stat-lbl">routes</div><div class="ext-grid__stat-val">{{ if gt .routes 0 }}{{.routes}}{{ else }}—{{ end }}</div></div>
+          </div>
+          {{ if gt .tables_count 0 }}
+          <div class="ext-grid__owns">
+            <div class="ext-grid__owns-lbl">OWNS</div>
+            <div class="ext-grid__owns-tbls">
+              {{ range .tables }}<span>{{.}}</span>{{ end }}
+            </div>
+          </div>
+          {{ end }}
+        </div>
+      {{ end }}
+    </div>
+
+    <div class="ext-grid__cta">
+      <a class="btn" href="{{.cta.url}}"{{ with .cta.target }} target="{{.}}"{{ end }}>{{.cta.text}} <span style="color: var(--accent)">→</span></a>
+    </div>
+  </div>
+</section>

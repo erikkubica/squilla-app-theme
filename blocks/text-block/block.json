@@ -1,0 +1,17 @@
+{
+  "slug": "text-block",
+  "name": "Text Block",
+  "description": "Generic rich-text body block for marketing-layout pages. Mono-font, container-narrow, the same width and tone as the about page. Use this for changelog, contact, about, and any other free-form text page on the default layout.",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "body",
+      "label": "Body",
+      "type": "richtext",
+      "help": "Rich text. Headings, lists, code, links, and emphasis all inherit the squilla mono-text style."
+    }
+  ],
+  "test_data": {
+    "body": "<p><em>WordPress made publishing easy in 2003. It is now 2026. The web has changed. Most CMSes haven't.</em></p><p>We built Squilla because the existing options force a trade: be developer-friendly OR editor-friendly. Be fast OR flexible. Be open-source OR AI-ready. Squilla refuses the trade.</p><p>The kernel is <span style=\"color: var(--accent)\">Linux-small</span>. The extension model is <span style=\"color: var(--violet)\">Debian-clean</span>. The MCP layer is <span style=\"color: var(--coral)\">agent-native</span>. The runtime is <span style=\"color: var(--lime)\">Go-fast</span>. The GPL-3.0 license is <span style=\"color: var(--magenta)\">forever</span>.</p>"
+  }
+}

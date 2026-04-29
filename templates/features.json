@@ -1,0 +1,122 @@
+{
+  "name": "Features",
+  "description": "Page header + four-quadrant features grid (content / editor / AI / performance).",
+  "thumbnail": "",
+  "blocks": [
+    {
+      "type": "page-header",
+      "fields": {
+        "sub": "Squilla isn't a wishlist. Each feature here is wired into the kernel or a built-in extension you can read on GitHub. The list is short on purpose.",
+        "title": "Every capability, with the receipts.",
+        "eyebrow": "§ features"
+      }
+    },
+    {
+      "type": "features-grid",
+      "fields": {
+        "groups": [
+          {
+            "items": [
+              {
+                "desc": "Custom post types via MCP or Tengo. JSONB storage, GIN-indexed.",
+                "name": "Node types",
+                "stat": "7 fields/avg"
+              },
+              {
+                "desc": "Per-node history with diff view, restore, draft/publish.",
+                "name": "Versioning",
+                "stat": "unlimited revs"
+              },
+              {
+                "desc": "Hierarchical + flat. Term metadata. Faceted query API.",
+                "name": "Taxonomies",
+                "stat": "JSON facets"
+              },
+              {
+                "desc": "Tree menus with deep-link tracking and route validation.",
+                "name": "Menus",
+                "stat": "route-aware"
+              }
+            ],
+            "category": "Content"
+          },
+          {
+            "items": [
+              {
+                "desc": "Server-driven UI. Boot manifest, layout trees, SSE updates.",
+                "name": "VDUS admin",
+                "stat": "no client routing"
+              },
+              {
+                "desc": "Renders the actual layout tree, not an iframe simulation.",
+                "name": "Live preview",
+                "stat": "real DOM"
+              },
+              {
+                "desc": "24 fine-grained permissions; per-extension required set.",
+                "name": "Capability gates",
+                "stat": "24 caps"
+              },
+              {
+                "desc": "Author content blocks in JSON + Go template. Live preview built in.",
+                "name": "Block authoring",
+                "stat": "JSON-defined"
+              }
+            ],
+            "category": "Editor"
+          },
+          {
+            "items": [
+              {
+                "desc": "stdio + http. ~50 tools across 15 domains. core.guide meta-tool.",
+                "name": "MCP server",
+                "stat": "~50 tools"
+              },
+              {
+                "desc": "squilla://guidelines/themes, …/extensions for agent self-onboarding.",
+                "name": "Resource URIs",
+                "stat": "12 URIs"
+              },
+              {
+                "desc": "core.guide returns next-action hints based on current state.",
+                "name": "Decision tree",
+                "stat": "state-aware"
+              },
+              {
+                "desc": "Per-tool capability declarations enforced server-side.",
+                "name": "Capability scopes",
+                "stat": "fine-grained"
+              }
+            ],
+            "category": "AI"
+          },
+          {
+            "items": [
+              {
+                "desc": "Hot-swapped maps. Reads never block. No lock contention.",
+                "name": "Atomic config",
+                "stat": "lock-free"
+              },
+              {
+                "desc": "Layout tree compiled at activation, not request time.",
+                "name": "Pre-resolved layouts",
+                "stat": "0ms lookup"
+              },
+              {
+                "desc": "pgxpool. Saturated under load. Per-tenant scoping.",
+                "name": "Connection pooling",
+                "stat": "pgxpool"
+              },
+              {
+                "desc": "Sub-50ms TTFB measured in CI. Regressions block merge.",
+                "name": "TTFB budgeted",
+                "stat": "<50ms"
+              }
+            ],
+            "category": "Performance"
+          }
+        ]
+      }
+    }
+  ]
+}

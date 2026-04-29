@@ -1,0 +1,7 @@
+<section class="page-header">
+  <div class="container container-wide">
+    <div class="h-eyebrow">{{.eyebrow}}</div>
+    <h1 class="page-header__title">{{ safeHTML .title }}</h1>
+    {{ with .sub }}<p class="page-header__sub">{{ safeHTML . }}</p>{{ end }}
+  </div>
+</section>

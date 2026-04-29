@@ -1,0 +1,56 @@
+// post_categories.tengo — list of category chips for the blog filter.
+//   {{ filter "post_categories" (dict) }}
+//
+// Returns: list of { id, label, count, color } in declaration order, prefixed
+// by the synthetic "all" entry.
+
+nodes := import("core/nodes")
+terms := import("core/terms")
+
+TAG_COLORS := {
+    "engineering": "coral",
+    "product":     "magenta",
+    "community":   "magenta",
+    "tutorials":   "violet",
+    "release":     "lime",
+    "deep dive":   "violet",
+    "philosophy":  "magenta"
+}
+
+term_list := terms.list("post", "category")
+if is_error(term_list) {
+    term_list = []
+}
+
+posts := nodes.query({ node_type: "post", status: "published", limit: 500 })
+counts := { all: 0 }
+if !is_error(posts) {
+    counts.all = posts.total
+    for n in posts.nodes {
+        slug := ""
+        if !is_undefined(n.taxonomies) && !is_undefined(n.taxonomies.category) {
+            cats := n.taxonomies.category
+            if len(cats) > 0 { slug = cats[0] }
+        }
+        if slug != "" {
+            if is_undefined(counts[slug]) { counts[slug] = 0 }
+            counts[slug] = counts[slug] + 1
+        }
+    }
+}
+
+out := [{ id: "all", label: "all", count: counts.all, color: "ink-1" }]
+for t in term_list {
+    color := TAG_COLORS[t.slug]
+    if is_undefined(color) { color = "ink-1" }
+    cnt := counts[t.slug]
+    if is_undefined(cnt) { cnt = 0 }
+    out = append(out, {
+        id:    t.slug,
+        label: t.slug,
+        count: cnt,
+        color: color
+    })
+}
+
+response = out

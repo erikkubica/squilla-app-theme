@@ -1,0 +1,45 @@
+// theme.tengo — Squilla promo theme entry point.
+//
+// Intentionally slim — only orchestrates submodules. Each `setup/*` file owns
+// one concern (taxonomies, node types, settings, menus, forms). Each
+// `seeds/*` file owns idempotent demo content for one area (pages, docs,
+// posts, extensions, themes catalog).
+//
+// To extend the theme, add a new module under setup/ or seeds/ and call its
+// `run()` from here. Do not stuff logic into this file — keep it a manifest.
+
+log := import("core/log")
+
+log.info("Squilla theme initializing...")
+
+// ─── Setup (registrations, settings, menus) ──────────────────
+taxonomies := import("./setup/taxonomies")
+nodetypes  := import("./setup/nodetypes")
+settings   := import("./setup/settings")
+forms      := import("./setup/forms")
+filt       := import("./setup/filters")
+menus      := import("./setup/menus")
+
+taxonomies.run()
+nodetypes.run()
+settings.run()
+forms.run()
+filt.run()
+
+// ─── Seeds (idempotent demo content) ─────────────────────────
+seed_pages      := import("./seeds/pages")
+seed_docs       := import("./seeds/docs")
+seed_posts      := import("./seeds/posts")
+seed_extensions := import("./seeds/extensions")
+seed_themes     := import("./seeds/themes")
+
+seed_pages.run()
+seed_docs.run()
+seed_posts.run()
+seed_extensions.run()
+seed_themes.run()
+
+// Menus depend on seeded slugs, so run last.
+menus.run()
+
+log.info("Squilla theme initialization complete")

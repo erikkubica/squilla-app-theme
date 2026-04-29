@@ -1,0 +1,42 @@
+<section class="showcase-grid">
+  <div class="container container-wide">
+    <div class="showcase-grid__cells" data-grid="3">
+      {{ range .items }}
+        <a class="showcase-grid__card" data-color="{{.color}}" href="{{.url}}"{{ if .url }} target="_blank" rel="noopener"{{ end }}>
+          {{- /* The "showcase-thumb" image_size (450x350 crop) is registered in theme.json image_sizes[]. */ -}}
+          {{- /* When media-manager has imported the asset, .screenshot.url is /media/theme/squilla/<key>.jpg. */ -}}
+          {{- /* Use the cache path so the optimizer serves a 450x350 variant; falls back to the original. */ -}}
+          {{- $shotURL := "" -}}{{- $shotAlt := "" -}}
+          {{- with .screenshot -}}
+            {{- with .url -}}{{- $shotURL = . -}}{{- end -}}
+            {{- with .alt -}}{{- $shotAlt = . -}}{{- end -}}
+          {{- end -}}
+          {{- if $shotAlt -}}{{- else -}}{{- $shotAlt = printf "%s screenshot" .name -}}{{- end -}}
+          <div class="showcase-grid__preview">
+            {{ if $shotURL }}
+              <img class="showcase-grid__shot"
+                   src="{{ image_url $shotURL "showcase-thumb" }}"
+                   alt="{{ $shotAlt }}"
+                   width="450" height="350"
+                   loading="lazy" decoding="async">
+            {{ else }}
+              <div class="eyegrid showcase-grid__grid" aria-hidden="true"></div>
+              <div class="showcase-grid__fade" aria-hidden="true"></div>
+              <div class="showcase-grid__placeholder">PLACEHOLDER · screenshot</div>
+            {{ end }}
+            <div class="showcase-grid__cara cara-grad">
+              {{ range seq 10 }}<span></span>{{ end }}
+            </div>
+          </div>
+          <div class="showcase-grid__body">
+            <div>
+              <div class="showcase-grid__name">{{.name}}</div>
+              <div class="showcase-grid__type">{{.type}} · built in {{.built}}</div>
+            </div>
+            <span style="color: var(--accent)">↗</span>
+          </div>
+        </a>
+      {{ end }}
+    </div>
+  </div>
+</section>

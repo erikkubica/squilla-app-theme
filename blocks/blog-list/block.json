@@ -1,0 +1,16 @@
+{
+  "slug": "blog-list",
+  "name": "Blog list (filter + pagination)",
+  "description": "Blog index list with category filter chips and numbered pagination. URL state persisted via ?cat=X&page=N (history.pushState). Initial state matches URL on first paint. Phase 1 has 14 posts baked in.",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "page_size",
+      "label": "Posts per page",
+      "type": "number"
+    }
+  ],
+  "test_data": {
+    "page_size": 6
+  }
+}

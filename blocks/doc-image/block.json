@@ -1,0 +1,14 @@
+{
+  "slug":        "doc-image",
+  "name":        "Doc Image",
+  "description": "A single full-width figure with optional caption. Renders as <figure><img><figcaption>; the design's .prose figcaption styles the caption in mono.",
+  "category":    "squilla",
+  "field_schema": [
+    { "key": "image",   "label": "Image",   "type": "image",   "help": "Single image upload. The block uses width=100%, max-height not capped — let the image dictate height." },
+    { "key": "caption", "label": "Caption", "type": "text",    "help": "Optional. Renders below the image in mono." }
+  ],
+  "test_data": {
+    "image":   { "url": "theme-asset:hero", "alt": "Hero photo" },
+    "caption": "Fig. 1 — The peacock mantis shrimp's dactyl club accelerates faster than a .22 bullet."
+  }
+}

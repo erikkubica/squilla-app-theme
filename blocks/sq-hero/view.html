@@ -1,0 +1,37 @@
+{{- /* Hero — last word of the headline gets the iridescent gradient. */ -}}
+{{- $head := beforeLastWord .headline -}}
+{{- $tail := lastWord .headline -}}
+<section class="hero">
+  <div class="hero__motif" data-squilla-eye data-size="460" data-density="dense" aria-hidden="true"></div>
+
+  <div class="container container-wide" style="position: relative;">
+    <div class="hero__eyebrow-row">
+      <span class="eyebrow">{{.eyebrow}}</span>
+    </div>
+
+    <h1>
+      {{ if $head }}<span>{{ $head }} </span>{{ end }}<span class="grad">{{ $tail }}</span>
+    </h1>
+
+    <p class="hero__lead">{{ safeHTML .lead }}</p>
+
+    <div class="hero__buttons">
+      <a class="btn btn-primary" href="{{.primary.url}}"{{ with .primary.target }} target="{{.}}"{{ end }}>
+        <span class="dollar">$</span>
+        <span>{{.primary.text}}</span>
+        <span class="arrow">→</span>
+      </a>
+      <a class="btn" href="{{.secondary.url}}"{{ with .secondary.target }} target="{{.}}"{{ end }}>
+        <span>{{.secondary.text}}</span>
+        <span style="color: var(--ink-3)">↗</span>
+      </a>
+      <a class="btn btn-ghost" style="border-color: transparent" href="{{.tertiary.url}}"{{ with .tertiary.target }} target="{{.}}"{{ end }}>
+        <span style="color: var(--ink-2)">{{.tertiary.text}}</span>
+      </a>
+    </div>
+
+    <div class="hero__carapace cara-grad">
+      {{ range seq 32 }}<span></span>{{ end }}
+    </div>
+  </div>
+</section>

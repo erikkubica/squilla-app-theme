@@ -1,0 +1,28 @@
+{{- $s := .app.settings -}}
+<!doctype html>
+<html lang="en"
+      data-theme="{{ index $s "squilla.tweaks.theme" }}"
+      data-accent="{{ index $s "squilla.tweaks.accent" }}"
+      data-density="{{ index $s "squilla.tweaks.density" }}"
+      data-motif="{{ index $s "squilla.tweaks.motif" }}">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" type="image/svg+xml" href="/theme/assets/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 — {{ index $s "squilla.brand.name" }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+  {{- range .app.head_styles -}}<link rel="stylesheet" href="{{.}}">{{- end -}}
+  {{.app.block_styles}}
+</head>
+<body>
+  <div class="page">
+    {{renderLayoutBlock "site-header"}}
+    <main>{{.node.blocks_html}}</main>
+    {{renderLayoutBlock "site-footer"}}
+  </div>
+  {{- range .app.foot_scripts -}}<script src="{{.}}" defer></script>{{- end -}}
+  {{.app.block_scripts}}
+</body>
+</html>

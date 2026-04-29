@@ -1,0 +1,8 @@
+<figure class="doc-gallery" data-cols="{{.columns}}">
+  <div class="doc-gallery__grid">
+    {{ range .images }}
+      <img src="{{.url}}" alt="{{.alt}}">
+    {{ end }}
+  </div>
+  {{ with .caption }}<figcaption>{{.}}</figcaption>{{ end }}
+</figure>

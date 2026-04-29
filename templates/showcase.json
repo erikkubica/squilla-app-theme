@@ -1,0 +1,64 @@
+{
+  "name": "Showcase",
+  "description": "Page header + grid of sites built on Squilla.",
+  "thumbnail": "",
+  "blocks": [
+    {
+      "type": "page-header",
+      "fields": {
+        "sub": "A small but growing list. Are you running Squilla in production? Open a PR.",
+        "title": "Sites built on Squilla.",
+        "eyebrow": "§ showcase"
+      }
+    },
+    {
+      "type": "showcase-grid",
+      "fields": {
+        "items": [
+          {
+            "url": "https://arctic-method.com",
+            "name": "arctic-method.com",
+            "type": "editorial",
+            "built": "4 days",
+            "color": "teal"
+          },
+          {
+            "url": "https://kindred-tours.travel",
+            "name": "kindred-tours.travel",
+            "type": "small locals-driven travel agency",
+            "built": "1 week",
+            "color": "violet"
+          },
+          {
+            "url": "https://recipe.notes",
+            "name": "recipe.notes",
+            "type": "recipes",
+            "built": "1 day (AI-built)",
+            "color": "coral"
+          },
+          {
+            "url": "https://kernel-zero.dev",
+            "name": "kernel-zero.dev",
+            "type": "tech blog",
+            "built": "3 days",
+            "color": "lime"
+          },
+          {
+            "url": "https://forms.cooperative",
+            "name": "forms.cooperative",
+            "type": "docs",
+            "built": "5 days",
+            "color": "magenta"
+          },
+          {
+            "url": "https://patches.local",
+            "name": "patches.local",
+            "type": "changelog",
+            "built": "2 days",
+            "color": "amber"
+          }
+        ]
+      }
+    }
+  ]
+}

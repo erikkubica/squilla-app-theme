@@ -1,0 +1,37 @@
+{
+  "slug": "doc-callout",
+  "name": "Doc Callout",
+  "description": "A coloured heads-up / note / success box with a tiny accent label and a body line. The design uses these for 'HEADS UP' warnings (coral border) and similar emphasis.",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "label",
+      "label": "Tiny accent label",
+      "type": "text",
+      "help": "All-caps short label, e.g. 'HEADS UP', 'NOTE', 'TIP'."
+    },
+    {
+      "key": "variant",
+      "label": "Variant",
+      "type": "select",
+      "options": [
+        "heads-up",
+        "note",
+        "tip",
+        "danger"
+      ],
+      "default": "heads-up",
+      "help": "heads-up = coral, note = teal, tip = lime, danger = magenta."
+    },
+    {
+      "key": "body",
+      "label": "Body (HTML allowed)",
+      "type": "richtext"
+    }
+  ],
+  "test_data": {
+    "body": "In <code>block.json</code> field_schema entries use <code>\"key\":</code>. In Tengo nodetypes.register field_schema entries use <code>\"name\":</code>. Don't mix them — the admin reads sub-field VALUES against the schema's key/name field, and a mismatch produces empty inputs even when fields_data is correct.",
+    "label": "HEADS UP",
+    "variant": "heads-up"
+  }
+}

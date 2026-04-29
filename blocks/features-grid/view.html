@@ -1,0 +1,23 @@
+<section class="feat-grid">
+  <div class="container container-wide feat-grid__container">
+    {{ range .groups }}
+      {{- $items := .items -}}
+      <div class="feat-grid__group">
+        <div class="feat-grid__group-head">
+          <h3 class="feat-grid__group-title">{{.category}}</h3>
+          <div class="feat-grid__group-rule"></div>
+          <span class="feat-grid__group-count">{{ len $items }} features</span>
+        </div>
+        <div class="feat-grid__cells" data-grid="4">
+          {{ range $items }}
+            <div class="feat-grid__cell">
+              <div class="feat-grid__name">{{.name}}</div>
+              <p class="feat-grid__desc">{{.desc}}</p>
+              <span class="tag feat-grid__stat">{{.stat}}</span>
+            </div>
+          {{ end }}
+        </div>
+      </div>
+    {{ end }}
+  </div>
+</section>

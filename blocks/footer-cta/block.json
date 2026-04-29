@@ -1,0 +1,72 @@
+{
+  "slug": "footer-cta",
+  "name": "Footer CTA",
+  "description": "Closing section with a giant compound-eye motif, a multi-line console snippet, lead text, and primary/secondary CTAs.",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "eyebrow",
+      "label": "Eyebrow",
+      "type": "text"
+    },
+    {
+      "key": "heading",
+      "label": "Heading",
+      "type": "text"
+    },
+    {
+      "key": "console_lines",
+      "label": "Console snippet lines",
+      "type": "repeater",
+      "sub_fields": [
+        {
+          "label": "Line (HTML allowed)",
+          "type": "text",
+          "help": "May include <span style=\"color: var(--ink-3)\">$</span>, <span style=\"color: var(--accent)\">cmd</span>, etc.",
+          "key": "html"
+        }
+      ]
+    },
+    {
+      "key": "lead",
+      "label": "Lead paragraph",
+      "type": "text"
+    },
+    {
+      "key": "primary",
+      "label": "Primary CTA",
+      "type": "link"
+    },
+    {
+      "key": "secondary",
+      "label": "Secondary CTA",
+      "type": "link"
+    }
+  ],
+  "test_data": {
+    "lead": "Five extensions active, one theme seeded. You're three minutes from publishing.",
+    "eyebrow": "§ try it",
+    "heading": "Three minutes from publishing.",
+    "primary": {
+      "url": "/docs/installation",
+      "text": "docker compose up",
+      "target": "_self"
+    },
+    "secondary": {
+      "url": "https://github.com/squilla-cms/squilla",
+      "text": "View on GitHub ↗",
+      "target": "_blank"
+    },
+    "console_lines": [
+      {
+        "html": "<span style=\"color: var(--ink-3)\">$</span> <span style=\"color: var(--accent)\">git clone</span> github.com/squilla/squilla"
+      },
+      {
+        "html": "<span style=\"color: var(--ink-3)\">$</span> <span style=\"color: var(--accent)\">docker compose up</span> --build"
+      },
+      {
+        "html": "<span style=\"color: var(--ink-3)\">→ app at localhost:3000 · admin login printed to logs</span>"
+      }
+    ]
+  }
+}

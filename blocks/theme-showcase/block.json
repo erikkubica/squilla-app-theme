@@ -1,0 +1,135 @@
+{
+  "slug": "theme-showcase",
+  "name": "Theme showcase (with code preview)",
+  "description": "Two-column section: copy + 'layouts/partials/blocks' explainer rows on the left, faux-IDE code preview on the right. The three rows and the code body are fields so editors can change them without touching code.",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "eyebrow",
+      "label": "Eyebrow",
+      "type": "text"
+    },
+    {
+      "key": "heading",
+      "label": "Heading (HTML)",
+      "type": "richtext"
+    },
+    {
+      "key": "lead",
+      "label": "Lead paragraph",
+      "type": "richtext",
+      "help": "May include inline <code> for accent words."
+    },
+    {
+      "key": "rows",
+      "label": "Explainer rows",
+      "type": "repeater",
+      "help": "Three rows recommended (Layouts / Partials / Blocks). Color: teal | violet | magenta | coral | lime | amber.",
+      "sub_fields": [
+        {
+          "label": "Label",
+          "type": "text",
+          "key": "key"
+        },
+        {
+          "label": "Description",
+          "type": "text",
+          "key": "value"
+        },
+        {
+          "label": "Chip color",
+          "type": "select",
+          "options": [
+            "teal",
+            "violet",
+            "magenta",
+            "coral",
+            "lime",
+            "amber"
+          ],
+          "key": "color"
+        }
+      ]
+    },
+    {
+      "key": "callout",
+      "label": "Italic callout",
+      "type": "text"
+    },
+    {
+      "key": "code_file",
+      "label": "Code header — file path",
+      "type": "text",
+      "help": "Shown at the top of the IDE-style block."
+    },
+    {
+      "key": "code_language",
+      "label": "Code language",
+      "type": "select",
+      "options": [
+        "plaintext",
+        "bash",
+        "shell",
+        "go",
+        "javascript",
+        "typescript",
+        "tsx",
+        "jsx",
+        "json",
+        "yaml",
+        "html",
+        "xml",
+        "css",
+        "scss",
+        "sql",
+        "php",
+        "python",
+        "ruby",
+        "rust",
+        "java",
+        "kotlin",
+        "swift",
+        "makefile",
+        "dockerfile",
+        "markdown",
+        "diff",
+        "ini",
+        "tengo"
+      ],
+      "default": "plaintext",
+      "help": "Auto syntax highlighter applies on render."
+    },
+    {
+      "key": "code_body",
+      "label": "Code body",
+      "type": "richtext",
+      "help": "Use the WYSIWYG code-block button. Highlighter runs on render — no manual span markup."
+    }
+  ],
+  "test_data": {
+    "lead": "A Squilla theme is a self-contained package: layouts, partials, content blocks, assets, Tengo scripts that seed content on activation. Activating a theme runs its <code style=\"color: var(--accent)\">theme.tengo</code> script — registering node types, taxonomies, and seeding pages — with zero server restart.",
+    "rows": [
+      {
+        "key": "Layouts",
+        "color": "teal",
+        "value": "Page-level templates. .node · .app · .user"
+      },
+      {
+        "key": "Partials",
+        "color": "violet",
+        "value": "Reusable fragments. Same context plus .partial"
+      },
+      {
+        "key": "Blocks",
+        "color": "magenta",
+        "value": "Atomic content units. Self-contained, schema-defined, render with their own field data only."
+      }
+    ],
+    "callout": "Activate a theme. The CMS reorganizes itself around it. No restart.",
+    "eyebrow": "§ themes",
+    "heading": "Themes are<br/>sovereign too.",
+    "code_body": "<pre><code>core    := import(\"core/cms\")\nnodes   := import(\"core/nodes\")\nevents  := import(\"core/events\")\n\n// register the recipe node type\nnodes.register_type({\n  slug: \"recipe\",\n  fields: [\n    {name: \"hero_image\",   type: \"media\"},\n    {name: \"prep_minutes\", type: \"int\"},\n    {name: \"servings\",     type: \"int\"},\n    {name: \"ingredients\",  type: \"repeater\"},\n    {name: \"instructions\", type: \"richtext\"},\n  ]\n})\n\n// seed a starter recipe\ncore.node_create({\n  type:  \"recipe\",\n  title: \"Caramelized scallops\",\n  fields: { prep_minutes: 18, servings: 2 }\n})\n\nevents.emit(\"theme.seeded\", { theme: \"hello-vietnam\" })</code></pre>",
+    "code_file": "themes/hello-vietnam/theme.tengo",
+    "code_language": "javascript"
+  }
+}

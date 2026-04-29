@@ -1,0 +1,45 @@
+{{- /* Blog list — pulls real published posts via the list_posts filter and
+       category chips via post_categories. JS does category filter +
+       pagination with URL state (?cat=…&page=…). */ -}}
+{{- $page_size := .page_size -}}
+{{- $cats  := filter "post_categories" (dict) -}}
+{{- $posts := filter "list_posts" (dict "limit" 500) -}}
+<section class="blog-list" data-squilla-blog data-page-size="{{$page_size}}">
+  <div class="container container-narrow">
+
+    <div class="blog-list__filters">
+      <span class="blog-list__filter-label">filter ›</span>
+      {{ range $cats }}
+        <button type="button" class="blog-list__chip"
+                data-filter="{{.id}}"
+                data-color="{{.color}}"
+                {{- if eq .id "all" }} aria-pressed="true"{{ end }}>
+          <span>{{.label}}</span>
+          <span class="blog-list__chip-count" data-count="{{.id}}">{{.count}}</span>
+        </button>
+      {{ end }}
+      <span class="blog-list__count" data-blog-total>{{ len $posts }} posts</span>
+    </div>
+
+    <div class="blog-list__rows" data-blog-rows>
+      {{ range $posts }}
+        <a class="blog-list__row" href="{{.url}}" data-tag="{{.tag}}">
+          <span class="blog-list__date">{{.date}}</span>
+          <span class="tag blog-list__tag" data-color="{{.color}}">{{.tag}}</span>
+          <span class="blog-list__title">{{.title}}</span>
+          <span class="blog-list__read">{{.read}} →</span>
+        </a>
+      {{ end }}
+    </div>
+
+    <div class="blog-list__empty" data-blog-empty hidden>
+      No posts in this category. Try another, or go write one.
+    </div>
+
+    <div class="blog-list__pager" data-blog-pager hidden>
+      <button type="button" class="blog-list__pager-btn" data-blog-prev>← prev</button>
+      <div class="blog-list__pager-pages" data-blog-pages></div>
+      <button type="button" class="blog-list__pager-btn" data-blog-next>next →</button>
+    </div>
+  </div>
+</section>

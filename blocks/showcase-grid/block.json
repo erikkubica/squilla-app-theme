@@ -1,0 +1,61 @@
+{
+  "slug": "showcase-grid",
+  "name": "Showcase grid",
+  "description": "N showcase cards. Each card has a synthetic preview (gradient + eyegrid + carapace stripe), name, type, and 'built in N' line.",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "items",
+      "label": "Showcase entries",
+      "type": "repeater",
+      "sub_fields": [
+        {
+          "label": "Name (e.g. domain)",
+          "type": "text",
+          "key": "name"
+        },
+        {
+          "label": "Type / kind",
+          "type": "text",
+          "key": "type"
+        },
+        {
+          "label": "Built-in time",
+          "type": "text",
+          "key": "built"
+        },
+        {
+          "label": "Accent",
+          "type": "select",
+          "options": [
+            "teal",
+            "violet",
+            "coral",
+            "lime",
+            "magenta",
+            "amber"
+          ],
+          "key": "color"
+        },
+        {
+          "label": "URL (optional)",
+          "type": "text",
+          "key": "url"
+        },
+        {
+          "label": "Screenshot (optional)",
+          "help": "If set, replaces the synthetic preview. Reference theme-bundled images via theme-asset:<key> so the URL survives theme switches.",
+          "type": "image",
+          "key": "screenshot"
+        }
+      ]
+    }
+  ],
+  "test_data": {
+    "items": [
+      { "url": "https://squilla.app",                         "screenshot": { "url": "theme-asset:showcase-squilla",          "alt": "squilla.app marketing site screenshot" },  "name": "squilla.app",      "type": "marketing + docs (the page you're on)",        "built": "this site",  "color": "teal" },
+      { "url": "https://hello-vietnam-demo.erik-kubica.dev/", "screenshot": { "url": "theme-asset:showcase-hello-vietnam",    "alt": "Hello Vietnam demo theme screenshot" },     "name": "Hello Vietnam",    "type": "travel-agency demo theme bundled in the repo", "built": "demo theme", "color": "violet" },
+      { "url": "https://erik-kubica.dev/",                    "screenshot": { "url": "theme-asset:showcase-curriculum-vitae", "alt": "Curriculum Vitae demo theme screenshot" },  "name": "Curriculum Vitae", "type": "single-page CV/portfolio demo theme",          "built": "demo theme", "color": "coral" }
+    ]
+  }
+}

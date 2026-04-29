@@ -1,0 +1,83 @@
+// seeds/themes.tengo — Marketplace listings (theme node type).
+
+nodes := import("core/nodes")
+terms := import("core/terms")
+log   := import("core/log")
+
+ensure_source := func(slug, name) {
+    found := terms.list("theme", "source")
+    if !is_error(found) {
+        for t in found {
+            if t.slug == slug { return true }
+        }
+    }
+    res := terms.create({ taxonomy: "source", node_type: "theme", slug: slug, name: name })
+    return !is_error(res)
+}
+
+ensure_theme := func(slug, title, fields, body) {
+    res := nodes.query({ node_type: "theme", slug: slug, limit: 1 })
+    if !is_error(res) && res.total > 0 {
+        return
+    }
+    tagline := ""
+    if !is_undefined(fields.tagline) { tagline = fields.tagline }
+    nodes.create({
+        title:        title,
+        slug:         slug,
+        node_type:    "theme",
+        status:       "published",
+        excerpt:      tagline,
+        fields_data:  fields,
+        seo_settings: {
+            meta_title:       title + " — Squilla theme",
+            meta_description: tagline
+        },
+        blocks_data: [
+            { type: "doc-content", fields: { body: body } }
+        ]
+    })
+}
+
+export {
+    run: func() {
+        log.info("[squilla:seed] seeding themes catalog")
+
+        ensure_source("official",  "Official")
+        ensure_source("community", "Community")
+        ensure_source("verified",  "Verified")
+
+        ensure_theme("squilla", "Squilla (this site)", {
+            tagline:   "The official Squilla marketing, marketplace, and docs theme — the one rendering this site.",
+            source:    { slug: "official" },
+            version:   "0.1.0",
+            author:    "Squilla Team",
+            downloads: 0,
+            rating:    5,
+            price:     0,
+            featured:  true
+        }, `<p><strong>Squilla</strong> is the marketing-and-docs theme that ships with the project. It's the theme rendering the site you're reading right now.</p><h3>What's inside</h3><ul><li>4 layouts — <code>default</code> (marketing), <code>docs</code> (docs sidebar + TOC), <code>post</code> (long-form blog), <code>error</code> (404 / 500)</li><li>~28 content blocks for hero, pillars, architecture diagram, MCP console, perf section, doc-callout, doc-codeblock, themes/extensions catalogs, and so on</li><li>Tengo seed scripts that populate node types (page, post, documentation, theme, extension), taxonomies, settings, menus, and the demo content</li><li>JetBrains Mono + Geist Sans typography, iridescent accent palette, dark by default</li></ul><h3>How to activate</h3><p>It's already active by default after a fresh install. To re-activate (which re-runs the seed idempotently), use <code>core.theme.activate</code> with the slug <code>squilla</code>.</p>`)
+
+        ensure_theme("hello-vietnam", "Hello Vietnam", {
+            tagline:   "Warm, playful demo theme for a fictional travel agency. Twenty-five blocks, two layouts, full demo content.",
+            source:    { slug: "official" },
+            version:   "1.0.0",
+            author:    "Squilla Team",
+            downloads: 0,
+            rating:    5,
+            price:     0,
+            featured:  true
+        }, `<p><strong>Hello Vietnam</strong> is a demo theme for a small travel agency. It exists primarily as a reference for how a third-party theme should be structured — from <code>theme.json</code> through layouts, partials, blocks, assets, and a self-bootstrapping <code>theme.tengo</code> seed.</p><h3>What it demonstrates</h3><ul><li>A fully theme-owned set of content blocks (hero, trip card grid, story sections, testimonials, contact form)</li><li>A custom <code>trip</code> node type registered from <code>theme.tengo</code> on activation</li><li>Form-extension handshake — the contact form is wired through the <code>forms</code> extension via the <code>vibe-form</code> block</li><li>Cream-and-red palette, Fredoka Display + Montserrat body, candid travel photography</li></ul><h3>Activate it</h3><p><code>core.theme.activate({ id: … })</code> with the <code>hello-vietnam</code> slug. Activation is hot — the layout tree swaps atomically and the seed runs idempotently.</p>`)
+
+        ensure_theme("curriculum-vitae", "Curriculum Vitae", {
+            tagline:   "Editorial single-page CV / portfolio theme. Cream-and-ink palette, sticky nav, accordion experience, contact black-card.",
+            source:    { slug: "official" },
+            version:   "0.5.0",
+            author:    "Squilla Team",
+            downloads: 0,
+            rating:    4,
+            price:     0,
+            featured:  false
+        }, `<p><strong>Curriculum Vitae</strong> is a single-page CV / portfolio theme designed for senior developers. It's deliberately editorial — cream paper, ink type, lots of whitespace, a sticky in-page nav, and an accordion-driven experience block.</p><h3>What it includes</h3><ul><li>One layout — a long single-page document with anchor sections</li><li>Blocks for hero, summary, experience accordion, project showcase, skills matrix, and a black-card contact section</li><li>Geist Sans + JetBrains Mono typography</li></ul><h3>Use it for</h3><p>Personal sites, developer CVs, small portfolios. If you want a marketing site instead, the <code>squilla</code> or <code>hello-vietnam</code> theme is a better starting point.</p>`)
+    }
+}

@@ -1,0 +1,20 @@
+<section class="footer-cta huge">
+  <div class="footer-cta__motif" data-squilla-eye data-size="520" data-density="dense" aria-hidden="true"></div>
+  <div class="footer-cta__fade" aria-hidden="true"></div>
+
+  <div class="container container-narrow footer-cta__inner">
+    <div class="h-eyebrow" style="justify-content: center">{{.eyebrow}}</div>
+    <h2 class="footer-cta__heading">{{.heading}}</h2>
+
+    <div class="footer-cta__console">
+      {{ range .console_lines }}<div>{{ safeHTML .html }}</div>{{ end }}
+    </div>
+
+    <p class="footer-cta__lead">{{.lead}}</p>
+
+    <div class="footer-cta__buttons">
+      <a class="btn btn-primary" href="{{.primary.url}}"{{ with .primary.target }} target="{{.}}"{{ end }}><span style="opacity:.6">$</span> {{.primary.text}} <span style="opacity:.6; margin-left: 4px">→</span></a>
+      <a class="btn" href="{{.secondary.url}}"{{ with .secondary.target }} target="{{.}}"{{ end }}>{{.secondary.text}}</a>
+    </div>
+  </div>
+</section>

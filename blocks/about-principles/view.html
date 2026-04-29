@@ -1,0 +1,16 @@
+<section class="about-principles">
+  <div class="container container-narrow">
+    <div class="h-eyebrow">{{.eyebrow}}</div>
+    <ol class="about-principles__list">
+      {{ range $i, $p := .items }}
+        <li class="about-principles__item">
+          <span class="about-principles__num">{{ printf "%02d" (add $i 1) }}</span>
+          <div>
+            <div class="about-principles__h">{{ safeHTML $p.heading }}</div>
+            <div class="about-principles__b">{{ safeHTML $p.body }}</div>
+          </div>
+        </li>
+      {{ end }}
+    </ol>
+  </div>
+</section>

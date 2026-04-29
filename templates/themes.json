@@ -1,0 +1,19 @@
+{
+  "name": "Themes Catalog",
+  "description": "Page header + auto-rendered grid of all installed themes.",
+  "thumbnail": "",
+  "blocks": [
+    {
+      "type": "page-header",
+      "fields": {
+        "sub": "Themes ship layouts, partials, content blocks, assets, and a theme.tengo seed script. Activating runs the script — registering node types, taxonomies, settings, and seeding pages — without restart.",
+        "title": "Self-contained presentation packages. Activate to install.",
+        "eyebrow": "§ themes"
+      }
+    },
+    {
+      "type": "themes-catalog",
+      "fields": {}
+    }
+  ]
+}

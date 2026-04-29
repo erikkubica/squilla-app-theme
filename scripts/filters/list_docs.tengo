@@ -1,0 +1,105 @@
+// list_docs.tengo — query all documentation nodes grouped by section.
+//   {{ filter "list_docs" (dict) }}
+//
+// Returns a list of section groups: { section_slug, section_name, items }.
+// `n.fields.section` may arrive as either a string (slug) or a hydrated
+// term object — handle both.
+
+nodes := import("core/nodes")
+log   := import("core/log")
+
+SECTION_LABELS := {
+    "getting-started": "Getting Started",
+    "extensions":      "Extensions",
+    "themes":          "Themes",
+    "scripting":       "Scripting",
+    "api":             "API Reference"
+}
+
+res := nodes.query({
+    node_type: "documentation",
+    status:    "published",
+    limit:     500,
+    order_by:  "title asc"
+})
+
+if is_error(res) {
+    log.warn("list_docs filter: nodes.query failed")
+    response = []
+} else {
+    groups := {}
+    section_order := []
+
+    for n in res.nodes {
+        sec_slug := "uncategorized"
+        if !is_undefined(n.fields_data) && !is_undefined(n.fields_data.section) {
+            sv := n.fields_data.section
+            if is_string(sv) {
+                sec_slug = sv
+            } else if !is_undefined(sv.slug) {
+                sec_slug = sv.slug
+            }
+        }
+
+        sec_name := SECTION_LABELS[sec_slug]
+        if is_undefined(sec_name) {
+            sec_name = sec_slug
+        }
+
+        if is_undefined(groups[sec_slug]) {
+            groups[sec_slug] = {
+                section_slug: sec_slug,
+                section_name: sec_name,
+                items:        []
+            }
+            section_order = append(section_order, sec_slug)
+        }
+
+        order := 999
+        if !is_undefined(n.fields_data) && !is_undefined(n.fields_data.order) {
+            order = n.fields_data.order
+        }
+
+        item := {
+            id:    n.id,
+            slug:  n.slug,
+            title: n.title,
+            url:   n.full_url,
+            order: order
+        }
+        groups[sec_slug].items = append(groups[sec_slug].items, item)
+    }
+
+    // Sort each group's items by order ascending (insertion sort)
+    for slug in section_order {
+        items := groups[slug].items
+        for i := 1; i < len(items); i++ {
+            j := i
+            for j > 0 && items[j].order < items[j-1].order {
+                tmp := items[j-1]
+                items[j-1] = items[j]
+                items[j] = tmp
+                j--
+            }
+        }
+        groups[slug].items = items
+    }
+
+    out := []
+    // Preferred order
+    preferred := ["getting-started", "extensions", "themes", "scripting", "api"]
+    for slug in preferred {
+        if !is_undefined(groups[slug]) {
+            out = append(out, groups[slug])
+        }
+    }
+    // Anything else
+    for slug in section_order {
+        seen := false
+        for p in preferred {
+            if p == slug { seen = true; break }
+        }
+        if !seen { out = append(out, groups[slug]) }
+    }
+    response = out
+}

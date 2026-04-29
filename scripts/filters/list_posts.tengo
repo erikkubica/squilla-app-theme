@@ -1,0 +1,86 @@
+// list_posts.tengo — query published posts ordered by published_at desc.
+//   {{ filter "list_posts" (dict "limit" 50) }}
+//
+// Returns: list of { id, slug, title, url, date, tag, color, read, excerpt }
+// where:
+//   - date is YYYY-MM-DD from published_at (or created_at as fallback)
+//   - tag is the category slug (string)
+//   - color is the design's tag color for that category (lime/coral/violet/magenta)
+//   - read is "{n} min" derived from excerpt+body length (heuristic)
+
+nodes := import("core/nodes")
+log   := import("core/log")
+
+input := value
+if is_undefined(input) { input = {} }
+limit := 50
+if !is_undefined(input.limit) { limit = input.limit }
+
+// Map category slug → design's accent color for that tag chip.
+TAG_COLORS := {
+    "engineering": "coral",
+    "product":     "magenta",
+    "community":   "magenta",
+    "tutorials":   "violet",
+    "release":     "lime",
+    "deep dive":   "violet",
+    "philosophy":  "magenta"
+}
+
+res := nodes.query({
+    node_type: "post",
+    status:    "published",
+    limit:     limit,
+    order_by:  "published_at desc"
+})
+
+if is_error(res) {
+    log.warn("list_posts filter: nodes.query failed")
+    response = []
+} else {
+    out := []
+    for n in res.nodes {
+        // category lives in node.taxonomies.category (array of slugs).
+        tag_slug := ""
+        if !is_undefined(n.taxonomies) && !is_undefined(n.taxonomies.category) {
+            cats := n.taxonomies.category
+            if len(cats) > 0 {
+                tag_slug = cats[0]
+            }
+        }
+        color := TAG_COLORS[tag_slug]
+        if is_undefined(color) { color = "ink-1" }
+
+        excerpt := ""
+        if !is_undefined(n.fields_data) && !is_undefined(n.fields_data.excerpt) {
+            excerpt = n.fields_data.excerpt
+        }
+
+        // Crude read-time estimate: 1 minute per 250 chars of excerpt+title.
+        chars := len(n.title) + len(excerpt)
+        minutes := chars / 250
+        if minutes < 1 { minutes = 1 }
+        read := string(minutes) + " min"
+
+        // Date — slice the first 10 chars of published_at (YYYY-MM-DDTHH:...).
+        date := ""
+        if !is_undefined(n.published_at) && len(n.published_at) >= 10 {
+            date = n.published_at[:10]
+        } else if !is_undefined(n.created_at) && len(n.created_at) >= 10 {
+            date = n.created_at[:10]
+        }
+
+        out = append(out, {
+            id:      n.id,
+            slug:    n.slug,
+            title:   n.title,
+            url:     n.full_url,
+            date:    date,
+            tag:     tag_slug,
+            color:   color,
+            read:    read,
+            excerpt: excerpt
+        })
+    }
+    response = out
+}

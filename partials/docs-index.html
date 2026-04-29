@@ -1,0 +1,25 @@
+{{- $sections := filter "list_docs" (dict) -}}
+{{- $current := or .node.slug "" -}}
+<nav class="docs-nav" aria-label="Documentation">
+  {{ range $sections }}
+    {{- $secName := .section_name -}}
+    <div class="docs-nav__group" data-docs-group>
+      <button type="button" class="docs-nav__group-btn" data-docs-group-toggle>
+        <span>{{ $secName }}</span>
+        <span class="docs-nav__group-icon" data-docs-group-icon>−</span>
+      </button>
+      <ul class="docs-nav__list" data-docs-list>
+        {{ range .items }}
+          {{ $active := eq .slug $current }}
+          <li>
+            <a class="docs-nav__item{{ if $active }} is-active{{ end }}"
+               href="{{.url}}"
+               data-docs-item
+               data-docs-label="{{.title}}"
+               data-docs-section="{{ $secName }}">{{.title}}</a>
+          </li>
+        {{ end }}
+      </ul>
+    </div>
+  {{ end }}
+</nav>

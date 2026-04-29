@@ -1,0 +1,84 @@
+{{- $s := .app.settings -}}
+<!doctype html>
+<html lang="{{.node.language_code}}"
+      data-theme="{{ index $s "squilla.tweaks.theme" }}"
+      data-accent="{{ index $s "squilla.tweaks.accent" }}"
+      data-density="{{ index $s "squilla.tweaks.density" }}"
+      data-motif="{{ index $s "squilla.tweaks.motif" }}">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" type="image/svg+xml" href="/theme/assets/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {{- $seo := .node.seo -}}
+  <title>{{ if and $seo $seo.meta_title }}{{$seo.meta_title}}{{ else }}{{.node.title}} — {{ index $s "squilla.brand.name" }} blog{{ end }}</title>
+  <meta name="description" content="{{ if and $seo $seo.meta_description }}{{$seo.meta_description}}{{ else if .node.excerpt }}{{.node.excerpt}}{{ else }}{{.node.fields.excerpt}}{{ end }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+  {{- range .app.head_styles -}}<link rel="stylesheet" href="{{.}}">{{- end -}}
+  {{.app.block_styles}}
+</head>
+<body>
+  <div class="page">
+    {{renderLayoutBlock "site-header"}}
+
+    {{- /* Top strip: back link + meta (date / category / read / byline). */ -}}
+    {{- $catSlug := "" -}}
+    {{- with .node.taxonomies -}}
+      {{- with .category -}}
+        {{- if gt (len .) 0 -}}{{- $catSlug = index . 0 -}}{{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $date := "" -}}
+    {{- if .node.published_at -}}{{- $date = slice .node.published_at 0 10 -}}{{- end -}}
+    {{- $read := .node.fields.read_time -}}
+    {{- $author := .node.fields.author -}}
+    <section class="post-meta">
+      <div class="container container-narrow">
+        <a href="/blog" class="post-meta__back">← back to blog</a>
+        <div class="post-meta__strip">
+          {{- $first := true -}}
+          {{- with $date -}}
+            <span>{{.}}</span>
+            {{- $first = false -}}
+          {{- end -}}
+          {{- with $catSlug -}}
+            {{- if not $first -}}<span class="post-meta__sep">│</span>{{- end -}}
+            <span class="tag post-meta__tag">{{.}}</span>
+            {{- $first = false -}}
+          {{- end -}}
+          {{- with $read -}}
+            {{- if not $first -}}<span class="post-meta__sep">│</span>{{- end -}}
+            <span>{{.}}</span>
+            {{- $first = false -}}
+          {{- end -}}
+          {{- with $author -}}
+            {{- if not $first -}}<span class="post-meta__sep">│</span>{{- end -}}
+            <span>by {{.}}</span>
+            {{- $first = false -}}
+          {{- end -}}
+        </div>
+      </div>
+    </section>
+
+    {{- /* Article body — fills container-narrow to match post-meta width. */ -}}
+    <section style="padding-top: 0">
+      <div class="container container-narrow">
+        <article class="prose post-prose">
+          <h1>{{.node.title}}</h1>
+          {{ with .node.fields.excerpt }}<p style="font-size: 19px; color: var(--ink-2); margin-top: 1.2em">{{.}}</p>{{ end }}
+          {{.node.blocks_html}}
+        </article>
+
+        <div style="margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: 12px; color: var(--ink-3);">
+          <a href="/blog" style="color: var(--ink-2);">← all posts</a>
+        </div>
+      </div>
+    </section>
+
+    {{renderLayoutBlock "site-footer"}}
+  </div>
+  {{- range .app.foot_scripts -}}<script src="{{.}}" defer></script>{{- end -}}
+  {{.app.block_scripts}}
+</body>
+</html>

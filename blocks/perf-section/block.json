@@ -1,0 +1,110 @@
+{
+  "slug": "perf-section",
+  "name": "Performance / TTFB section",
+  "description": "Two-column section: bullet list of perf wins on the left, a 'live' TTFB widget with sweep animation, mini bar chart, and p50/p95/p99 stats on the right. JS animates the TTFB number and randomises bars.",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "eyebrow",
+      "label": "Eyebrow",
+      "type": "text"
+    },
+    {
+      "key": "heading",
+      "label": "Heading (HTML)",
+      "type": "richtext"
+    },
+    {
+      "key": "bullets",
+      "label": "Bullet points",
+      "type": "repeater",
+      "sub_fields": [
+        {
+          "label": "Text",
+          "type": "text",
+          "key": "text"
+        }
+      ]
+    },
+    {
+      "key": "ttfb_label",
+      "label": "TTFB widget label",
+      "type": "text"
+    },
+    {
+      "key": "ttfb_initial",
+      "label": "TTFB starting value (ms)",
+      "type": "number"
+    },
+    {
+      "key": "budget_text",
+      "label": "Budget marker label",
+      "type": "text"
+    },
+    {
+      "key": "tag_text",
+      "label": "Status tag",
+      "type": "text",
+      "help": "Top-right pill — design uses 'under budget'."
+    },
+    {
+      "key": "stats",
+      "label": "Latency stat cells",
+      "type": "repeater",
+      "sub_fields": [
+        {
+          "label": "Label",
+          "type": "text",
+          "key": "label"
+        },
+        {
+          "label": "Value",
+          "type": "text",
+          "key": "value"
+        }
+      ]
+    }
+  ],
+  "test_data": {
+    "stats": [
+      {
+        "label": "p50",
+        "value": "21ms"
+      },
+      {
+        "label": "p95",
+        "value": "38ms"
+      },
+      {
+        "label": "p99",
+        "value": "46ms"
+      }
+    ],
+    "bullets": [
+      {
+        "text": "Atomic configuration maps — hot-swapped without locks"
+      },
+      {
+        "text": "Pre-resolved layout trees — no template lookup at request time"
+      },
+      {
+        "text": "JSONB + GIN indexes for content — sub-millisecond field queries"
+      },
+      {
+        "text": "PostgreSQL connection pooling — saturated under load"
+      },
+      {
+        "text": "No N+1 queries — eager-loaded relations across all read paths"
+      },
+      {
+        "text": "Sub-50ms TTFB target on public pages, measured in CI"
+      }
+    ],
+    "eyebrow": "§ performance",
+    "heading": "Built for the metric<br/>that matters: TTFB.",
+    "tag_text": "under budget",
+    "ttfb_label": "LIVE TTFB · /recipes/scallops",
+    "budget_text": "50ms budget",
+    "ttfb_initial": 23
+  }
+}

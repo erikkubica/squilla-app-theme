@@ -1,0 +1,92 @@
+// doc_neighbors.tengo — find prev/next docs for a documentation node.
+// Walks the section + order ordering. Input must be a map with `id`.
+//   {{ filter "doc_neighbors" (dict "id" .node.id) }}
+//
+// Returns: { prev: <node-or-undef>, next: <node-or-undef> }.
+
+nodes := import("core/nodes")
+log   := import("core/log")
+
+input := value
+if is_undefined(input) { input = {} }
+
+result := { prev: undefined, next: undefined }
+
+if !is_undefined(input.id) {
+    current_id := input.id
+
+    res := nodes.query({
+        node_type: "documentation",
+        status:    "published",
+        limit:     500,
+        order_by:  "title asc"
+    })
+
+    if is_error(res) {
+        log.warn("doc_neighbors filter: nodes.query failed")
+    } else {
+        // Group docs by section, then sort each by `order`.
+        groups := {}
+        section_order := []
+        for n in res.nodes {
+            sec := "zzz"
+            if !is_undefined(n.fields_data) && !is_undefined(n.fields_data.section) {
+                sv := n.fields_data.section
+                if is_string(sv) { sec = sv } else if !is_undefined(sv.slug) { sec = sv.slug }
+            }
+            if is_undefined(groups[sec]) {
+                groups[sec] = []
+                section_order = append(section_order, sec)
+            }
+            order := 999
+            if !is_undefined(n.fields_data) && !is_undefined(n.fields_data.order) {
+                order = n.fields_data.order
+            }
+            groups[sec] = append(groups[sec], { id: n.id, slug: n.slug, title: n.title, url: n.full_url, order: order })
+        }
+
+        // Stable preferred-section ordering matches list_docs.tengo.
+        preferred := ["getting-started", "extensions", "themes", "scripting", "api"]
+        ordered := []
+        for p in preferred {
+            if !is_undefined(groups[p]) {
+                ordered = append(ordered, p)
+            }
+        }
+        for s in section_order {
+            seen := false
+            for p in ordered { if p == s { seen = true; break } }
+            if !seen { ordered = append(ordered, s) }
+        }
+
+        // Flatten in order, sorting each group by `order`.
+        flat := []
+        for sec in ordered {
+            items := groups[sec]
+            for i := 1; i < len(items); i++ {
+                j := i
+                for j > 0 && items[j].order < items[j-1].order {
+                    tmp := items[j-1]
+                    items[j-1] = items[j]
+                    items[j] = tmp
+                    j--
+                }
+            }
+            for it in items { flat = append(flat, it) }
+        }
+
+        // Find current.
+        idx := -1
+        for i, n in flat {
+            if n.id == current_id {
+                idx = i
+                break
+            }
+        }
+
+        if idx > 0                       { result.prev = flat[idx-1] }
+        if idx >= 0 && idx < len(flat)-1 { result.next = flat[idx+1] }
+    }
+}
+
+response = result

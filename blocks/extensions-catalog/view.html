@@ -1,0 +1,37 @@
+{{- /* Extensions catalog — pulls real extension nodes. Filter chips drive a
+       client-side filter+URL state (?source=core|community|verified|all). */ -}}
+{{- $exts := filter "list_extensions" (dict "limit" 500) -}}
+<section class="ext-cat" data-squilla-ext-catalog>
+  <div class="container container-wide">
+    <div class="ext-cat__filters">
+      {{ range $f := list
+        (dict "id" "all"       "label" "all")
+        (dict "id" "official"  "label" "official")
+        (dict "id" "verified"  "label" "verified")
+        (dict "id" "community" "label" "community") }}
+        <button type="button" class="ext-cat__filter" data-filter="{{$f.id}}"{{ if eq $f.id "all" }} aria-pressed="true"{{ end }}>{{$f.label}}</button>
+      {{ end }}
+      <span class="ext-cat__spacer"></span>
+      <span class="ext-cat__count" data-ext-count>{{ len $exts }} extensions</span>
+    </div>
+
+    <div class="ext-cat__cells" data-grid="3" data-ext-cells>
+      {{ range $exts }}
+        <div class="ext-cat__cell" data-tag="{{.source}}" data-color="{{.color}}">
+          <div class="ext-cat__row">
+            <div class="ext-cat__name">
+              <span class="ext-cat__chip"></span>
+              <span>{{.title}}</span>
+            </div>
+            <span class="tag ext-cat__tag">{{.source}}</span>
+          </div>
+          <p class="ext-cat__desc">{{.tagline}}</p>
+          <div class="ext-cat__foot">
+            <span>{{.kind}}</span>
+            <span>v{{.version}}</span>
+          </div>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</section>

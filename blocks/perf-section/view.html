@@ -1,0 +1,38 @@
+<section class="perf">
+  <div class="container container-wide">
+    <div class="perf__grid" data-cols="2-1">
+      <div>
+        <div class="h-eyebrow">{{.eyebrow}}</div>
+        <h2 class="perf__heading">{{ safeHTML .heading }}</h2>
+        <ul class="perf__points">
+          {{ range .bullets }}
+            <li><span class="perf__bullet">▸</span><span>{{.text}}</span></li>
+          {{ end }}
+        </ul>
+      </div>
+
+      <div class="perf__panel" data-squilla-perf>
+        <div class="perf__sweep" aria-hidden="true"></div>
+
+        <div class="perf__top">
+          <div>
+            <div class="perf__label">{{.ttfb_label}}</div>
+            <div class="perf__num"><span data-perf-num>{{.ttfb_initial}}</span><span class="perf__unit">ms</span></div>
+          </div>
+          <div class="tag perf__tag">{{.tag_text}}</div>
+        </div>
+
+        <div class="perf__chart" aria-hidden="true">
+          {{ range seq 48 }}<span class="perf__bar"></span>{{ end }}
+          <div class="perf__budget"><span>{{.budget_text}}</span></div>
+        </div>
+
+        <div class="perf__stats">
+          {{ range .stats }}
+            <div class="perf__stat-cell"><div class="perf__stat-lbl">{{.label}}</div><div class="perf__stat-val">{{.value}}</div></div>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

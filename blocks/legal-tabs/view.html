@@ -1,0 +1,22 @@
+<section class="legal" data-squilla-legal>
+  <div class="container container-narrow">
+    <div class="legal__tabs" role="tablist">
+      {{ range $i, $t := .tabs }}
+        <button type="button" class="legal__tab" role="tab" data-tab="{{$t.slug}}"{{ if eq $i 0 }} aria-selected="true"{{ end }}>{{$t.label}}</button>
+      {{ end }}
+    </div>
+
+    <article class="legal__panels">
+      {{ range $i, $t := .tabs }}
+        <div class="legal__panel" data-panel="{{$t.slug}}"{{ if ne $i 0 }} hidden{{ end }}>
+          {{ range $t.sections }}
+            <div class="legal__sec">
+              <h2 class="legal__h">{{.heading}}</h2>
+              <p class="legal__p">{{ safeHTML .body }}</p>
+            </div>
+          {{ end }}
+        </div>
+      {{ end }}
+    </article>
+  </div>
+</section>

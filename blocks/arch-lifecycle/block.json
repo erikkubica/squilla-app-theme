@@ -1,0 +1,53 @@
+{
+  "slug": "arch-lifecycle",
+  "name": "Request lifecycle table",
+  "description": "Time-stamped request-lifecycle table from the architecture page. Each row is { time, label, detail }.",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "eyebrow",
+      "label": "Eyebrow",
+      "type": "text"
+    },
+    {
+      "key": "heading",
+      "label": "Heading",
+      "type": "text"
+    },
+    {
+      "key": "rows",
+      "label": "Lifecycle rows",
+      "type": "repeater",
+      "sub_fields": [
+        {
+          "label": "Time stamp",
+          "type": "text",
+          "key": "time"
+        },
+        {
+          "label": "Label",
+          "type": "text",
+          "key": "label"
+        },
+        {
+          "label": "Detail (HTML allowed)",
+          "type": "text",
+          "key": "detail"
+        }
+      ]
+    }
+  ],
+  "test_data": {
+    "rows": [
+      { "time": "01", "label": "Fiber receives request", "detail": "router resolves to node handler" },
+      { "time": "02", "label": "Layout tree lookup",     "detail": "pre-resolved at activation; no DB query" },
+      { "time": "03", "label": "Node fetch",             "detail": "JSONB query · GIN index hit · single round-trip" },
+      { "time": "04", "label": "Filter chain",           "detail": "extensions hook into filter.apply" },
+      { "time": "05", "label": "Template render",        "detail": "html/template with custom funcs" },
+      { "time": "06", "label": "Response flush",         "detail": "compressed at the response writer (gzip / brotli)" },
+      { "time": "07", "label": "Done",                   "detail": "event.emit(\"page.served\") · async" }
+    ],
+    "eyebrow": "§ request lifecycle",
+    "heading": "From URL to bytes, in seven steps."
+  }
+}

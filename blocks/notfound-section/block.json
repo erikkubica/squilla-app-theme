@@ -1,0 +1,101 @@
+{
+  "slug": "notfound-section",
+  "name": "404 — not found",
+  "description": "Full-bleed 404 section. The compound-eye motif behind the content is rendered by JS.",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "label",
+      "label": "Top label (red)",
+      "type": "text"
+    },
+    {
+      "key": "code",
+      "label": "Big code",
+      "type": "text",
+      "help": "Renders with the iridescent gradient."
+    },
+    {
+      "key": "heading",
+      "label": "Heading",
+      "type": "text"
+    },
+    {
+      "key": "lead",
+      "label": "Lead paragraph",
+      "type": "text"
+    },
+    {
+      "key": "console_lines",
+      "label": "Fake-console lines",
+      "type": "repeater",
+      "sub_fields": [
+        {
+          "label": "Line (HTML allowed)",
+          "type": "text",
+          "key": "html"
+        }
+      ]
+    },
+    {
+      "key": "buttons",
+      "label": "Buttons",
+      "type": "repeater",
+      "sub_fields": [
+        {
+          "label": "Link",
+          "type": "link",
+          "key": "link"
+        },
+        {
+          "label": "Filled?",
+          "type": "toggle",
+          "key": "is_primary"
+        }
+      ]
+    }
+  ],
+  "test_data": {
+    "label": "HTTP 404 · UNRENDERED",
+    "code": "404",
+    "heading": "This page is unrendered.",
+    "lead": "The route resolver couldn't match this URL to a node, a layout, or an extension's public route. The kernel is fine. The link is sus.",
+    "console_lines": [
+      {
+        "html": "<span style=\"color: var(--ink-3)\">$ core.render.node_preview --url=<span data-notfound-path>/missing</span></span>"
+      },
+      {
+        "html": "<span style=\"color: var(--coral)\">← err: NodeNotFound (no row in content_nodes matching slug)</span>"
+      },
+      {
+        "html": "<span style=\"color: var(--ink-3)\">→ try: core.node.list, or fix the link</span>"
+      }
+    ],
+    "buttons": [
+      {
+        "link": {
+          "text": "← back to home",
+          "url": "/",
+          "target": "_self"
+        },
+        "is_primary": true
+      },
+      {
+        "link": {
+          "text": "read the docs",
+          "url": "/docs",
+          "target": "_self"
+        },
+        "is_primary": false
+      },
+      {
+        "link": {
+          "text": "browse showcase",
+          "url": "/showcase",
+          "target": "_self"
+        },
+        "is_primary": false
+      }
+    ]
+  }
+}

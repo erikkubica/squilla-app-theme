@@ -1,0 +1,138 @@
+{
+  "slug": "arch-diagram",
+  "name": "Architecture diagram",
+  "description": "Two-column section: copy + 'hard rule' callout on the left, six-layer architecture diagram on the right (with hover effects). Layers and legend cells are repeaters so editors can rename / re-order / add new ones.",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "eyebrow",
+      "label": "Eyebrow",
+      "type": "text"
+    },
+    {
+      "key": "heading",
+      "label": "Heading (HTML)",
+      "type": "richtext",
+      "help": "Multi-line section heading. <br/> for line breaks."
+    },
+    {
+      "key": "lead",
+      "label": "Lead paragraph",
+      "type": "textarea"
+    },
+    {
+      "key": "rule_label",
+      "label": "Hard-rule label",
+      "type": "text",
+      "help": "Tiny accent label inside the callout (the design uses 'HARD RULE')."
+    },
+    {
+      "key": "rule",
+      "label": "Hard-rule body",
+      "type": "textarea"
+    },
+    {
+      "key": "layers",
+      "label": "Architecture layers",
+      "type": "repeater",
+      "help": "Six recommended; render top-to-bottom in declared order. Color: ink-3 | coral | teal | violet | magenta | lime.",
+      "sub_fields": [
+        {
+          "label": "Label",
+          "type": "text",
+          "key": "label"
+        },
+        {
+          "label": "Description",
+          "type": "text",
+          "key": "desc"
+        },
+        {
+          "label": "Color token",
+          "type": "select",
+          "options": [
+            "ink-3",
+            "coral",
+            "teal",
+            "violet",
+            "magenta",
+            "lime",
+            "amber"
+          ],
+          "default": "teal",
+          "key": "color"
+        }
+      ]
+    },
+    {
+      "key": "legend",
+      "label": "Legend cells (footer)",
+      "type": "repeater",
+      "sub_fields": [
+        {
+          "label": "Top label",
+          "type": "text",
+          "key": "key"
+        },
+        {
+          "label": "Bottom label",
+          "type": "text",
+          "key": "val"
+        }
+      ]
+    }
+  ],
+  "test_data": {
+    "lead": "Squilla's architecture is borrowed from operating systems: the kernel does the minimum required to be a CMS, and everything else is a sovereign extension. Disable an extension and there is no dead code in core. Add a new extension and it brings its own database tables, HTTP routes, admin UI pages, scripts, and migrations.",
+    "rule": "If disabling an extension would leave dead code in core, that code belongs in the extension, not the core.",
+    "layers": [
+      {
+        "desc": "Fiber HTTP · pre-resolved layouts · cached",
+        "color": "ink-3",
+        "label": "PUBLIC WEB"
+      },
+      {
+        "desc": "Model Context Protocol · ~50 tools · stdio + http",
+        "color": "coral",
+        "label": "MCP SERVER"
+      },
+      {
+        "desc": "nodes · rendering · auth · event bus · capability gates",
+        "color": "teal",
+        "label": "KERNEL (CoreAPI)"
+      },
+      {
+        "desc": "HashiCorp go-plugin · bidirectional · GRPCBroker",
+        "color": "violet",
+        "label": "gRPC PLUGIN BUS"
+      },
+      {
+        "desc": "media · forms · email · sitemap · blocks · providers",
+        "color": "magenta",
+        "label": "EXTENSIONS"
+      },
+      {
+        "desc": "JSONB · GIN indexes · per-extension migrations · pooling",
+        "color": "lime",
+        "label": "POSTGRESQL 16"
+      }
+    ],
+    "legend": [
+      {
+        "key": "kernel",
+        "val": "internal/cms · internal/coreapi"
+      },
+      {
+        "key": "extensions",
+        "val": "extensions/*/plugin.go"
+      },
+      {
+        "key": "themes",
+        "val": "themes/*/theme.tengo"
+      }
+    ],
+    "eyebrow": "§ architecture",
+    "heading": "A kernel<br/>for kernels.",
+    "rule_label": "HARD RULE"
+  }
+}

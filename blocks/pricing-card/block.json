@@ -1,0 +1,118 @@
+{
+  "slug": "pricing-card",
+  "name": "Pricing card",
+  "description": "Single zero-price pricing card with badge, feature checklist, two CTAs, and a small FAQ list.",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "badge",
+      "label": "Top badge",
+      "type": "text"
+    },
+    {
+      "key": "price",
+      "label": "Price",
+      "type": "text",
+      "help": "Big mono number — '$0', 'free', etc."
+    },
+    {
+      "key": "subtitle",
+      "label": "Subtitle",
+      "type": "text"
+    },
+    {
+      "key": "features",
+      "label": "Feature bullets",
+      "type": "repeater",
+      "sub_fields": [
+        {
+          "label": "Text",
+          "type": "text",
+          "key": "text"
+        }
+      ]
+    },
+    {
+      "key": "primary",
+      "label": "Primary CTA",
+      "type": "link"
+    },
+    {
+      "key": "secondary",
+      "label": "Secondary CTA",
+      "type": "link"
+    },
+    {
+      "key": "faq_label",
+      "label": "FAQ section label",
+      "type": "text"
+    },
+    {
+      "key": "faq",
+      "label": "FAQ entries",
+      "type": "repeater",
+      "sub_fields": [
+        {
+          "label": "Question",
+          "type": "text",
+          "key": "q"
+        },
+        {
+          "label": "Answer (continues inline)",
+          "type": "textarea",
+          "key": "a"
+        }
+      ]
+    }
+  ],
+  "test_data": {
+    "faq": [
+      {
+        "a": "No, and there are no plans for one. Run it yourself or run nothing.",
+        "q": "Is there a managed/hosted version?"
+      },
+      {
+        "a": "No. The kernel doesn't know what an enterprise is.",
+        "q": "Is there an enterprise tier?"
+      },
+      {
+        "a": "The license can't. GPL-3.0 is one-way.",
+        "q": "Will pricing change later?"
+      }
+    ],
+    "badge": "FREE · GPL-3.0 · FOREVER",
+    "price": "$0",
+    "primary": {
+      "url": "/docs/installation",
+      "text": "docker compose up",
+      "target": "_self"
+    },
+    "features": [
+      {
+        "text": "Full kernel + all built-in extensions"
+      },
+      {
+        "text": "~50 MCP tools across 15 domains"
+      },
+      {
+        "text": "Sub-50ms TTFB target"
+      },
+      {
+        "text": "No telemetry · no CLA"
+      },
+      {
+        "text": "GPL-3.0 license"
+      },
+      {
+        "text": "Community support (Discord, GitHub)"
+      }
+    ],
+    "subtitle": "no usage limits · no seat caps · no feature gates",
+    "faq_label": "// FAQ",
+    "secondary": {
+      "url": "https://github.com/squilla-cms/squilla",
+      "text": "View on GitHub ↗",
+      "target": "_blank"
+    }
+  }
+}

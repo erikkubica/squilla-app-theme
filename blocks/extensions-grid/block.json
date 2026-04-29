@@ -1,0 +1,42 @@
+{
+  "slug": "extensions-grid",
+  "name": "Extensions grid (homepage 6)",
+  "description": "Homepage section showing the first 6 extension nodes (sorted by title). Pulls live data via the list_extensions filter — kind, version, routes, tables — so editors only manage the extension nodes themselves.",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "eyebrow",
+      "label": "Eyebrow",
+      "type": "text",
+      "help": "Small all-caps label above the heading. The design uses a §-prefixed phrase, e.g. '§ built-in extensions'."
+    },
+    {
+      "key": "heading",
+      "label": "Heading (HTML)",
+      "type": "richtext",
+      "help": "Two-line section heading. <br/> for the line break."
+    },
+    {
+      "key": "lead",
+      "label": "Lead paragraph",
+      "type": "textarea",
+      "help": "Right-aligned blurb under the heading. ~40 chars per line."
+    },
+    {
+      "key": "cta",
+      "label": "Bottom CTA",
+      "type": "link",
+      "help": "Button below the grid. Stores text/url/target."
+    }
+  ],
+  "test_data": {
+    "cta": {
+      "url": "/docs/extension-grpc",
+      "text": "build your own extension",
+      "target": "_self"
+    },
+    "lead": "Squilla ships with reference extensions that exercise every part of the extension API. They are not core code in disguise — they're the same gRPC plugins you'd build yourself.",
+    "eyebrow": "§ built-in extensions",
+    "heading": "Six extensions out of the box.<br/>Built like a third-party would build them."
+  }
+}

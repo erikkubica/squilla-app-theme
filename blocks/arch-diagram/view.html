@@ -1,0 +1,40 @@
+<section class="arch-diagram">
+  <div class="container container-wide">
+    <div class="arch-diagram__grid" data-cols="2-1">
+      <div>
+        <div class="h-eyebrow">{{.eyebrow}}</div>
+        <h2 class="arch-diagram__heading">{{ safeHTML .heading }}</h2>
+        <p class="arch-diagram__lead">{{.lead}}</p>
+        <div class="arch-diagram__rule">
+          <div class="arch-diagram__rule-label">{{.rule_label}}</div>
+          <p>{{.rule}}</p>
+        </div>
+      </div>
+
+      <div class="arch-diagram__panel">
+        <div class="eyegrid arch-diagram__eyegrid" aria-hidden="true"></div>
+        <div class="arch-diagram__layers">
+          {{ range $i, $l := .layers }}
+            <div class="arch-diagram__layer" data-color="{{$l.color}}">
+              <span class="arch-diagram__chip"></span>
+              <div>
+                <div class="arch-diagram__layer-title">{{$l.label}}</div>
+                <div class="arch-diagram__layer-desc">{{$l.desc}}</div>
+              </div>
+              <div class="arch-diagram__layer-num">L{{$i}}</div>
+            </div>
+          {{ end }}
+        </div>
+
+        <div class="arch-diagram__legend">
+          {{ range .legend }}
+            <div class="arch-diagram__legend-cell">
+              <div class="arch-diagram__legend-key">{{.key}}</div>
+              <div class="arch-diagram__legend-val">{{.val}}</div>
+            </div>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

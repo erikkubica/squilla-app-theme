@@ -1,0 +1,148 @@
+// seeds/extensions.tengo — Marketplace listings (extension node type).
+//
+// Mirrors what actually lives under extensions/ in the repo. Eight entries:
+// seven active reference extensions plus the `hello-extension` demo. No
+// fabricated entries — the catalog must reflect codebase reality.
+
+nodes := import("core/nodes")
+terms := import("core/terms")
+log   := import("core/log")
+
+ensure_source := func(slug, name) {
+    found := terms.list("extension", "source")
+    if !is_error(found) {
+        for t in found {
+            if t.slug == slug { return true }
+        }
+    }
+    res := terms.create({ taxonomy: "source", node_type: "extension", slug: slug, name: name })
+    return !is_error(res)
+}
+
+ensure_ext := func(slug, title, fields, body) {
+    res := nodes.query({ node_type: "extension", slug: slug, limit: 1 })
+    if !is_error(res) && res.total > 0 {
+        return
+    }
+    tagline := ""
+    if !is_undefined(fields.tagline) { tagline = fields.tagline }
+    nodes.create({
+        title:        title,
+        slug:         slug,
+        node_type:    "extension",
+        status:       "published",
+        excerpt:      tagline,
+        fields_data:  fields,
+        seo_settings: {
+            meta_title:       title + " — Squilla extension",
+            meta_description: tagline
+        },
+        blocks_data: [
+            { type: "doc-content", fields: { body: body } }
+        ]
+    })
+}
+
+tbls := func(names) {
+    out := []
+    for n in names { out = append(out, { name: n }) }
+    return out
+}
+
+export {
+    run: func() {
+        log.info("[squilla:seed] seeding extensions catalog")
+
+        ensure_source("official",  "Official")
+        ensure_source("community", "Community")
+        ensure_source("verified",  "Verified")
+
+        ensure_ext("media-manager", "media-manager", {
+            tagline:   "Upload, organise, and serve images, documents, and any other file. Public routes for /media/* and /media/cache/*.",
+            source:    { slug: "official" },
+            kind:      "gRPC plugin",
+            version:   "1.0.0",
+            author:    "Squilla Team",
+            routes:    2,
+            tables:    tbls(["media_files", "media_image_sizes"]),
+            downloads: 0, rating: 5, price: 0, featured: true
+        }, `<p><strong>media-manager</strong> is the reference media stack for Squilla. It runs as a gRPC plugin, owns its own tables (<code>media_files</code>, <code>media_image_sizes</code>), and exposes the <code>media</code> field type used across the admin and the public site.</p><h3>What it gives you</h3><ul><li>Drag-and-drop uploads with progress, retries, MIME validation</li><li>Public serving via <code>/media/*</code> and on-the-fly variants via <code>/media/cache/*</code></li><li>The <code>MediaFieldInput</code> picker, registered as a built-in field type</li><li>Image / gallery / file modes, all backed by the same node-attachment model</li></ul><h3>Why it lives outside core</h3><p>Image optimisation, variant generation, and cache routing are all feature work — not infrastructure. Disable media-manager and the kernel keeps serving content nodes; the file picker simply disappears from the editor.</p>`)
+
+        ensure_ext("forms", "forms", {
+            tagline:   "Production-grade form builder. File uploads, CAPTCHA, conditional logic, GDPR fields, webhooks, email notifications.",
+            source:    { slug: "official" },
+            kind:      "gRPC plugin",
+            version:   "2.0.0",
+            author:    "Squilla Team",
+            routes:    5,
+            tables:    tbls(["forms", "form_submissions", "form_webhook_logs"]),
+            downloads: 0, rating: 5, price: 0, featured: true
+        }, `<p><strong>forms</strong> is the form-builder extension. gRPC plugin, full admin micro-frontend at <code>/admin/ext/forms</code>, public submission endpoint at <code>/forms/submit/*</code>.</p><h3>What it gives you</h3><ul><li>Visual builder with text, select, file-upload, GDPR-consent, and conditional-logic fields</li><li>The <code>vibe-form</code> content block — drop it on any page to render a form</li><li>The <code>form_selector</code> field type — pick a form from the editor when authoring blocks</li><li>Submissions stored in <code>form_submissions</code>, browsable in the admin with filters and CSV export</li><li>Outbound webhooks (logged to <code>form_webhook_logs</code>) and email notifications via the email extension</li></ul><h3>Capabilities declared</h3><p><code>data:read</code>, <code>data:write</code>, <code>data:delete</code>, <code>email:send</code>, <code>files:write</code>, <code>files:delete</code>, <code>http:fetch</code>, <code>events:emit</code>, <code>users:read</code>, <code>log:write</code>.</p>`)
+
+        ensure_ext("email-manager", "email-manager", {
+            tagline:   "Email templates, base layouts, sending rules, and a delivery log — fronting any email-provider extension via the event bus.",
+            source:    { slug: "official" },
+            kind:      "gRPC plugin",
+            version:   "1.0.0",
+            author:    "Squilla Team",
+            routes:    9,
+            tables:    tbls(["email_templates", "email_layouts", "email_rules", "email_logs"]),
+            downloads: 0, rating: 5, price: 0, featured: true
+        }, `<p><strong>email-manager</strong> is the management layer for transactional email. The kernel emits an <code>email.send</code> event; this extension owns the templates, the rendered output, and the delivery log. The actual SMTP / Resend / etc. transport is a separate provider extension that subscribes to <code>email.send</code>.</p><h3>What it gives you</h3><ul><li>Template editor with subject, base layout, plain-text + HTML bodies, and Go-template variables</li><li>Reusable base layouts (<code>email_layouts</code>) for consistent header/footer styling</li><li>Rules engine — fire a template when a specific event matches a condition</li><li>Delivery log with full payload, render output, provider response, retries</li><li>Settings page that other provider extensions inject their own settings into via slot</li></ul><h3>Pairs with</h3><p><code>resend-provider</code> (Tengo) and <code>smtp-provider</code> (gRPC) — either subscribes to <code>email.send</code> and ships the bytes.</p>`)
+
+        ensure_ext("sitemap-generator", "sitemap-generator", {
+            tagline:   "Auto-generated XML sitemap that rebuilds when content changes. Subscribes to node + theme events.",
+            source:    { slug: "official" },
+            kind:      "gRPC plugin",
+            version:   "1.0.0",
+            author:    "Squilla Team",
+            routes:    1,
+            tables:    [],
+            downloads: 0, rating: 5, price: 0, featured: false
+        }, `<p><strong>sitemap-generator</strong> serves <code>/sitemap.xml</code> for any Squilla site without configuration. It subscribes to node lifecycle events (<code>node.created</code>, <code>node.updated</code>, <code>node.deleted</code>) and theme events, and rebuilds its index in the background.</p><h3>What it gives you</h3><ul><li>A registered public route at <code>/sitemap.xml</code></li><li>Automatic rebuild on content changes — no cron, no manual trigger</li><li>Two custom events: <code>sitemap.rebuild</code> (force) and <code>sitemap.get</code> (return the current index)</li></ul><h3>Capabilities declared</h3><p><code>nodes:read</code>, <code>settings:read</code>, <code>settings:write</code>, <code>events:subscribe</code>, <code>events:emit</code>, <code>routes:register</code>, <code>log:write</code>.</p>`)
+
+        ensure_ext("content-blocks", "content-blocks", {
+            tagline:   "Forty production-ready content blocks plus ten page templates. Pure manifest — no plugin binary required.",
+            source:    { slug: "official" },
+            kind:      "Manifest only",
+            version:   "1.0.0",
+            author:    "Squilla Team",
+            routes:    0,
+            tables:    [],
+            downloads: 0, rating: 5, price: 0, featured: true
+        }, `<p><strong>content-blocks</strong> is the kitchen-sink block library. Forty blocks — paragraph, heading, quote, code, image, slider, before-after, CTA banners, pricing, testimonials, accordion, tabs, comparison tables, contact forms, and so on — plus ten ready-made page templates (services, pricing, blog index, contact, documentation…).</p><h3>What it gives you</h3><ul><li>40 block types under the <code>cb-*</code> prefix, all defined declaratively (manifest + view template)</li><li>10 page templates an editor can drop in as a starting point</li><li>Zero plugin binary — it's a manifest-only extension, ship-by-copy</li></ul><h3>Why it's an extension</h3><p>The blocks aren't required for the kernel to function — disable the extension and they unload cleanly. They're packaged separately so a stripped-down build (e.g. a docs-only site using the squilla theme's own blocks) can opt out.</p>`)
+
+        ensure_ext("resend-provider", "resend-provider", {
+            tagline:   "Send transactional email via Resend.com. Pure Tengo — the entire transport is a settings page and a script.",
+            source:    { slug: "official" },
+            kind:      "Tengo only",
+            version:   "1.0.0",
+            author:    "Squilla Team",
+            routes:    0,
+            tables:    [],
+            downloads: 0, rating: 5, price: 0, featured: false
+        }, `<p><strong>resend-provider</strong> is the smallest possible reference for a Tengo-only extension. No Go binary, no migrations, no admin pages of its own — just a settings schema (api_key, from_name, from_email) and a Tengo script that subscribes to <code>email.send</code> and POSTs the payload to the Resend API.</p><h3>Why it's a useful pattern</h3><p>If your extension only needs to react to events, register filters, or expose simple HTTP routes, you don't need a gRPC plugin. The whole transport here is settings + one Tengo file. The Settings UI integrates via the <code>email-settings</code> slot exposed by email-manager.</p><h3>Capabilities declared</h3><p><code>settings:read</code>, <code>events:subscribe</code>, <code>http:fetch</code>, <code>log:write</code>.</p>`)
+
+        ensure_ext("smtp-provider", "smtp-provider", {
+            tagline:   "Send email via any SMTP server. The drop-in alternative to resend-provider for self-hosted setups.",
+            source:    { slug: "official" },
+            kind:      "gRPC plugin",
+            version:   "1.0.0",
+            author:    "Squilla Team",
+            routes:    0,
+            tables:    [],
+            downloads: 0, rating: 5, price: 0, featured: false
+        }, `<p><strong>smtp-provider</strong> is the SMTP transport for Squilla's email pipeline. It's a gRPC plugin (so it can talk to long-lived SMTP connections from a separate process) and exposes its own settings schema covering host, port, encryption (none / TLS / STARTTLS), credentials, and from-address.</p><h3>What it gives you</h3><ul><li>Subscribes to <code>email.send</code> and dispatches via Go's <code>net/smtp</code></li><li>Settings page injected into the Email → Settings tab via the <code>email-settings</code> slot</li><li>Sensitive fields (password) marked in the schema so the UI masks them</li></ul><h3>Capabilities declared</h3><p><code>settings:read</code>, <code>events:subscribe</code>, <code>log:write</code>.</p>`)
+
+        ensure_ext("hello-extension", "hello-extension", {
+            tagline:   "Tiny demo extension. Reads its manifest, declares an asset, does nothing scary. Read the source, then build your own.",
+            source:    { slug: "official" },
+            kind:      "Manifest only",
+            version:   "1.0.0",
+            author:    "Squilla Team",
+            routes:    0,
+            tables:    [],
+            downloads: 0, rating: 4, price: 0, featured: false
+        }, `<p><strong>hello-extension</strong> is the canonical "What does the smallest possible Squilla extension look like?" package. Nothing more. It ships an <code>extension.json</code>, declares one asset (a banner image), and stops there.</p><h3>What it teaches</h3><ul><li>The bare-minimum manifest fields: slug, name, version, description, author</li><li>How <code>assets[]</code> is declared and resolved at activation time</li><li>That an extension can be useful even with no plugin, no migrations, no admin UI</li></ul><p>Ships disabled by default. Activate from the Extensions admin or via <code>core.extension.activate</code> if you want to play with it.</p>`)
+    }
+}

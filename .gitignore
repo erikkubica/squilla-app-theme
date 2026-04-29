@@ -1,0 +1,47 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+*~
+
+# Editors / IDEs
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+.project
+.classpath
+.settings/
+.history/
+nbproject/
+
+# AI tooling
+.claude/
+.cursor/
+.aider*
+.codeium/
+.continue/
+.windsurf/
+.github-copilot/
+CLAUDE.local.md
+
+# Node / build artefacts (in case a block ever ships its own bundler)
+node_modules/
+dist/
+build/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Local scratch
+.tmp/
+.cache/
+*.bak

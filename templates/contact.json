@@ -1,0 +1,14 @@
+{
+  "name": "Contact",
+  "description": "Page header only — drop a 'forms-extension' block to add a form.",
+  "thumbnail": "",
+  "blocks": [
+    {
+      "type": "page-header",
+      "fields": {
+        "title": "Get in touch.",
+        "eyebrow": "§ contact"
+      }
+    }
+  ]
+}

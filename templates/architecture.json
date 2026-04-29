@@ -1,0 +1,115 @@
+{
+  "name": "Architecture",
+  "description": "Page header, kernel-and-extensions diagram, request lifecycle table.",
+  "thumbnail": "",
+  "blocks": [
+    {
+      "type": "page-header",
+      "fields": {
+        "sub": "Squilla borrows from operating-system design. The kernel manages content nodes, rendering, auth, the CoreAPI, the event bus, and the MCP server. Anything feature-specific is a sovereign gRPC extension.",
+        "title": "The kernel does six things. The extensions do everything else.",
+        "eyebrow": "§ architecture"
+      }
+    },
+    {
+      "type": "arch-diagram",
+      "fields": {
+        "lead": "Squilla's architecture is borrowed from operating systems: the kernel does the minimum required to be a CMS, and everything else is a sovereign extension. Disable an extension and there is no dead code in core. Add a new extension and it brings its own database tables, HTTP routes, admin UI pages, scripts, and migrations.",
+        "rule": "If disabling an extension would leave dead code in core, that code belongs in the extension, not the core.",
+        "layers": [
+          {
+            "desc": "Fiber HTTP · pre-resolved layouts · cached",
+            "color": "ink-3",
+            "label": "PUBLIC WEB"
+          },
+          {
+            "desc": "Model Context Protocol · ~50 tools · stdio + http",
+            "color": "coral",
+            "label": "MCP SERVER"
+          },
+          {
+            "desc": "nodes · rendering · auth · event bus · capability gates",
+            "color": "teal",
+            "label": "KERNEL (CoreAPI)"
+          },
+          {
+            "desc": "HashiCorp go-plugin · bidirectional · GRPCBroker",
+            "color": "violet",
+            "label": "gRPC PLUGIN BUS"
+          },
+          {
+            "desc": "media · forms · email · sitemap · blocks · providers",
+            "color": "magenta",
+            "label": "EXTENSIONS"
+          },
+          {
+            "desc": "JSONB · GIN indexes · per-extension migrations · pooling",
+            "color": "lime",
+            "label": "POSTGRESQL 16"
+          }
+        ],
+        "legend": [
+          {
+            "key": "kernel",
+            "val": "internal/cms · internal/coreapi"
+          },
+          {
+            "key": "extensions",
+            "val": "extensions/*/plugin.go"
+          },
+          {
+            "key": "themes",
+            "val": "themes/*/theme.tengo"
+          }
+        ],
+        "eyebrow": "§ architecture",
+        "heading": "A kernel<br/>for kernels.",
+        "rule_label": "HARD RULE"
+      }
+    },
+    {
+      "type": "arch-lifecycle",
+      "fields": {
+        "rows": [
+          {
+            "time": "00ms",
+            "label": "Fiber receives request",
+            "detail": "router resolves to node handler"
+          },
+          {
+            "time": "01ms",
+            "label": "Layout tree lookup",
+            "detail": "pre-resolved at activation; no DB query"
+          },
+          {
+            "time": "03ms",
+            "label": "Node fetch",
+            "detail": "JSONB query · GIN index hit · 1 round-trip"
+          },
+          {
+            "time": "09ms",
+            "label": "Filter chain",
+            "detail": "extensions hook into filter.apply"
+          },
+          {
+            "time": "14ms",
+            "label": "Template render",
+            "detail": "html/template with custom funcs"
+          },
+          {
+            "time": "18ms",
+            "label": "Response flush",
+            "detail": "compressed · 4.1KB · TTFB recorded"
+          },
+          {
+            "time": "23ms",
+            "label": "Done",
+            "detail": "event.emit(&quot;page.served&quot;) · async"
+          }
+        ],
+        "eyebrow": "§ request lifecycle",
+        "heading": "From URL to bytes, in 23ms."
+      }
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "slug": "about-principles",
+  "name": "About — principles",
+  "description": "Numbered list of design principles. Each item: heading + body. Numbering is auto (01, 02, 03 …).",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "eyebrow",
+      "label": "Eyebrow",
+      "type": "text"
+    },
+    {
+      "key": "items",
+      "label": "Principles",
+      "type": "repeater",
+      "sub_fields": [
+        {
+          "label": "Heading",
+          "type": "text",
+          "key": "heading"
+        },
+        {
+          "label": "Body",
+          "type": "textarea",
+          "key": "body"
+        }
+      ]
+    }
+  ],
+  "test_data": {
+    "items": [
+      {
+        "body": "Not as a \"ChatGPT integration.\" As primary operators with the same API surface humans use.",
+        "heading": "AI agents are first-class users."
+      },
+      {
+        "body": "Sub-50ms TTFB on every public page. Always.",
+        "heading": "Performance is non-negotiable."
+      },
+      {
+        "body": "If disabling a feature would leave dead code in core, that feature belongs in an extension.",
+        "heading": "The kernel stays small."
+      },
+      {
+        "body": "Their tables, their UI, their scripts, their migrations. The kernel doesn't reach inside.",
+        "heading": "Extensions are sovereign."
+      },
+      {
+        "body": "docker compose up and you're publishing. No package managers, no cron jobs, no PHP-FPM tuning.",
+        "heading": "One-shot setup."
+      }
+    ],
+    "eyebrow": "§ principles"
+  }
+}

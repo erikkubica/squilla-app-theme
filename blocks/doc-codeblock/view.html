@@ -1,0 +1,13 @@
+<div class="code" data-language="{{or .language "plaintext"}}">
+  <div class="code-header">
+    {{- if .show_dots -}}
+    <span class="dot dot-coral"></span>
+    <span class="dot dot-amber"></span>
+    <span class="dot dot-lime"></span>
+    <span class="filename">{{.file}}</span>
+    {{- else -}}
+    <span class="filename">{{.file}}</span>
+    {{- end -}}
+  </div>
+  {{ safeHTML .body }}
+</div>

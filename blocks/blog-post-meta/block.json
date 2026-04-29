@@ -1,0 +1,20 @@
+{
+  "slug":        "blog-post-meta",
+  "name":        "Blog post — back link + meta strip",
+  "description": "Top of a blog post: 'back to blog' link + date / tag / read time / byline strip. Use before the prose body.",
+  "category":    "squilla",
+  "field_schema": [
+    { "key": "date",   "label": "Publish date",   "type": "text" },
+    { "key": "tag",    "label": "Category tag",   "type": "text" },
+    { "key": "color",  "label": "Tag color token (teal | violet | magenta | coral | lime | amber)", "type": "text" },
+    { "key": "read",   "label": "Read time",      "type": "text" },
+    { "key": "author", "label": "Author byline",  "type": "text" }
+  ],
+  "test_data": {
+    "date":   "2026-04-12",
+    "tag":    "engineering",
+    "color":  "coral",
+    "read":   "13 min read",
+    "author": "by Mara Quint"
+  }
+}

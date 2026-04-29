@@ -1,0 +1,28 @@
+{
+  "slug": "page-header",
+  "name": "Page header (eyebrow + title + sub)",
+  "description": "Standard sub-page header used at the top of features, architecture, extensions, themes, about, blog, etc. Renders eyebrow, large title, and an optional subtitle paragraph.",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "eyebrow",
+      "label": "Eyebrow",
+      "type": "text"
+    },
+    {
+      "key": "title",
+      "label": "Title",
+      "type": "text"
+    },
+    {
+      "key": "sub",
+      "label": "Subtitle",
+      "type": "textarea"
+    }
+  ],
+  "test_data": {
+    "sub": "Squilla borrows from operating-system design. The kernel manages content nodes, rendering, auth, the CoreAPI, the event bus, and the MCP server. Anything feature-specific is a sovereign gRPC extension.",
+    "title": "The kernel does six things. The extensions do everything else.",
+    "eyebrow": "§ architecture"
+  }
+}

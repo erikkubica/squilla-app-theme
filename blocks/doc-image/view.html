@@ -1,0 +1,6 @@
+{{- /* Bare <figure> — relies on the docs-main article.prose wrapper for
+       margin and figcaption typography. */ -}}
+<figure>
+  <img src="{{.image.url}}" alt="{{.image.alt}}">
+  {{ with .caption }}<figcaption>{{.}}</figcaption>{{ end }}
+</figure>

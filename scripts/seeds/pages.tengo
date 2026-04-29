@@ -1,0 +1,448 @@
+// seeds/pages.tengo — Idempotent page seeds.
+//
+// Each page = one ContentNode (`page` node type) with `blocks_data` listing
+// the design's sections in order. Pattern: existence-check by slug; don't
+// overwrite editors' changes. Layout selection happens implicitly via the
+// `default` layout — except docs pages (handled in seeds/docs.tengo) which
+// will use the `docs` layout once layout-per-node-type wiring lands.
+
+nodes    := import("core/nodes")
+settings := import("core/settings")
+log      := import("core/log")
+
+// Per-page excerpt + SEO. meta_title doubles as the <title> SEO override;
+// meta_description is the meta-description. Excerpt is also stored at the
+// top-level node.excerpt for templates that fall back to it.
+PAGE_META := {
+    "home":         { excerpt: "An open-source, Go-based CMS designed so an AI agent can build, populate, and operate an entire website. Kernel + sovereign extensions, MCP-first, sub-50ms TTFB.",            meta_title: "Squilla — The CMS where AI does the work.",                                meta_description: "Open-source, Go-based, AI-native CMS. Kernel + extension architecture, MCP-driven, sub-50ms public renders. GPL-3.0, no telemetry." },
+    "features":     { excerpt: "Every Squilla capability mapped to the kernel module or built-in extension that ships it. No wishlist — every line is wired and on GitHub.",                                  meta_title: "Features — Squilla",                                                        meta_description: "Content modelling, MCP control surface, theme engine, capability-scoped extensions, sub-50ms renders. The full feature list with the receipts." },
+    "architecture": { excerpt: "How Squilla's kernel + extension model maps to a request lifecycle: HTTP → kernel → CoreAPI → gRPC plugin bus → PostgreSQL JSONB.",                                            meta_title: "Architecture — Squilla",                                                    meta_description: "The kernel-vs-extension split, request lifecycle, hot activation, capability scopes, and where every byte of work happens." },
+    "extensions":   { excerpt: "The eight reference extensions that ship with Squilla v0.1.0 — media, forms, email, sitemap, content blocks, SMTP / Resend providers, and the hello demo.",                    meta_title: "Extensions — Squilla",                                                      meta_description: "Browse the eight reference extensions that ship with Squilla. Each one owns its tables, admin UI, and gRPC plugin." },
+    "themes":       { excerpt: "Squilla themes ship layouts, partials, content blocks, and a Tengo seed script. Activate one and the CMS reorganises itself — no restart.",                                  meta_title: "Themes — Squilla",                                                          meta_description: "Three reference themes for marketing sites, single-page apps, and CV pages. Layouts, partials, blocks, seeded content — all via Tengo." },
+    "about":        { excerpt: "Why Squilla exists, who builds it, and the principles that decide what goes in the kernel vs. an extension.",                                                                  meta_title: "About — Squilla",                                                           meta_description: "An open-source CMS built around the bet that AI agents are first-class users. Principles, history, and the people behind the project." },
+    "blog":         { excerpt: "Updates, deep dives, and field notes from the Squilla project — kernel design, extension authoring, performance budgets, and migration guides.",                              meta_title: "Blog — Squilla",                                                            meta_description: "Engineering posts and product notes from the Squilla project. New extensions, kernel internals, MCP workflows, performance, and migrations." },
+    "showcase":     { excerpt: "Real sites running on Squilla — squilla.app itself, plus the reference Hello-Vietnam landing and the CV theme.",                                                              meta_title: "Showcase — Squilla",                                                        meta_description: "Live sites running on Squilla, including the marketing site you're reading and the reference themes shipped with the project." },
+    "pricing":      { excerpt: "Squilla is GPL-3.0 and free to self-host. Optional commercial licensing and managed hosting for teams that want a vendor on the hook.",                                       meta_title: "Pricing — Squilla",                                                         meta_description: "Free and open-source under GPL-3.0. Optional commercial licensing and managed hosting if you'd rather have someone on the hook." },
+    "legal":        { excerpt: "Terms of use, privacy policy, and license information for squilla.app and the Squilla open-source project.",                                                                  meta_title: "Legal — Squilla",                                                           meta_description: "Terms of use, privacy policy, and licensing for squilla.app and the open-source Squilla project." },
+    "changelog":    { excerpt: "Versioned release notes for the Squilla kernel, reference extensions, and the Squilla theme.",                                                                                meta_title: "Changelog — Squilla",                                                       meta_description: "Versioned release notes for the Squilla kernel, the reference extensions, and the marketing theme." },
+    "contact":      { excerpt: "How to reach the Squilla maintainers — GitHub issues for bugs and features, GitHub Discussions for everything else.",                                                          meta_title: "Contact — Squilla",                                                         meta_description: "Open an issue for bugs and features, or start a thread on GitHub Discussions for ideas, questions, and showcases." }
+}
+
+ensure_page := func(slug, title, blocks) {
+    res := nodes.query({ node_type: "page", slug: slug, limit: 1 })
+    if is_error(res) || res.total > 0 {
+        if !is_error(res) && res.total > 0 { return res.nodes[0].id }
+        return 0
+    }
+    meta := PAGE_META[slug]
+    if is_undefined(meta) { meta = { excerpt: "", meta_title: title, meta_description: "" } }
+    n := nodes.create({
+        title:        title,
+        slug:         slug,
+        node_type:    "page",
+        status:       "published",
+        excerpt:      meta.excerpt,
+        seo_settings: {
+            meta_title:       meta.meta_title,
+            meta_description: meta.meta_description
+        },
+        blocks_data: blocks
+    })
+    if is_error(n) {
+        log.warn("[squilla:seed] failed to create page: " + slug)
+        return 0
+    }
+    return n.id
+}
+
+export {
+    run: func() {
+        log.info("[squilla:seed] seeding pages with design blocks")
+
+        // ─── HOME ─────────────────────────────────────────────
+        home_id := ensure_page("home", "Squilla — The CMS where AI does the work.", [
+            { type: "sq-hero",          fields: {
+                eyebrow:   "AI-native · kernel-class · mantis-shrimp-fast",
+                headline:  "The CMS where AI does the work.",
+                lead:      "Squilla is an open-source, Go-based CMS designed around one idea: an AI agent should be able to build, populate, and operate an entire website with zero hand-holding. Every operation lives behind an <span style=\"color: var(--accent)\">MCP tool</span>. Every feature lives in a sovereign gRPC extension. The kernel stays small. The shrimp stays fast.",
+                primary:   { text: "docker compose up", url: "/docs/installation",                  target: "_self" },
+                secondary: { text: "View on GitHub",    url: "https://github.com/erikkubica/squilla", target: "_blank" },
+                tertiary:  { text: "read the brief →",  url: "/about",                              target: "_self" }
+            } },
+            { type: "pillars",          fields: {
+                p1_title: "AI-Native, MCP-First",
+                p1_body:  "Roughly 50 MCP tools across 15 domains. An agent registers custom node types, seeds content, activates themes, manages extensions, renders previews — all through structured calls. No filesystem access, no shell, no human-in-the-loop required.",
+                p1_code:  "core.node.create({\n  type: \"recipe\",\n  fields: {…}\n})",
+                p2_title: "Kernel + Extensions",
+                p2_body:  "The core is a minimal kernel: nodes, rendering, auth, CoreAPI, event bus. Anything feature-specific (media, email, forms, sitemap, blocks) is a sovereign gRPC extension that owns its full stack — its own tables, business logic, admin UI, migrations.",
+                p2_code:  "$ ls extensions/\nforms/        media-manager/\nemail-manager/ sitemap-generator/\ncontent-blocks/ resend-provider/",
+                p3_title: "Sub-millisecond strike",
+                p3_body:  "Atomic, hot-swapped config maps. Pre-resolved layout trees. JSONB + GIN-indexed content. PostgreSQL connection pooling. The kernel gets out of the way so the response gets out the door — fast.",
+                p3_code:  "GET /docs/quickstart\n→ 200 OK\n  template = pre-resolved\n  query    = single round-trip"
+            } },
+            { type: "arch-diagram",     fields: {
+                eyebrow:    "§ architecture",
+                heading:    "A kernel<br/>for kernels.",
+                lead:       "Squilla's architecture is borrowed from operating systems: the kernel does the minimum required to be a CMS, and everything else is a sovereign extension. Disable an extension and there is no dead code in core. Add a new extension and it brings its own database tables, HTTP routes, admin UI pages, scripts, and migrations.",
+                rule_label: "HARD RULE",
+                rule:       "If disabling an extension would leave dead code in core, that code belongs in the extension, not the kernel.",
+                layers: [
+                    { label: "PUBLIC WEB",       desc: "Fiber HTTP · pre-resolved layouts · cached",              color: "ink-3" },
+                    { label: "MCP SERVER",       desc: "Model Context Protocol · ~50 tools · stdio + http",       color: "coral" },
+                    { label: "KERNEL (CoreAPI)", desc: "nodes · rendering · auth · event bus · capability gates", color: "teal" },
+                    { label: "gRPC PLUGIN BUS",  desc: "HashiCorp go-plugin · bidirectional · GRPCBroker",        color: "violet" },
+                    { label: "EXTENSIONS",       desc: "media · forms · email · sitemap · blocks · providers",     color: "magenta" },
+                    { label: "POSTGRESQL 16",    desc: "JSONB · GIN indexes · per-extension migrations · pooling", color: "lime" }
+                ],
+                legend: [
+                    { key: "kernel",     val: "internal/cms · internal/coreapi" },
+                    { key: "extensions", val: "extensions/*/cmd/plugin" },
+                    { key: "themes",     val: "themes/*/scripts/theme.tengo" }
+                ]
+            } },
+            { type: "mcp-console",      fields: {
+                eyebrow:      "§ MCP showcase",
+                heading:      "Every operation<br/>is a tool an<br/>AI can call.",
+                lead:         "Squilla exposes a Model Context Protocol surface across 15 domains — nodes, node types, taxonomies, terms, settings, events, menus, media, themes, extensions, layouts, blocks, render, users, files. An agent drives the entire CMS through structured tool calls, with capability scopes enforced server-side.",
+                stats: [
+                    { value: "~50",          label: "tools" },
+                    { value: "15",           label: "domains" },
+                    { value: "24",           label: "capability gates" },
+                    { value: "stdio + http", label: "transports" }
+                ],
+                replay_label: "↻ replay",
+                pause_label:  "❚❚ pause",
+                all_link:     { text: "browse the MCP API →", url: "/docs/api-mcp", target: "_self" },
+                endpoint:     "mcp://squilla.local",
+                session_id:   "session a4f9e2",
+                capabilities: "capabilities 24/24",
+                transcript: [
+                    { t: "sys",  text: "agent connected · session a4f9e2 · capabilities=24/24 · tools=50" },
+                    { t: "user", text: "Build a recipe blog with 10 example recipes." },
+                    { t: "plan", text: "6-step plan: theme → activation → nodetype → seed → preview → menu" },
+                    { t: "call", tool: "core.theme.list",          args_text: "tags: [\"recipe\", \"food\"]",      dur: 14, color: "teal" },
+                    { t: "res",  text: "found 4 themes · selecting hello-vietnam (best schema match)" },
+                    { t: "call", tool: "core.theme.activate",      args_text: "id: \"hello-vietnam\"",             dur: 31, color: "lime" },
+                    { t: "res",  text: "activated · seeded 4 node types · 1 menu · 12 settings" },
+                    { t: "call", tool: "core.nodetype.create",     args_text: "slug: \"recipe\", fields: 7",       dur: 22, color: "violet" },
+                    { t: "res",  text: "recipe type registered · JSONB GIN index live" },
+                    { t: "call", tool: "core.node.create",         args_text: "type: \"recipe\", batch: 10",       dur: 84, color: "magenta" },
+                    { t: "res",  text: "10 recipes drafted · ids=[101..110]" },
+                    { t: "call", tool: "core.render.node_preview", args_text: "slug: \"caramelised-scallops\"",   dur: 19, color: "coral" },
+                    { t: "res",  text: "rendered · ok" },
+                    { t: "call", tool: "core.menu.upsert",         args_text: "slug: \"main-nav\", items: 4",      dur: 11, color: "amber" },
+                    { t: "res",  text: "navigation wired · publishing…" },
+                    { t: "done", text: "site live · 10 recipes published in 12.4s · zero filesystem touches" }
+                ]
+            } },
+            { type: "extensions-grid",  fields: {
+                eyebrow: "§ built-in extensions",
+                heading: "Seven extensions in the box.<br/>Built like a third-party would build them.",
+                lead:    "Squilla ships with reference extensions that exercise every part of the extension API — gRPC plugins, Tengo-only providers, manifest-only block libraries. They are not core code in disguise; they're the same extensions you'd build yourself.",
+                cta:     { text: "build your own extension", url: "/docs/extension-grpc", target: "_self" }
+            } },
+            { type: "theme-showcase",   fields: {
+                eyebrow: "§ themes",
+                heading: "Themes are<br/>sovereign too.",
+                lead:    "A Squilla theme is a self-contained package: layouts, partials, content blocks, assets, plus a Tengo seed script that registers node types, taxonomies, and seeds pages on activation. No restart, no manual install — activate and the CMS reorganises itself around the theme.",
+                rows: [
+                    { key: "Layouts",  value: "Page-level templates. Receive .node · .app · .user",                                                       color: "teal" },
+                    { key: "Partials", value: "Reusable fragments included via {{renderLayoutBlock}}. Same context plus .partial",                        color: "violet" },
+                    { key: "Blocks",   value: "Atomic content units. Self-contained, schema-defined, render with their own field data only.",            color: "magenta" }
+                ],
+                callout:       "Activate a theme. The CMS reorganises itself around it. No restart.",
+                code_file:     "themes/hello-vietnam/scripts/theme.tengo",
+                code_language: "javascript",
+                code_body:     "<pre><code>nodes    := import(\"core/nodes\")\nnodetypes := import(\"core/nodetypes\")\nevents   := import(\"core/events\")\n\n// register the recipe node type\nnodetypes.register({\n  slug: \"recipe\",\n  label: \"Recipe\",\n  field_schema: [\n    {name: \"hero_image\",   type: \"image\"},\n    {name: \"prep_minutes\", type: \"number\"},\n    {name: \"servings\",     type: \"number\"},\n    {name: \"ingredients\",  type: \"repeater\"},\n    {name: \"instructions\", type: \"richtext\"}\n  ]\n})\n\n// seed a starter recipe\nnodes.create({\n  node_type: \"recipe\",\n  title:     \"Caramelised scallops\",\n  status:    \"published\",\n  fields_data: { prep_minutes: 18, servings: 2 }\n})\n\nevents.emit(\"theme.seeded\", { theme: \"hello-vietnam\" })</code></pre>"
+            } },
+            { type: "perf-section",     fields: {
+                eyebrow:      "§ performance",
+                heading:      "Built for the metric<br/>that matters: TTFB.",
+                bullets: [
+                    { text: "Atomic configuration maps — hot-swapped without locks" },
+                    { text: "Pre-resolved layout trees — no template lookup at request time" },
+                    { text: "JSONB + GIN indexes for content — sub-millisecond field queries" },
+                    { text: "PostgreSQL connection pooling via pgx — saturated under load" },
+                    { text: "Eager-loaded relations — no N+1 queries on read paths" },
+                    { text: "Hot theme/extension activation — no restart, no downtime" }
+                ],
+                ttfb_label:   "LIVE TTFB · /docs/quickstart",
+                ttfb_initial: 23,
+                budget_text:  "kernel budget",
+                tag_text:     "single-digit ms goal",
+                stats: [
+                    { label: "p50", value: "fast" },
+                    { label: "p95", value: "still fast" },
+                    { label: "p99", value: "yes really" }
+                ]
+            } },
+            { type: "footer-cta",       fields: {
+                eyebrow: "§ try it",
+                heading: "Three minutes from publishing.",
+                console_lines: [
+                    { html: "<span style=\"color: var(--ink-3)\">$</span> <span style=\"color: var(--accent)\">git clone</span> github.com/erikkubica/squilla" },
+                    { html: "<span style=\"color: var(--ink-3)\">$</span> <span style=\"color: var(--accent)\">docker compose up</span> --build" },
+                    { html: "<span style=\"color: var(--ink-3)\">→ app at localhost:8099 · admin login printed to logs</span>" }
+                ],
+                lead:      "Clone, compose-up, log in with the password printed to stdout. Seven extensions active, one theme seeded, MCP server listening. Welcome to the shrimp.",
+                primary:   { text: "docker compose up", url: "/docs/installation",                    target: "_self" },
+                secondary: { text: "View on GitHub ↗",   url: "https://github.com/erikkubica/squilla", target: "_blank" }
+            } }
+        ])
+        // homepage_node_id is an internal pointer the kernel uses to resolve
+        // GET /. Always re-set so deleting + re-seeding 'home' doesn't leave
+        // the setting pointing at a deleted node. Editors don't change this
+        // directly (the admin homepage picker writes the same key, but only
+        // after manual reassignment, which is fine to clobber on activation).
+        if home_id > 0 {
+            settings.set("homepage_node_id", string(home_id))
+        }
+
+        // ─── FEATURES ─────────────────────────────────────────
+        ensure_page("features", "Features", [
+            { type: "page-header", fields: {
+                eyebrow: "§ features",
+                title:   "Every capability, with the receipts.",
+                sub:     "Squilla isn't a wishlist. Each feature here is wired into the kernel or a built-in extension you can read on GitHub. The list is short on purpose."
+            }},
+            { type: "features-grid", fields: {
+                groups: [
+                    { category: "Content", items: [
+                        { name: "Node types",   desc: "Custom post types via MCP or Tengo. JSONB storage, GIN-indexed.",          stat: "metadata-only" },
+                        { name: "Versioning",   desc: "Drafts, publishes, and per-field history with restore.",                    stat: "field-level" },
+                        { name: "Taxonomies",   desc: "Hierarchical and flat. Term metadata. Faceted query API.",                  stat: "JSON facets" },
+                        { name: "Menus",        desc: "Tree menus with deep-link tracking and route validation.",                  stat: "route-aware" }
+                    ] },
+                    { category: "Editor", items: [
+                        { name: "VDUS admin",       desc: "Server-driven UI. Boot manifest, layout trees, SSE updates.",        stat: "no client routing" },
+                        { name: "Live preview",     desc: "Renders the actual layout tree, not an iframe simulation.",            stat: "real DOM" },
+                        { name: "Capability gates", desc: "Fine-grained capability strings; per-extension required set.",         stat: "server-enforced" },
+                        { name: "Block authoring",  desc: "Author content blocks in JSON + Go template. Live preview built in.",  stat: "JSON-defined" }
+                    ] },
+                    { category: "AI", items: [
+                        { name: "MCP server",        desc: "stdio + http. ~50 tools across 15 domains. core.guide meta-tool.",       stat: "~50 tools" },
+                        { name: "Resource URIs",     desc: "squilla://guidelines/themes, …/extensions for agent self-onboarding.",   stat: "self-describing" },
+                        { name: "Decision tree",     desc: "core.guide returns goal-to-tool decision trees plus current CMS state.", stat: "state-aware" },
+                        { name: "Capability scopes", desc: "Per-tool capability declarations enforced server-side; no override.",   stat: "fine-grained" }
+                    ] },
+                    { category: "Performance", items: [
+                        { name: "Atomic config",        desc: "Hot-swapped maps. Reads never block. No lock contention.",   stat: "lock-free" },
+                        { name: "Pre-resolved layouts", desc: "Layout tree compiled at activation, not request time.",       stat: "0ms lookup" },
+                        { name: "Connection pooling",   desc: "pgxpool, sized to saturate under load. Per-tenant scoping.",  stat: "pgxpool" },
+                        { name: "TTFB budgeted",        desc: "Single-digit ms kernel work targeted; regressions reviewed.", stat: "single-digit" }
+                    ] }
+                ]
+            } }
+        ])
+
+        // ─── ARCHITECTURE ─────────────────────────────────────
+        ensure_page("architecture", "Architecture", [
+            { type: "page-header", fields: {
+                eyebrow: "§ architecture",
+                title:   "The kernel does six things. The extensions do everything else.",
+                sub:     "Squilla borrows from operating-system design. The kernel manages content nodes, rendering, auth, the CoreAPI, the event bus, and the MCP server. Anything feature-specific is a sovereign gRPC extension."
+            }},
+            { type: "arch-diagram",     fields: {
+                eyebrow:    "§ architecture",
+                heading:    "A kernel<br/>for kernels.",
+                lead:       "Squilla's architecture is borrowed from operating systems: the kernel does the minimum required to be a CMS, and everything else is a sovereign extension. Disable an extension and there is no dead code in core. Add a new extension and it brings its own database tables, HTTP routes, admin UI pages, scripts, and migrations.",
+                rule_label: "HARD RULE",
+                rule:       "If disabling an extension would leave dead code in core, that code belongs in the extension, not the kernel.",
+                layers: [
+                    { label: "PUBLIC WEB",       desc: "Fiber HTTP · pre-resolved layouts · cached",              color: "ink-3" },
+                    { label: "MCP SERVER",       desc: "Model Context Protocol · ~50 tools · stdio + http",       color: "coral" },
+                    { label: "KERNEL (CoreAPI)", desc: "nodes · rendering · auth · event bus · capability gates", color: "teal" },
+                    { label: "gRPC PLUGIN BUS",  desc: "HashiCorp go-plugin · bidirectional · GRPCBroker",        color: "violet" },
+                    { label: "EXTENSIONS",       desc: "media · forms · email · sitemap · blocks · providers",     color: "magenta" },
+                    { label: "POSTGRESQL 16",    desc: "JSONB · GIN indexes · per-extension migrations · pooling", color: "lime" }
+                ],
+                legend: [
+                    { key: "kernel",     val: "internal/cms · internal/coreapi" },
+                    { key: "extensions", val: "extensions/*/cmd/plugin" },
+                    { key: "themes",     val: "themes/*/scripts/theme.tengo" }
+                ]
+            }},
+            { type: "arch-lifecycle",  fields: {
+                eyebrow: "§ request lifecycle",
+                heading: "From URL to bytes, in seven steps.",
+                rows: [
+                    { time: "01", label: "Fiber receives request", detail: "router resolves to node handler" },
+                    { time: "02", label: "Layout tree lookup",     detail: "pre-resolved at activation; no DB query" },
+                    { time: "03", label: "Node fetch",             detail: "JSONB query · GIN index hit · single round-trip" },
+                    { time: "04", label: "Filter chain",           detail: "extensions hook into filter.apply" },
+                    { time: "05", label: "Template render",        detail: "html/template with custom funcs" },
+                    { time: "06", label: "Response flush",         detail: "compressed at the response writer (gzip / brotli)" },
+                    { time: "07", label: "Done",                   detail: "event.emit(\"page.served\") · async" }
+                ]
+            } }
+        ])
+
+        // ─── EXTENSIONS (catalog) ─────────────────────────────
+        ensure_page("extensions", "Extensions", [
+            { type: "page-header", fields: {
+                eyebrow: "§ extensions",
+                title:   "A package manager, but the packages are sovereign.",
+                sub:     "Each extension is a Go plugin binary, a React micro-frontend, SQL migrations, and a manifest — bundled together. The kernel never reaches inside."
+            }},
+            { type: "extensions-catalog", fields: {} }
+        ])
+
+        // ─── THEMES (catalog) ─────────────────────────────────
+        ensure_page("themes", "Themes", [
+            { type: "page-header", fields: {
+                eyebrow: "§ themes",
+                title:   "Self-contained presentation packages. Activate to install.",
+                sub:     "Themes ship layouts, partials, content blocks, assets, and a theme.tengo seed script. Activating runs the script — registering node types, taxonomies, settings, and seeding pages — without restart."
+            }},
+            { type: "themes-catalog", fields: {} }
+        ])
+
+        // ─── ABOUT ────────────────────────────────────────────
+        ensure_page("about", "About", [
+            { type: "page-header",       fields: { eyebrow: "§ about", title: "Why Squilla exists." } },
+            { type: "text-block", fields: {
+                body: `<p><em>WordPress made publishing easy in 2003. It is now 2026. The web has changed. Most CMSes haven't.</em></p><p>We built Squilla because the existing options force a trade: be developer-friendly OR editor-friendly. Be fast OR flexible. Be open-source OR AI-ready. Squilla refuses the trade. The kernel does the minimum required to be a CMS, and every feature is a sovereign extension that owns its full stack.</p><p>The kernel is <span style="color: var(--accent)">Linux-small</span>. The extension model is <span style="color: var(--violet)">Debian-clean</span>. The MCP layer is <span style="color: var(--coral)">agent-native</span>. The runtime is <span style="color: var(--lime)">Go-fast</span>. The GPL-3.0 license is <span style="color: var(--magenta)">forever</span>.</p>`
+            } },
+            { type: "about-principles",  fields: {
+                eyebrow: "§ principles",
+                items: [
+                    { heading: "AI agents are first-class users.", body: "Not as a \"ChatGPT integration.\" As primary operators with the same API surface humans use." },
+                    { heading: "Performance is non-negotiable.",   body: "Sub-50ms TTFB on every public page. Always." },
+                    { heading: "The kernel stays small.",          body: "If disabling a feature would leave dead code in core, that feature belongs in an extension." },
+                    { heading: "Extensions are sovereign.",        body: "Their tables, their UI, their scripts, their migrations. The kernel doesn't reach inside." },
+                    { heading: "One-shot setup.",                  body: "docker compose up and you're publishing. No package managers, no cron jobs, no PHP-FPM tuning." }
+                ]
+            } },
+            { type: "about-name",        fields: {
+                os_eyebrow:   "§ open source",
+                os_body:      "GPL-3.0. No telemetry. No CLA. No \"open core\" bait-and-switch. What's in the repo is the whole thing.",
+                name_eyebrow: "§ name",
+                name_body:    "<em>Squilla</em> is the Latin genus of mantis shrimps — the fastest punchers in the animal kingdom (sub-millisecond strike) and possessing the most complex visual system on Earth (16 photoreceptor types vs. our 3). Extreme speed; multi-spectrum perception (for AI agents); a segmented body with specialized appendages (kernel + extensions). The metaphor wrote itself."
+            } }
+        ])
+
+        // ─── BLOG INDEX ───────────────────────────────────────
+        ensure_page("blog", "Blog", [
+            { type: "page-header", fields: {
+                eyebrow: "§ blog",
+                title:   "Engineering, philosophy, releases.",
+                sub:     "Long-form posts from the people building Squilla. We don't post often — only when there's something worth reading."
+            }},
+            { type: "blog-list", fields: { page_size: 6 } }
+        ])
+
+        // ─── SHOWCASE ─────────────────────────────────────────
+        ensure_page("showcase", "Showcase", [
+            { type: "page-header", fields: {
+                eyebrow: "§ showcase",
+                title:   "Sites built on Squilla.",
+                sub:     "Squilla is brand new. The showcase is honest about that. Are you running Squilla in production or in a side-project? Open a PR on GitHub and we'll add you here."
+            }},
+            { type: "showcase-grid", fields: {
+                items: [
+                    { name: "squilla.app",       type: "marketing + docs (the page you're on)",         built: "this site",  color: "teal",   url: "https://squilla.app",                         screenshot: { url: "theme-asset:showcase-squilla",          alt: "squilla.app marketing site screenshot" } },
+                    { name: "Hello Vietnam",     type: "travel-agency demo theme bundled in the repo",  built: "demo theme", color: "violet", url: "https://hello-vietnam-demo.erik-kubica.dev/", screenshot: { url: "theme-asset:showcase-hello-vietnam",    alt: "Hello Vietnam demo theme screenshot" } },
+                    { name: "Curriculum Vitae",  type: "single-page CV/portfolio demo theme",           built: "demo theme", color: "coral",  url: "https://erik-kubica.dev/",                    screenshot: { url: "theme-asset:showcase-curriculum-vitae", alt: "Curriculum Vitae demo theme screenshot" } }
+                ]
+            } }
+        ])
+
+        // ─── PRICING ──────────────────────────────────────────
+        ensure_page("pricing", "Pricing", [
+            { type: "page-header", fields: {
+                eyebrow: "§ pricing",
+                title:   "There is no pricing.",
+                sub:     "Squilla is GPL-3.0. The repo is the product. There is no paid tier, no managed offering, no enterprise SKU — and no plans for any of those."
+            }},
+            { type: "pricing-card", fields: {
+                badge:    "FREE · GPL-3.0 · FOREVER",
+                price:    "$0",
+                subtitle: "no usage limits · no seat caps · no feature gates",
+                features: [
+                    { text: "Full kernel + all seven reference extensions" },
+                    { text: "~50 MCP tools across 15 domains" },
+                    { text: "Hot theme + extension activation" },
+                    { text: "No telemetry · no CLA · no \"managed\" upsell" },
+                    { text: "GPL-3.0 license" },
+                    { text: "Community support via GitHub issues + discussions" }
+                ],
+                primary:   { text: "docker compose up", url: "/docs/installation",                    target: "_self" },
+                secondary: { text: "View on GitHub ↗",   url: "https://github.com/erikkubica/squilla", target: "_blank" },
+                faq_label: "// FAQ",
+                faq: [
+                    { q: "Is there a managed/hosted version?", a: "No, and there are no plans for one. Run it yourself or run nothing." },
+                    { q: "Is there an enterprise tier?",       a: "No. The kernel doesn't know what an enterprise is." },
+                    { q: "Will pricing change later?",         a: "The license can't. GPL-3.0 is one-way." },
+                    { q: "How do I get help?",                  a: "Open an issue or a PR. Squilla is run by a small group of people who read both." }
+                ]
+            } }
+        ])
+
+        // ─── LEGAL ────────────────────────────────────────────
+        ensure_page("legal", "Legal", [
+            { type: "page-header", fields: {
+                eyebrow: "§ legal · text",
+                title:   "The fine print, in plain text.",
+                sub:     "Boring legal documents written without a legal team. If anything is unclear, open an issue."
+            }},
+            { type: "legal-tabs", fields: {
+                tabs: [
+                    { slug: "license", label: "License", sections: [
+                        { heading: "License — GPL-3.0",        body: "Squilla is licensed under the <span style=\"color: var(--accent)\">GNU General Public License v3.0</span>. You can use, modify, and distribute it. If you distribute a modified version, you must release the source under the same license. The full text is in the LICENSE file at the root of the repository. The summary above is not a substitute." },
+                        { heading: "What \"free\" means here", body: "Free as in freedom, and free as in price. There is no commercial license tier, no SaaS escape hatch, no enterprise add-on. The repository is the product." },
+                        { heading: "No CLA",                   body: "Contributors do not sign a Contributor License Agreement. You retain copyright in your contributions; you license them under GPL-3.0 by submitting a PR." }
+                    ] },
+                    { slug: "privacy", label: "Privacy", sections: [
+                        { heading: "What we collect (in core)", body: "The Squilla CMS itself collects nothing. No telemetry. No phone-home. No anonymous metrics. The binary makes no outbound network calls unless you install and configure an extension that does (e.g. <code>resend-provider</code>, <code>smtp-provider</code>)." },
+                        { heading: "This website",              body: "This marketing site (squilla.app) uses no cookies, no analytics, no third-party trackers. Server access logs (IP, user-agent, path, timestamp) are kept for abuse detection and rotated regularly. We don't sell, share, or aggregate them." },
+                        { heading: "Third parties",             body: "Web fonts are served from Google Fonts. If that bothers you, build the site locally — the source is in the GitHub repo and uses the same theme." }
+                    ] },
+                    { slug: "terms", label: "Terms", sections: [
+                        { heading: "Use of this site", body: "You can read it. You can link to it. You can scrape it (the robots.txt is permissive). You cannot pretend you wrote it." },
+                        { heading: "No warranty",      body: "Squilla is provided \"as is\", without warranty of any kind. See the GPL-3.0 license for the legally-binding version of that sentence." },
+                        { heading: "Trademarks",       body: "\"Squilla\" and the compound-eye mark are unregistered trademarks of the Squilla project. Use them to refer to the project. Don't use them to brand a fork as if it were endorsed." }
+                    ] },
+                    { slug: "security", label: "Security", sections: [
+                        { heading: "Reporting a vulnerability", body: "Open a <em>private</em> security advisory on the GitHub repo — don't file a public issue for an exploitable bug. We aim to acknowledge within 72 hours and coordinate disclosure from there." },
+                        { heading: "Disclosure timeline",       body: "Standard 90 days from acknowledgement. We can negotiate longer for severe issues; we won't sit on something past 90 days for marketing reasons." },
+                        { heading: "Bug bounty",                body: "None. We're a small project on a zero-revenue license. We will publicly thank you in the release notes and acknowledgements." }
+                    ] },
+                    { slug: "brand", label: "Brand", sections: [
+                        { heading: "The mark",     body: "The compound-eye dot cluster represents Squilla's segmented architecture and multi-spectrum perception. Don't recolour it; the iridescent palette is part of the identity." },
+                        { heading: "The wordmark", body: "Set in JetBrains Mono Medium. Lowercase always. Don't pad-cap it." },
+                        { heading: "Do",           body: "Use the kit in articles, talks, screenshots, blog posts, and tutorials. Link back to the project if you can." },
+                        { heading: "Don't",        body: "Don't combine the mark with another logo. Don't suggest we endorse your product. Don't ship a hostile fork called \"Squilla X\" while using the mark." }
+                    ] }
+                ]
+            } }
+        ])
+
+        // No /docs landing page — the Docs menu item points directly at
+        // /docs/introduction. A Tengo HTTP route in scripts/routes/docs_redirect.tengo
+        // handles bare /docs hits with a 302.
+
+// ─── CHANGELOG ────────────────────────────────────────
+        ensure_page("changelog", "Changelog", [
+            { type: "page-header", fields: {
+                eyebrow: "§ changelog",
+                title:   "What we shipped.",
+                sub:     "Engineering notes from each release. We commit publicly; the canonical log lives on GitHub, this page is the human-readable summary."
+            }},
+            { type: "text-block", fields: {
+                body: `<h2>v0.1.0 — Public preview</h2><p><em>2026-04 · first tagged release of the Squilla theme + marketing site.</em></p><ul><li>Kernel + extensions split finalised — no feature-specific code remains in <code>internal/</code></li><li>MCP server with ~50 tools across 15 domains, plus the <code>core.guide</code> meta-tool</li><li>Hot theme + extension activation — no server restart, no downtime</li><li><code>core.theme.deploy</code> and <code>core.extension.deploy</code> accept a base64-encoded zip and unpack via atomic directory swap (50 MB cap)</li><li>VDUS admin shell wired up; every feature page is now an extension micro-frontend</li><li>Seven reference extensions: media-manager, forms, email-manager, sitemap-generator, content-blocks (40 blocks + 10 templates), resend-provider, smtp-provider</li><li>The Squilla theme — marketing, docs, marketplace shells — ships in the repo as the activated default</li></ul><h2>The road ahead</h2><p>The full GitHub roadmap is the source of truth; treat what's below as direction rather than commitments.</p><ul><li>Per-node language fallbacks and richer i18n primitives in core</li><li>Page-level content versioning + diff view (currently field-level)</li><li>S3 file storage adapter (the kernel already has the abstraction; only the local-disk impl ships today)</li><li>More themes, more blocks, more example extensions</li></ul><p>For the commit-by-commit log, see <a href="https://github.com/erikkubica/squilla/commits/main">github.com/erikkubica/squilla/commits/main</a>.</p>`
+            }}
+        ])
+
+        // ─── CONTACT ──────────────────────────────────────────
+        ensure_page("contact", "Contact", [
+            { type: "page-header", fields: {
+                eyebrow: "§ contact",
+                title:   "Get in touch.",
+                sub:     "Squilla is a small open-source project. There is no support email, no SLA, and no \"sales team\" — just a GitHub repo and a maintainer who reads issues."
+            }},
+            { type: "text-block", fields: {
+                body: `<h2>The right place for most things: GitHub</h2><ul><li><strong>Bugs &amp; feature requests:</strong> <a href="https://github.com/erikkubica/squilla/issues">github.com/erikkubica/squilla/issues</a> — search first, then open a fresh issue with a reproduction.</li><li><strong>Discussion / questions:</strong> <a href="https://github.com/erikkubica/squilla/discussions">github.com/erikkubica/squilla/discussions</a> — great for design questions, "how do I…?", and showing off what you've built.</li><li><strong>Pull requests:</strong> always welcome. Read the contributing guide in the repo first; we don't ask for a CLA.</li></ul><h2>Other paths</h2><ul><li><strong>Security disclosures:</strong> open a <em>private</em> security advisory on the GitHub repo — not a public issue. We aim to acknowledge within 72 hours.</li><li><strong>Showcase submissions:</strong> open a PR adding your site to the Showcase page; we'll review and merge if it's a real Squilla deploy.</li><li><strong>Maintainer:</strong> Erik Kubica — reachable via GitHub.</li></ul><p>No commercial offering exists today. If that changes, this page will say so. The shrimp does not have a sales team.</p>`
+            }}
+        ])
+    }
+}

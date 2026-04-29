@@ -1,0 +1,11 @@
+{{- $nb := filter "doc_neighbors" (dict "id" .node.id) -}}
+{{- if or $nb.prev $nb.next -}}
+<div class="docs-prevnext__row">
+  {{ with $nb.prev }}
+    <a class="docs-prevnext__prev" href="{{.url}}">← Previous · {{.title}}</a>
+  {{ else }}<span></span>{{ end }}
+  {{ with $nb.next }}
+    <a class="docs-prevnext__next" href="{{.url}}">{{.title}} →</a>
+  {{ else }}<span></span>{{ end }}
+</div>
+{{- end -}}

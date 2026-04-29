@@ -1,0 +1,29 @@
+<section class="pricing">
+  <div class="container container-wide">
+    <div class="pricing__card">
+      <div class="pricing__pill-row">
+        <span class="pricing__pill">{{.badge}}</span>
+      </div>
+      <div class="pricing__price">{{.price}}</div>
+      <div class="pricing__sub">{{.subtitle}}</div>
+
+      <ul class="pricing__features">
+        {{ range .features }}
+          <li><span class="pricing__plus">+</span><span>{{.text}}</span></li>
+        {{ end }}
+      </ul>
+
+      <div class="pricing__buttons">
+        <a class="btn btn-primary" href="{{.primary.url}}"{{ with .primary.target }} target="{{.}}"{{ end }}><span style="opacity:.6">$</span> {{.primary.text}}</a>
+        <a class="btn" href="{{.secondary.url}}"{{ with .secondary.target }} target="{{.}}"{{ end }}>{{.secondary.text}}</a>
+      </div>
+
+      <div class="pricing__faq">
+        <div class="pricing__faq-h">{{.faq_label}}</div>
+        {{ range .faq }}
+          <div class="pricing__faq-q"><span>{{.q}}</span> {{.a}}</div>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</section>

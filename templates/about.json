@@ -1,0 +1,90 @@
+{
+  "name": "About",
+  "description": "Page header, manifesto text with emphasized lines, principles list, name + open-source notes.",
+  "thumbnail": "",
+  "blocks": [
+    {
+      "type": "page-header",
+      "fields": {
+        "title": "Why Squilla exists.",
+        "eyebrow": "§ about"
+      }
+    },
+    {
+      "type": "about-text",
+      "fields": {
+        "p1": "WordPress made publishing easy in 2003. It's now 2026. The web has changed; the CMS hasn't.",
+        "p2": "We built Squilla because the existing options force a choice: be developer-friendly OR be content-editor-friendly. Be fast OR be flexible. Be open-source OR be AI-ready. Squilla refuses the trade.",
+        "emphasis": [
+          {
+            "word": "Linux-small",
+            "after": ".",
+            "color": "accent",
+            "before": "The kernel is"
+          },
+          {
+            "word": "Debian-clean",
+            "after": ".",
+            "color": "violet",
+            "before": "The extension model is"
+          },
+          {
+            "word": "OpenAI-native",
+            "after": ".",
+            "color": "coral",
+            "before": "The MCP layer is"
+          },
+          {
+            "word": "Go-native",
+            "after": ".",
+            "color": "lime",
+            "before": "The performance is"
+          },
+          {
+            "word": "forever",
+            "after": ".",
+            "color": "magenta",
+            "before": "The GPL-3.0 license is"
+          }
+        ]
+      }
+    },
+    {
+      "type": "about-principles",
+      "fields": {
+        "items": [
+          {
+            "body": "Not as a \"ChatGPT integration.\" As primary operators with the same API surface humans use.",
+            "heading": "AI agents are first-class users."
+          },
+          {
+            "body": "Sub-50ms TTFB on every public page. Always.",
+            "heading": "Performance is non-negotiable."
+          },
+          {
+            "body": "If disabling a feature would leave dead code in core, that feature belongs in an extension.",
+            "heading": "The kernel stays small."
+          },
+          {
+            "body": "Their tables, their UI, their scripts, their migrations. The kernel doesn't reach inside.",
+            "heading": "Extensions are sovereign."
+          },
+          {
+            "body": "docker compose up and you're publishing. No package managers, no cron jobs, no PHP-FPM tuning.",
+            "heading": "One-shot setup."
+          }
+        ],
+        "eyebrow": "§ principles"
+      }
+    },
+    {
+      "type": "about-name",
+      "fields": {
+        "os_body": "GPL-3.0. No telemetry. No CLA. No \"open core\" bait-and-switch. What's in the repo is the whole thing.",
+        "name_body": "<em>Squilla</em> is the Latin genus of mantis shrimps — the fastest punchers in the animal kingdom (sub-millisecond strike) and possessing the most complex visual system on Earth (16 photoreceptor types vs. our 3). Extreme speed; multi-spectrum perception (for AI agents); a segmented body with specialized appendages (kernel + extensions). The metaphor wrote itself.",
+        "os_eyebrow": "§ open source",
+        "name_eyebrow": "§ name"
+      }
+    }
+  ]
+}

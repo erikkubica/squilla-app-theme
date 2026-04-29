@@ -1,0 +1,87 @@
+// setup/menus.tengo — Header and footer menus.
+//
+// Mirrors the design 1:1:
+//   header NAV (chrome.jsx):  Home, Features, Architecture, Extensions, Themes,
+//                             Docs, About, Blog, Showcase, Pricing, Legal
+//   footer FOOTER_COLS:       Product / Develop / Community / Project
+//
+// Items use slug-based references (`page: "<slug>"`) where a CMS page exists,
+// and `url: "..."` for direct paths or external links. Run last so seeded
+// pages exist before menu items reference them.
+//
+// Idempotency: the kernel's `menus.upsert` REPLACES all items. To preserve
+// editor changes across re-activations, we existence-check first via
+// `menus.get(slug)` and skip if a menu already lives in the DB.
+
+menus := import("core/menus")
+log   := import("core/log")
+
+ensure_menu := func(slug, name, items) {
+    existing := menus.get(slug)
+    if !is_error(existing) {
+        // Menu exists — preserve editor changes, skip.
+        return
+    }
+    menus.upsert({ slug: slug, name: name, items: items })
+}
+
+export {
+    run: func() {
+        log.info("[squilla:setup] seeding menus (skip-if-exists)")
+
+        // ─── Primary navigation (header) ─────────────────────
+        // 'Home' is the wordmark — kept out of the menu strip.
+        ensure_menu("main-nav", "Primary Navigation", [
+            { label: "Features",     page: "features"            },
+            { label: "Architecture", page: "architecture"        },
+            { label: "Extensions",   page: "extensions"          },
+            { label: "Themes",       page: "themes"              },
+            { label: "Docs",         url:  "/docs/introduction"  },
+            { label: "About",        page: "about"               },
+            { label: "Blog",         page: "blog"                },
+            { label: "Showcase",     page: "showcase"            },
+            { label: "Pricing",      page: "pricing"             },
+            { label: "Legal",        page: "legal"               }
+        ])
+
+        // ─── Footer: PRODUCT (6 links) ───────────────────────
+        ensure_menu("footer-product", "Footer — Product", [
+            { label: "Features",     page: "features"     },
+            { label: "Architecture", page: "architecture" },
+            { label: "Extensions",   page: "extensions"   },
+            { label: "Themes",       page: "themes"       },
+            { label: "Showcase",     page: "showcase"     },
+            { label: "Pricing",      page: "pricing"      }
+        ])
+
+        // ─── Footer: DEVELOP ─────────────────────────────────
+        ensure_menu("footer-develop", "Footer — Develop", [
+            { label: "Documentation",      url: "/docs/introduction"    },
+            { label: "Quickstart",         url: "/docs/quickstart"      },
+            { label: "MCP Reference",      url: "/docs/api-mcp"         },
+            { label: "CoreAPI Reference",  url: "/docs/api-coreapi"     },
+            { label: "Tengo Scripting",    url: "/docs/scripting-intro" },
+            { label: "Changelog",          page: "changelog"            }
+        ])
+
+        // ─── Footer: COMMUNITY (GitHub-anchored) ─────────────
+        // Squilla is a small project — community lives on GitHub. Real social
+        // accounts can be added later by editing the menu in admin.
+        ensure_menu("footer-community", "Footer — Community", [
+            { label: "GitHub",      url: "https://github.com/erikkubica/squilla",             target: "_blank" },
+            { label: "Issues",      url: "https://github.com/erikkubica/squilla/issues",      target: "_blank" },
+            { label: "Discussions", url: "https://github.com/erikkubica/squilla/discussions", target: "_blank" },
+            { label: "Contact",     page: "contact" }
+        ])
+
+        // ─── Footer: PROJECT ─────────────────────────────────
+        ensure_menu("footer-project", "Footer — Project", [
+            { label: "About",             page: "about"          },
+            { label: "Blog",              page: "blog"           },
+            { label: "Changelog",         page: "changelog"      },
+            { label: "Brand kit",         url:  "/legal#brand"   },
+            { label: "Security policy",   url:  "/legal#security" },
+            { label: "License (GPL-3.0)", url:  "https://github.com/erikkubica/squilla/blob/main/LICENSE", target: "_blank" }
+        ])
+    }
+}

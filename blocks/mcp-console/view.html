@@ -1,0 +1,43 @@
+<section class="mcp">
+  <div class="container container-wide">
+    <div class="mcp__grid" data-cols="2-1">
+      <div>
+        <div class="h-eyebrow">{{.eyebrow}}</div>
+        <h2 class="mcp__heading">{{ safeHTML .heading }}</h2>
+        <p class="mcp__lead">{{.lead}}</p>
+
+        <div class="mcp__stats">
+          {{ range .stats }}
+            <div class="mcp__stat">
+              <div class="mcp__stat-val">{{.value}}</div>
+              <div class="mcp__stat-lbl">{{.label}}</div>
+            </div>
+          {{ end }}
+        </div>
+
+        <div class="mcp__controls">
+          <button class="btn" data-mcp-replay>{{.replay_label}}</button>
+          <button class="btn" data-mcp-toggle>{{.pause_label}}</button>
+          <a class="btn btn-ghost" href="{{.all_link.url}}"{{ with .all_link.target }} target="{{.}}"{{ end }}><span class="muted">{{.all_link.text}}</span></a>
+        </div>
+      </div>
+
+      <div class="mcp__console" data-squilla-mcp>
+        <div class="mcp__header">
+          <span class="live-dot"></span>
+          <span style="color: var(--ink-1)">{{.endpoint}}</span>
+          <span style="color: var(--ink-3)">·</span>
+          <span>{{.session_id}}</span>
+          <span style="color: var(--ink-3)">·</span>
+          <span>{{.capabilities}}</span>
+          <span class="mcp__progress" style="margin-left: auto; color: var(--ink-3)">0/{{ len .transcript }}</span>
+        </div>
+        <div class="mcp__body" data-mcp-body></div>
+
+        {{- /* Transcript serialised to JSON for the JS animation; the JS
+               reads tpl.innerHTML and parses it. */ -}}
+        <template data-mcp-script>{{ json (dict "lines" .transcript) }}</template>
+      </div>
+    </div>
+  </div>
+</section>

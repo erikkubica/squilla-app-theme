@@ -1,0 +1,82 @@
+{{- $s := .app.settings -}}
+<!doctype html>
+<html lang="{{.node.language_code}}"
+      data-theme="{{ index $s "squilla.tweaks.theme" }}"
+      data-accent="{{ index $s "squilla.tweaks.accent" }}"
+      data-density="{{ index $s "squilla.tweaks.density" }}"
+      data-motif="{{ index $s "squilla.tweaks.motif" }}">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" type="image/svg+xml" href="/theme/assets/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {{- $seo := .node.seo -}}
+  <title>{{ if and $seo $seo.meta_title }}{{$seo.meta_title}}{{ else }}{{.node.title}} — {{ index $s "squilla.brand.name" }} docs{{ end }}</title>
+  <meta name="description" content="{{ if and $seo $seo.meta_description }}{{$seo.meta_description}}{{ else if .node.excerpt }}{{.node.excerpt}}{{ else }}{{.node.fields.summary}}{{ end }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+  {{- range .app.head_styles -}}<link rel="stylesheet" href="{{.}}">{{- end -}}
+  {{.app.block_styles}}
+</head>
+<body>
+  <div class="page">
+    {{renderLayoutBlock "site-header"}}
+
+    <section class="docs-section" data-squilla-docs>
+      <div class="container container-wide docs-shell">
+        {{- /* SIDEBAR — server-rendered docs index */ -}}
+        <aside class="docs-sidebar">
+          <div class="docs-search">
+            <span class="docs-search__icon" aria-hidden="true">⌕</span>
+            <input type="search" data-docs-search class="docs-search__input" placeholder="Search docs · ⌘K" autocomplete="off">
+          </div>
+          {{ renderLayoutBlock "docs-index" }}
+          <div class="docs-search__noresults" data-docs-noresults hidden>No results — the kernel is fine. The search is sus.</div>
+        </aside>
+
+        {{- /* MAIN — breadcrumb + body + prev/next nav */ -}}
+        <main class="docs-main">
+          {{- $sec := .node.fields.section -}}
+          {{- $secLabel := "" -}}
+          {{- if $sec -}}
+            {{- with $sec.name }}{{ $secLabel = . }}{{ end -}}
+            {{- if not $secLabel -}}{{- with $sec.slug }}{{ $secLabel = . }}{{ end -}}{{- end -}}
+            {{- if not $secLabel -}}{{- $secLabel = $sec -}}{{- end -}}
+          {{- end -}}
+          <nav class="docs-breadcrumb" aria-label="Breadcrumb">
+            <a href="/docs/introduction">Docs</a>
+            {{ with $secLabel }}<span class="docs-breadcrumb__sep">/</span><span>{{.}}</span>{{ end }}
+            <span class="docs-breadcrumb__sep">/</span>
+            <span>{{$.node.title}}</span>
+          </nav>
+
+          <article data-docs-article class="docs-article prose">
+            <h1>{{.node.title}}</h1>
+            {{ with .node.fields.summary }}<p class="docs-article__lead">{{.}}</p>{{ end }}
+            {{.node.blocks_html}}
+          </article>
+
+          <div class="docs-prevnext">
+            {{ renderLayoutBlock "docs-prev-next" }}
+          </div>
+        </main>
+
+        {{- /* TOC — built client-side from article h2/h3 */ -}}
+        <aside class="docs-toc">
+          <div class="docs-toc__title">On this page</div>
+          <div data-docs-toc></div>
+          <div class="docs-toc__edit">
+            <div class="docs-toc__title">Improve this page</div>
+            <a href="https://github.com/erikkubica/squilla/issues/new?title=docs:%20{{.node.slug}}" target="_blank" rel="noopener">↗ open issue</a>
+            <a href="https://github.com/erikkubica/squilla/discussions" target="_blank" rel="noopener">↗ start a discussion</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    {{renderLayoutBlock "site-footer"}}
+  </div>
+  {{- range .app.foot_scripts -}}<script src="{{.}}" defer></script>{{- end -}}
+  {{.app.block_scripts}}
+</body>
+</html>

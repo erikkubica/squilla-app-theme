@@ -1,0 +1,543 @@
+// seeds/docs.tengo — Documentation pages.
+//
+// Block strategy:
+//   doc-content      — long prose: <h2>/<h3>/<p>/<blockquote>/<ul>/<ol>/<hr>
+//                      and inline <code>/<strong>/<em>/<a>. WYSIWYG primitives.
+//   doc-callout      — coloured heads-up / note / tip / danger box.
+//   doc-codeblock    — IDE-style code block with file header + traffic-light dots.
+//   doc-image        — figure with caption (single image).
+//   doc-gallery      — figure with caption (multiple images, 2-4 columns).
+//
+// Body content paraphrased from the in-repo docs (architecture.md, theming.md,
+// scripting_api.md, etc.) so the on-this-page TOC populates with real headings.
+
+nodes := import("core/nodes")
+terms := import("core/terms")
+log   := import("core/log")
+
+ensure_term := func(slug, name) {
+    found := terms.list("documentation", "doc_section")
+    if !is_error(found) {
+        for t in found {
+            if t.slug == slug { return true }
+        }
+    }
+    res := terms.create({
+        taxonomy:  "doc_section",
+        node_type: "documentation",
+        slug:      slug,
+        name:      name
+    })
+    return !is_error(res)
+}
+
+ensure_doc := func(slug, title, section_slug, section_name, summary, order, blocks) {
+    res := nodes.query({ node_type: "documentation", slug: slug, limit: 1 })
+    if !is_error(res) && res.total > 0 {
+        return
+    }
+    n := nodes.create({
+        title:        title,
+        slug:         slug,
+        node_type:    "documentation",
+        status:       "published",
+        layout:       "docs",
+        excerpt:      summary,
+        fields_data:  {
+            section: { slug: section_slug, name: section_name },
+            summary: summary,
+            order:   order
+        },
+        seo_settings: {
+            meta_title:       title + " — Squilla docs",
+            meta_description: summary
+        },
+        blocks_data: blocks
+    })
+    if is_error(n) {
+        log.warn("[squilla:seed] doc create failed: " + slug)
+    }
+}
+
+// ─── Block-builder helpers ───────────────────────────────────
+// Each takes the minimum input needed and returns a blocks_data entry.
+
+prose := func(html) { return { type: "doc-content", fields: { body: html } } }
+
+note  := func(label, variant, body) {
+    return { type: "doc-callout", fields: { label: label, variant: variant, body: body } }
+}
+
+code  := func(file, language, body) {
+    return { type: "doc-codeblock", fields: {
+        file:      file,
+        show_dots: true,
+        language:  language,
+        body:      "<pre><code>" + body + "</code></pre>"
+    } }
+}
+
+export {
+    run: func() {
+        log.info("[squilla:seed] seeding documentation")
+
+        ensure_term("getting-started", "Getting Started")
+        ensure_term("extensions",      "Extensions")
+        ensure_term("themes",          "Themes")
+        ensure_term("scripting",       "Scripting")
+        ensure_term("api",             "API Reference")
+
+        // ─── GETTING STARTED ─────────────────────────────────
+
+        ensure_doc("introduction", "Introduction", "getting-started", "Getting Started",
+            "What Squilla is and why it exists.", 10, [
+            prose(
+                "<h2>The CMS where AI does the work</h2>" +
+                "<p>Squilla is a Go-based, AI-native CMS built on a <strong>kernel + extension</strong> model. The core is a minimal Go binary that provides infrastructure only — content nodes, rendering, auth, the CoreAPI, the MCP server, and the VDUS engine. Every user-visible feature ships as an independent extension with its own gRPC plugin, admin micro-frontend, database tables, and SQL migrations.</p>" +
+                "<blockquote>If the kernel can't answer in 50ms, the kernel is doing too much.<cite>— Internal design doc, v0.2</cite></blockquote>" +
+                "<h2>Why we built it</h2>" +
+                "<p>Existing CMS options force a choice: be developer-friendly OR be content-editor-friendly; be fast OR be flexible; be open-source OR be AI-ready. Squilla refuses the trade.</p>" +
+                "<ul>" +
+                "<li>The kernel is <strong>Linux-small</strong></li>" +
+                "<li>The extension model is <strong>Debian-clean</strong></li>" +
+                "<li>The MCP layer is <strong>OpenAI-native</strong></li>" +
+                "<li>The performance is <strong>Go-native</strong></li>" +
+                "<li>The GPL-3.0 license is <strong>forever</strong></li>" +
+                "</ul>" +
+                "<h2>The hard rule</h2>" +
+                "<p>If disabling an extension would leave dead code in core, that code belongs in the extension, not core. Core provides only the generic plumbing that <em>any</em> extension could reuse.</p>"
+            ),
+            note("HARD RULE", "danger",
+                "Image optimization, WebP conversion, cache routing → media extension (NOT core). Email template management → email extension (NOT core). Public route proxy mechanism → core (generic, any extension can use it)."),
+            prose(
+                "<h2>Where to next</h2>" +
+                "<p>Read <a href=\"/docs/installation\">Installation</a> for the docker-compose path, or jump straight to <a href=\"/docs/quickstart\">Quickstart</a> if you have a Squilla container already running. The <a href=\"/docs/api-mcp\">MCP Endpoints</a> reference is the entry point for AI-driven workflows.</p>"
+            )
+        ])
+
+        ensure_doc("installation", "Installation", "getting-started", "Getting Started",
+            "Install Squilla via Docker or from source.", 20, [
+            prose(
+                "<h2>Prerequisites</h2>" +
+                "<ul>" +
+                "<li>Docker 24+ with Compose v2</li>" +
+                "<li>PostgreSQL 16 (or use the bundled compose service)</li>" +
+                "<li>Optional: an MCP-aware AI client (Claude Desktop, Cursor, the Anthropic <code>mcp</code> CLI)</li>" +
+                "</ul>" +
+                "<h2>Quickstart with Docker</h2>" +
+                "<p>The fastest path to a running Squilla is the bundled compose file. It boots PostgreSQL 16, the Squilla core, and the seven reference extensions:</p>"
+            ),
+            code("$ shell", "bash",
+                "git clone https://github.com/erikkubica/squilla.git\n" +
+                "cd squilla\n" +
+                "docker compose up --build\n\n" +
+                "# open http://localhost:8099\n" +
+                "# admin login is printed once on first boot"),
+            note("HEADS UP", "heads-up",
+                "The default admin password is printed exactly once, to the container's stdout, on first boot. Capture it. There's no “forgot password” flow for the bootstrap admin — if you lose it, you'll re-bootstrap (or update the user row directly via the data-store MCP tools)."),
+            prose(
+                "<hr/>" +
+                "<h2>Build from source</h2>" +
+                "<p>If you want to hack on the kernel:</p>"
+            ),
+            code("$ shell", "bash",
+                "git clone https://github.com/erikkubica/squilla.git\n" +
+                "cd squilla\n" +
+                "make deploy-local\n" +
+                "# admin UI rebuilds, plugins compile, container restarts"),
+            prose(
+                "<h3>Hot-deploying just the theme or a single extension</h3>" +
+                "<p>While developing, you don't need to rebuild the container for theme or extension changes. The repo ships <code>make theme</code> and per-extension hot-deploy targets that copy the rebuilt directory into the running container and trigger a re-scan via <code>core.theme.rescan</code> / <code>core.extension.rescan</code>. The fs watcher picks new directories up automatically; the rescan call is the explicit, idempotent trigger.</p>"
+            ),
+            prose(
+                "<h3>Verifying the install</h3>" +
+                "<p>A healthy Squilla responds at <code>/admin/api/boot</code> with a 200 and a small JSON manifest. The public homepage is at <code>/</code>; on a fresh install with the bundled compose file, the active theme is <code>squilla</code> and the home page is the seeded marketing copy you saw on this site.</p>"
+            ),
+            note("TIP", "tip",
+                "Run <code>docker compose logs -f app</code> in another terminal during your first session — Tengo seed errors and theme activation logs only show there.")
+        ])
+
+        ensure_doc("quickstart", "Quickstart", "getting-started", "Getting Started",
+            "Your first Squilla site in five minutes.", 30, [
+            prose(
+                "<h2>Goal</h2>" +
+                "<p>By the end of this page you'll have created a custom node type, seeded three nodes, and rendered them on a public page — entirely through the MCP interface, with zero filesystem access.</p>" +
+                "<h2>Step 1: connect via MCP</h2>" +
+                "<p>Squilla exposes a Model Context Protocol server at <code>/mcp</code>. Point your MCP client (Claude Desktop, Cursor, the Anthropic <code>mcp</code> CLI) at it with a bearer token from <code>/admin/settings/tokens</code>.</p>" +
+                "<h2>Step 2: register a content type</h2>" +
+                "<p>The <code>core.nodetype.create</code> tool registers a new content type with its own field schema. The CMS auto-creates the JSONB GIN index for fast queries.</p>"
+            ),
+            code("MCP call", "javascript",
+                "core.nodetype.create({\n" +
+                "  slug: \"recipe\",\n" +
+                "  label: \"Recipe\",\n" +
+                "  label_plural: \"Recipes\",\n" +
+                "  url_prefixes: { en: \"recipes\" },\n" +
+                "  field_schema: [\n" +
+                "    { name: \"hero_image\",   type: \"image\" },\n" +
+                "    { name: \"prep_minutes\", type: \"number\" },\n" +
+                "    { name: \"servings\",     type: \"number\" }\n" +
+                "  ]\n" +
+                "})"),
+            prose(
+                "<h3>Why JSONB</h3>" +
+                "<p>All node fields_data live in a single JSONB column with a GIN index. Custom types don't get their own SQL tables — adding a node type is a metadata-only operation. Reads are sub-millisecond for typical field queries.</p>" +
+                "<h2>Step 2: seed nodes</h2>" +
+                "<p>Bulk-create three recipes:</p>"
+            ),
+            code("MCP call", "javascript",
+                "core.node.create({\n" +
+                "  type: \"recipe\",\n" +
+                "  title: \"Caramelised scallops\",\n" +
+                "  status: \"published\",\n" +
+                "  fields_data: { prep_minutes: 18, servings: 2 }\n" +
+                "})"),
+            prose(
+                "<h2>Step 3: render preview</h2>" +
+                "<p>Without committing to a theme, you can preview a node with <code>core.render.node_preview</code>. The CMS resolves the slug, runs the rendering pipeline, and returns the HTML.</p>" +
+                "<hr/>" +
+                "<h2>What you didn't have to do</h2>" +
+                "<ul>" +
+                "<li>Touch the filesystem</li>" +
+                "<li>Restart the server</li>" +
+                "<li>Run a database migration</li>" +
+                "<li>Recompile anything</li>" +
+                "</ul>"
+            ),
+            note("NOTE", "note",
+                "The whole flow is reversible: <code>core.nodetype.delete</code> drops the type and orphans nothing.")
+        ])
+
+        // ─── EXTENSIONS ──────────────────────────────────────
+
+        ensure_doc("extensions-intro", "Extensions Overview", "extensions", "Extensions",
+            "What extensions are and how they extend the CMS.", 10, [
+            prose(
+                "<h2>Sovereign packages</h2>" +
+                "<p>An extension is a self-contained package that ships its full stack. Each owns its database tables, business logic, admin UI, scripts, and migrations. The kernel never reaches inside.</p>" +
+                "<h2>Anatomy</h2>" +
+                "<p>A complete extension under <code>extensions/&lt;slug&gt;/</code> contains:</p>" +
+                "<ul>" +
+                "<li><code>extension.json</code> — manifest declaring slug, capabilities, public routes</li>" +
+                "<li><code>cmd/plugin/main.go</code> — gRPC plugin entry point</li>" +
+                "<li><code>migrations/*.sql</code> — schema changes, applied on activation</li>" +
+                "<li><code>admin-ui/</code> — React micro-frontend, built to <code>admin-ui/dist/</code></li>" +
+                "<li><code>scripts/extension.tengo</code> — optional Tengo entry point for event hooks</li>" +
+                "</ul>" +
+                "<h3>Why a separate binary</h3>" +
+                "<p>Plugins run as their own processes via HashiCorp go-plugin. A panicking extension can't take down the kernel. Restart it with <code>core.extension.deactivate</code> + <code>core.extension.activate</code> — no kernel restart required.</p>" +
+                "<h2>Capabilities</h2>" +
+                "<p>Each extension declares the capabilities it needs in its manifest. The CoreAPI guard rejects calls that exceed the declared set. The capability strings are namespaced by domain — e.g. <code>nodes:read</code>, <code>data:write</code>, <code>files:write</code>, <code>email:send</code>, <code>http:fetch</code>, <code>events:emit</code>, <code>events:subscribe</code>, <code>routes:register</code>, <code>users:read</code>, <code>log:write</code>, <code>media:read</code>, <code>media:write</code>, <code>media:delete</code>, <code>settings:read</code>, <code>settings:write</code>, <code>data:exec</code>, etc. Internal callers (kernel code) bypass the guard.</p>"
+            ),
+            code("extension.json", "json",
+                "{\n" +
+                "  \"slug\": \"my-extension\",\n" +
+                "  \"capabilities\": [\n" +
+                "    \"nodes:read\",\n" +
+                "    \"data:write\",\n" +
+                "    \"files:write\",\n" +
+                "    \"email:send\"\n" +
+                "  ]\n" +
+                "}"),
+            prose(
+                "<h2>Public routes</h2>" +
+                "<p>Extensions can claim public URL prefixes (e.g. <code>/forms/submit/*</code> or <code>/media/*</code>). The kernel proxies matching requests to the plugin's <code>HandleHTTPRequest</code> RPC.</p>"
+            )
+        ])
+
+        ensure_doc("extension-grpc", "Building a gRPC Extension", "extensions", "Extensions",
+            "Author a Go extension as a gRPC plugin.", 20, [
+            prose(
+                "<h2>The five RPC methods</h2>" +
+                "<p>A plugin must implement five gRPC methods. Most extensions use one or two of them seriously and stub the rest.</p>" +
+                "<ol>" +
+                "<li><code>Init</code> — receive CoreAPI handle, run startup work</li>" +
+                "<li><code>HandleHTTPRequest</code> — serve admin / public routes</li>" +
+                "<li><code>HandleEvent</code> — react to event bus</li>" +
+                "<li><code>HandleFilter</code> — transform values in the filter chain</li>" +
+                "<li><code>Shutdown</code> — flush state on deactivation</li>" +
+                "</ol>" +
+                "<h2>The CoreAPI</h2>" +
+                "<p>The <code>SquillaHost</code> service exposed to plugins via GRPCBroker is the kernel's public surface. ~35 methods across 15 domains: nodes, settings, events, filters, capability checks, media, file storage, raw SQL.</p>"
+            ),
+            code("plugin/main.go", "go",
+                "resp, err := host.NodeQuery(ctx, &amp;coreapi.NodeQueryRequest{\n" +
+                "    NodeType: \"recipe\",\n" +
+                "    Status:   \"published\",\n" +
+                "    Limit:    10,\n" +
+                "})"),
+            note("HEADS UP", "heads-up",
+                "Every CoreAPI call is wrapped by <code>NewCapabilityGuard</code>. The guard rejects calls outside the declared capability set with an error — there is no override. Extensions that need raw SQL must declare <code>data:exec</code> in their manifest."),
+            prose(
+                "<h2>Migrations</h2>" +
+                "<p>SQL files in <code>migrations/</code> run on activation in lexicographic order. Naming convention is <code>NNNN_description.sql</code>. The CMS records the applied set in the kernel's <code>extension_migrations</code> table; re-activation only runs new files.</p>" +
+                "<h2>Hot-deploy from a zipped package</h2>" +
+                "<p>The <code>core.extension.deploy</code> MCP tool unpacks a base64'd zip into <code>extensions/&lt;slug&gt;/</code>, registers the row, and optionally activates — no server restart. 50MB cap. Plugin binaries must already be compiled for the host's OS/arch.</p>"
+            )
+        ])
+
+        ensure_doc("extension-tengo", "Tengo-only Extensions", "extensions", "Extensions",
+            "Lightweight extensions written purely in Tengo.", 30, [
+            prose(
+                "<h2>When to skip Go</h2>" +
+                "<p>If your extension only needs to react to events, register filters, or expose a simple HTTP route, you can ship it as a pure Tengo package — no Go binary required. The reference implementation is <code>resend-provider</code>, which handles transactional email in ~20 lines of Tengo.</p>" +
+                "<h2>Folder layout</h2>"
+            ),
+            code("filesystem", "plaintext",
+                "extensions/&lt;slug&gt;/\n" +
+                "  extension.json         # manifest, kind: \"tengo\"\n" +
+                "  scripts/\n" +
+                "    extension.tengo      # entry point\n" +
+                "    handlers/*.tengo     # event handlers, route handlers\n" +
+                "    filters/*.tengo      # filter handlers"),
+            prose(
+                "<h2>What you can do</h2>" +
+                "<ul>" +
+                "<li>Subscribe to events via <code>events.on(name, script_path)</code></li>" +
+                "<li>Register filter handlers via <code>filters.add(name, script_path)</code></li>" +
+                "<li>Mount HTTP routes via <code>routes.register(method, path, script_path)</code></li>" +
+                "<li>Call any CoreAPI method through the <code>core/*</code> Tengo modules</li>" +
+                "</ul>" +
+                "<h2>What you can't do</h2>"
+            ),
+            note("DANGER", "danger",
+                "Tengo extensions can't open arbitrary network connections, read arbitrary files, or spawn subprocesses. The sandbox limits memory allocations and execution time. If you need any of those, ship a gRPC plugin.")
+        ])
+
+        // ─── THEMES ──────────────────────────────────────────
+
+        ensure_doc("themes-intro", "Themes Overview", "themes", "Themes",
+            "Anatomy of a Squilla theme.", 10, [
+            prose(
+                "<h2>What's in a theme</h2>" +
+                "<p>A theme is a self-contained package under <code>themes/&lt;slug&gt;/</code> that owns the public-facing presentation. It declares layouts, partials, content blocks, assets, and a Tengo seed script.</p>"
+            ),
+            code("filesystem", "plaintext",
+                "themes/&lt;slug&gt;/\n" +
+                "  theme.json               # manifest\n" +
+                "  layouts/*.html           # page-level templates\n" +
+                "  partials/*.html          # reusable fragments\n" +
+                "  blocks/&lt;slug&gt;/           # content blocks (block.json + view.html)\n" +
+                "  assets/                  # CSS, JS, images\n" +
+                "  scripts/theme.tengo      # seed entry point\n" +
+                "  templates/*.json         # page templates for editors\n" +
+                "  forms/*.html             # themed form layouts"),
+            prose(
+                "<h2>Activation</h2>" +
+                "<p>Activating a theme runs <code>theme.tengo</code> in a sandboxed Tengo VM. The script registers node types, taxonomies, settings, and seeds pages — all idempotently. There is no server restart. The kernel atomically swaps the layout tree.</p>" +
+                "<h3>Hot-deploy</h3>"
+            ),
+            note("TIP", "tip",
+                "The <code>core.theme.deploy</code> MCP tool unpacks a base64'd zip into <code>themes/&lt;slug&gt;/</code> via an atomic directory swap. 50MB cap; <code>activate=true</code> hot-activates without restart."),
+            prose(
+                "<h2>Layout vs partial vs block</h2>" +
+                "<p>This is the #1 gotcha. The three template types see different data:</p>" +
+                "<ul>" +
+                "<li><strong>Layouts</strong> are page-level. They see full <code>.node</code>, <code>.app</code>, <code>.user</code>.</li>" +
+                "<li><strong>Partials</strong> are reusable fragments included via <code>{{renderLayoutBlock \"slug\"}}</code>. Same context as the layout, plus <code>.partial</code>.</li>" +
+                "<li><strong>Block views</strong> are atomic content units. They see <strong>only the block's own field values at root</strong>. <code>.app</code> is NOT in scope.</li>" +
+                "</ul>"
+            )
+        ])
+
+        ensure_doc("theme-blocks", "Authoring Blocks", "themes", "Themes",
+            "How blocks work and how to author them.", 20, [
+            prose(
+                "<h2>Anatomy of a block</h2>" +
+                "<p>A block lives under <code>themes/&lt;t&gt;/blocks/&lt;slug&gt;/</code> with two required files:</p>" +
+                "<ul>" +
+                "<li><code>block.json</code> — slug, name, field_schema, test_data</li>" +
+                "<li><code>view.html</code> — Go template that consumes the field values</li>" +
+                "</ul>" +
+                "<p>Optional: <code>style.css</code> (block-scoped CSS) and <code>script.js</code> (block-scoped JS).</p>" +
+                "<h2>The field types</h2>" +
+                "<p>Every field has a <code>type</code> that decides the admin editor and the data shape. The most common:</p>"
+            ),
+            code("block.json", "json",
+                "{\n" +
+                "  \"field_schema\": [\n" +
+                "    { \"key\": \"heading\",    \"type\": \"text\"     },\n" +
+                "    { \"key\": \"body\",       \"type\": \"richtext\" },\n" +
+                "    { \"key\": \"image\",      \"type\": \"image\"    },\n" +
+                "    { \"key\": \"cta\",        \"type\": \"link\"     },\n" +
+                "    { \"key\": \"items\",      \"type\": \"repeater\", \"sub_fields\": [...] }\n" +
+                "  ]\n" +
+                "}"),
+            note("HEADS UP", "heads-up",
+                "In <code>block.json</code> field_schema entries use <code>\"key\":</code>. In Tengo nodetypes.register field_schema entries use <code>\"name\":</code>. Don't mix them — the admin reads sub-field VALUES against the schema's key/name field, and a mismatch produces empty inputs even when fields_data is correct."),
+            prose(
+                "<h2>The test_data invariant</h2>" +
+                "<p>Every field in field_schema must have a corresponding entry in test_data. The admin renders test_data as the live preview when the editor opens a block they haven't touched yet. A missing test_data entry shows as a broken empty area.</p>" +
+                "<h2>No fallback values</h2>" +
+                "<blockquote>If you write {{or .heading \"default\"}}, you're hiding a data bug.<cite>— Build notes, §6.3</cite></blockquote>" +
+                "<p>Don't write fallbacks. They mask the case where seed data was supposed to populate the field but didn't. Pass real defaults via <code>fields_data:</code> in the seed and let templates fail visibly when something's wrong.</p>"
+            )
+        ])
+
+        ensure_doc("theme-layouts", "Layouts and Partials", "themes", "Themes",
+            "Layout vs partial vs block context.", 30, [
+            prose(
+                "<h2>Layouts</h2>" +
+                "<p>Layouts are top-level page chrome. They live in <code>layouts/*.html</code> and are referenced by slug from <code>theme.json</code>. The active node's layout is selected via the node's <code>layout_slug</code> column — themes can pin specific node types to specific layouts (e.g. all <code>documentation</code> nodes use <code>docs</code>).</p>" +
+                "<h3>Required fragments</h3>" +
+                "<p>A layout must include <code>{{.node.blocks_html}}</code> somewhere — that's the rendered block sequence for the current node. Most layouts also call <code>{{renderLayoutBlock \"site-header\"}}</code> and <code>{{renderLayoutBlock \"site-footer\"}}</code> for the chrome partials.</p>" +
+                "<h2>Settings access</h2>" +
+                "<p>Site settings are stored with dotted keys (e.g. <code>squilla.brand.name</code>). Templates can't dot-traverse those, so use <code>index</code>:</p>"
+            ),
+            code("layouts/default.html", "html",
+                "{{- $s := .app.settings -}}\n" +
+                "&lt;title&gt;{{ index $s \"squilla.brand.name\" }}&lt;/title&gt;"),
+            note("HEADS UP", "heads-up",
+                "Menu items render via <code>.title</code>, NOT <code>.label</code>. The Tengo input is <code>label:</code>, but storage and render use <code>title</code>. <code>{{.label}}</code> in templates returns empty."),
+            code("partials/site-header.html", "html",
+                "{{- $nav := index .app.menus \"main-nav\" -}}\n" +
+                "{{- range $nav.items -}}\n" +
+                "  &lt;a href=\"{{.url}}\"&gt;{{.title}}&lt;/a&gt;\n" +
+                "{{- end -}}")
+        ])
+
+        // ─── SCRIPTING ───────────────────────────────────────
+
+        ensure_doc("scripting-intro", "Scripting with Tengo", "scripting", "Scripting",
+            "The embedded Tengo scripting engine.", 10, [
+            prose(
+                "<h2>Why Tengo</h2>" +
+                "<p>Tengo is a small, sandboxed scripting language. Squilla embeds a Tengo VM so themes and Tengo-only extensions can run logic without a Go compile step. Memory and execution time are bounded; the sandbox blocks filesystem and network access except through whitelisted modules.</p>" +
+                "<h2>The core/* modules</h2>" +
+                "<p>Squilla exposes ~15 modules under the <code>core/*</code> namespace:</p>" +
+                "<ul>" +
+                "<li><code>core/log</code> — info / warn / debug (don't try <code>log.error</code>; <code>error</code> is reserved)</li>" +
+                "<li><code>core/nodes</code> — query / get / create / update / delete</li>" +
+                "<li><code>core/nodetypes</code> — register custom node types</li>" +
+                "<li><code>core/taxonomies</code> — register taxonomies</li>" +
+                "<li><code>core/terms</code> — list / create / update / delete</li>" +
+                "<li><code>core/settings</code> — get / set / all</li>" +
+                "<li><code>core/menus</code> — upsert / delete</li>" +
+                "<li><code>core/events</code> — emit / subscribe / on</li>" +
+                "<li><code>core/filters</code> — add</li>" +
+                "<li><code>core/routes</code> — register</li>" +
+                "<li><code>core/http</code> — outbound get / post / put / delete / fetch</li>" +
+                "<li><code>core/assets</code> — read theme files (forms, fixtures)</li>" +
+                "</ul>" +
+                "<h2>Modular themes</h2>" +
+                "<p>Don't pile everything into <code>scripts/theme.tengo</code>. Tengo supports relative imports — split your seed into focused modules:</p>"
+            ),
+            code("scripts/theme.tengo", "javascript",
+                "nodetypes := import(\"./setup/nodetypes\")\n" +
+                "seeds     := import(\"./seeds/pages\")\n\n" +
+                "nodetypes.run()\n" +
+                "seeds.run()")
+        ])
+
+        ensure_doc("scripting-events", "Events and Filters", "scripting", "Scripting",
+            "Hook into the event bus and filter chain.", 20, [
+            prose(
+                "<h2>Events</h2>" +
+                "<p>Events are fire-and-forget. Use them for cache invalidation, analytics, or sending email. Subscribers run asynchronously after the originating request completes.</p>" +
+                "<h3>Standard events</h3>" +
+                "<p>The kernel emits ~30 events including <code>node.created</code>, <code>node.updated</code>, <code>node.deleted</code>, <code>theme.activated</code>, <code>theme.deactivated</code>, <code>page.served</code>, <code>user.logged_in</code>, <code>media.uploaded</code>.</p>" +
+                "<h3>Subscribing</h3>"
+            ),
+            code("scripts/theme.tengo", "javascript",
+                "events := import(\"core/events\")\n" +
+                "events.on(\"node.created\", \"./handlers/on_node_created\")"),
+            prose(
+                "<p>The handler script receives a <code>payload</code> map. Set <code>response = {ok: true}</code> when done; non-zero <code>response.status</code> doesn't block the originating request (events are async).</p>" +
+                "<hr/>" +
+                "<h2>Filters</h2>" +
+                "<p>Filters are synchronous, ordered, and CAN mutate the value. Use them for transforming HTML before render, post-processing search results, etc. Each filter handler receives <code>value</code> (the input) and sets <code>response</code> (the output).</p>" +
+                "<h3>Registering</h3>"
+            ),
+            code("scripts/theme.tengo", "javascript",
+                "filters := import(\"core/filters\")\n" +
+                "filters.add(\"list_posts\", \"./filters/list_posts\")\n" +
+                "filters.add(\"node.title\", \"./filters/site_title_suffix\", 90)"),
+            note("NOTE", "note",
+                "Optional third argument is the priority (default 50). Lower numbers run first. Use this to order multiple subscribers to the same filter."),
+            prose(
+                "<h2>Routes</h2>" +
+                "<p>Tengo can register HTTP routes via <code>routes.register(method, path, script_path)</code>. <strong>Theme</strong> routes are mounted under <code>/api/theme/&lt;path&gt;</code> — themes can't shadow public paths. Extensions register their own public routes via the manifest.</p>"
+            )
+        ])
+
+        // ─── API REFERENCE ───────────────────────────────────
+
+        ensure_doc("api-coreapi", "CoreAPI Reference", "api", "API Reference",
+            "Every method on the CoreAPI surface.", 10, [
+            prose(
+                "<h2>The CoreAPI surface</h2>" +
+                "<p>The CoreAPI is the single Go interface that exposes all CMS capabilities to plugins, scripts, and the MCP server. It has ~35 methods across 15 domains. Three adapters wrap it: the Tengo modules, the gRPC SquillaHost service, and the internal Go interface used by core handlers.</p>" +
+                "<h2>Domains</h2>" +
+                "<ul>" +
+                "<li><strong>Nodes</strong> — CRUD + query</li>" +
+                "<li><strong>NodeTypes</strong> — register / get / list / update / delete</li>" +
+                "<li><strong>Taxonomies</strong> — register / list</li>" +
+                "<li><strong>Terms</strong> — list / create / update / delete</li>" +
+                "<li><strong>Settings</strong> — get / set / get-all</li>" +
+                "<li><strong>Events</strong> — emit / subscribe</li>" +
+                "<li><strong>Email</strong> — send (via event bus → provider plugin)</li>" +
+                "<li><strong>Menus</strong> — CRUD</li>" +
+                "<li><strong>Routes</strong> — register / remove</li>" +
+                "<li><strong>Filters</strong> — register / apply</li>" +
+                "<li><strong>Media</strong> — upload / get / query / delete</li>" +
+                "<li><strong>Users</strong> — get / query (read-only)</li>" +
+                "<li><strong>HTTP</strong> — outbound fetch</li>" +
+                "<li><strong>Log</strong> — leveled logging with caller prefix</li>" +
+                "<li><strong>DataStore</strong> — DataGet / DataQuery / DataCreate / DataUpdate / DataDelete / DataExec (raw SQL)</li>" +
+                "<li><strong>FileStorage</strong> — StoreFile / DeleteFile</li>" +
+                "</ul>" +
+                "<h2>Capability guard</h2>"
+            ),
+            note("HEADS UP", "heads-up",
+                "Every CoreAPI call from an extension or script is wrapped by <code>NewCapabilityGuard</code>. Calls outside the declared capability set return an error — there is no override. Internal callers (kernel code) bypass the guard."),
+            prose(
+                "<h3>The 24 capabilities</h3>" +
+                "<p>Capabilities are namespaced strings of the form <code>&lt;domain&gt;:&lt;verb&gt;</code>. The full set as of v0.1.0:</p>" +
+                "<ul>" +
+                "<li><strong>nodes</strong> — <code>nodes:read</code>, <code>nodes:write</code>, <code>nodes:delete</code></li>" +
+                "<li><strong>data</strong> — <code>data:read</code>, <code>data:write</code>, <code>data:delete</code>, <code>data:exec</code> (raw SQL)</li>" +
+                "<li><strong>files</strong> — <code>files:read</code>, <code>files:write</code>, <code>files:delete</code></li>" +
+                "<li><strong>media</strong> — <code>media:read</code>, <code>media:write</code>, <code>media:delete</code></li>" +
+                "<li><strong>settings</strong> — <code>settings:read</code>, <code>settings:write</code></li>" +
+                "<li><strong>events</strong> — <code>events:emit</code>, <code>events:subscribe</code></li>" +
+                "<li><strong>email</strong> — <code>email:send</code></li>" +
+                "<li><strong>routes</strong> — <code>routes:register</code></li>" +
+                "<li><strong>users</strong> — <code>users:read</code></li>" +
+                "<li><strong>http</strong> — <code>http:fetch</code></li>" +
+                "<li><strong>log</strong> — <code>log:write</code></li>" +
+                "</ul>" +
+                "<p>Inspect any installed extension's declared set by calling <code>core.extension.get(slug)</code> via MCP and reading <code>manifest.capabilities</code>.</p>"
+            )
+        ])
+
+        ensure_doc("api-mcp", "MCP Endpoints", "api", "API Reference",
+            "AI-native control via MCP.", 20, [
+            prose(
+                "<h2>What MCP gives you</h2>" +
+                "<p>The Model Context Protocol server exposes the CoreAPI as a structured tool surface. An AI agent can drive the entire CMS through ~50 tools across 15 domains — without filesystem or shell access. Every operation is a typed call with a typed response.</p>" +
+                "<blockquote>Activate a theme. The CMS reorganizes itself around it. No restart.<cite>— core.theme.activate</cite></blockquote>" +
+                "<h2>Transports</h2>" +
+                "<p>Two: stdio (for local agents like Claude Desktop and Cursor) and HTTP (for remote agents). Configure in <code>config.yaml</code> under <code>mcp.transport</code>.</p>" +
+                "<h2>Authentication</h2>" +
+                "<p>Bearer tokens with capability scopes. A token can be limited to specific tool classes (e.g. <code>nodes:read</code>, <code>theme:write</code>) so a content-only agent can't activate a theme. Tokens are issued at <code>/admin/settings/tokens</code>.</p>" +
+                "<h2>The core.guide meta-tool</h2>"
+            ),
+            note("TIP", "tip",
+                "Calling <code>core.guide</code> with no arguments returns a goal→tool decision tree plus the current CMS state (active theme, node counts, recent nodes). One call replaces ~10 discovery calls. Always start a session with <code>core.guide</code> if you don't have prior context."),
+            prose(
+                "<h2>Resource URIs</h2>" +
+                "<p>The MCP server also exposes <code>squilla://guidelines/themes</code>, <code>squilla://guidelines/extensions</code>, and ~10 other resource URIs that give an agent self-onboarding context — what conventions to follow when authoring a theme, the extension capability matrix, etc.</p>" +
+                "<h3>Audit log</h3>" +
+                "<p>Every MCP call is logged with token id, tool name, arguments, latency, and outcome. The log is queryable via <code>/admin/audit</code>.</p>" +
+                "<hr/>" +
+                "<h2>Hot-deploy tools</h2>" +
+                "<p><code>core.theme.deploy</code> and <code>core.extension.deploy</code> accept a base64-encoded zip and unpack it into <code>themes/</code> / <code>extensions/</code> via an atomic directory swap. 50MB cap. With <code>activate=true</code> the new package is registered AND activated in the same call — no server restart, no human in the loop.</p>"
+            ),
+            code("MCP call", "javascript",
+                "core.theme.deploy({\n" +
+                "  body_base64: \"...&lt;base64 zip&gt;...\",\n" +
+                "  activate:    true\n" +
+                "})")
+        ])
+    }
+}

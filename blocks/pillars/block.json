@@ -1,0 +1,64 @@
+{
+  "slug": "pillars",
+  "name": "Pillars (3-column)",
+  "description": "Three-column gallery of pillar cards used on the homepage. Each pillar has a number, color chip, title, body, and a small code/output sample.",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "p1_title",
+      "label": "Pillar 1 — title",
+      "type": "text"
+    },
+    {
+      "key": "p1_body",
+      "label": "Pillar 1 — body",
+      "type": "textarea"
+    },
+    {
+      "key": "p1_code",
+      "label": "Pillar 1 — code sample",
+      "type": "textarea"
+    },
+    {
+      "key": "p2_title",
+      "label": "Pillar 2 — title",
+      "type": "text"
+    },
+    {
+      "key": "p2_body",
+      "label": "Pillar 2 — body",
+      "type": "textarea"
+    },
+    {
+      "key": "p2_code",
+      "label": "Pillar 2 — code sample",
+      "type": "textarea"
+    },
+    {
+      "key": "p3_title",
+      "label": "Pillar 3 — title",
+      "type": "text"
+    },
+    {
+      "key": "p3_body",
+      "label": "Pillar 3 — body",
+      "type": "textarea"
+    },
+    {
+      "key": "p3_code",
+      "label": "Pillar 3 — code sample",
+      "type": "textarea"
+    }
+  ],
+  "test_data": {
+    "p1_body": "Roughly 50 MCP tools across 15 domains. An agent registers custom node types, seeds content, activates themes, manages extensions, renders previews — all through structured calls. No filesystem access, no shell, no human-in-the-loop required.",
+    "p1_code": "core.node.create({\n  type: \"recipe\",\n  fields: {…}\n})",
+    "p2_body": "The core is a minimal kernel: nodes, rendering, auth, CoreAPI, event bus. Anything feature-specific (media, email, forms, sitemap, blocks) is a sovereign gRPC extension that owns its full stack — its own tables, business logic, admin UI, migrations.",
+    "p2_code": "$ ls extensions/\nforms/        media-manager/\nemail-manager/ sitemap-generator/\ncontent-blocks/ resend-provider/",
+    "p3_body": "Atomic, hot-swapped config maps. Pre-resolved layout trees. JSONB + GIN-indexed content. PostgreSQL connection pooling. The kernel gets out of the way so the response gets out the door — fast.",
+    "p3_code": "GET /docs/quickstart\n→ 200 OK\n  template = pre-resolved\n  query    = single round-trip",
+    "p1_title": "AI-Native, MCP-First",
+    "p2_title": "Kernel + Extensions",
+    "p3_title": "Sub-millisecond strike"
+  }
+}

@@ -1,0 +1,16 @@
+// setup/filters.tengo — Register Tengo filter handlers used by partials/blocks.
+
+filters := import("core/filters")
+log     := import("core/log")
+
+export {
+    run: func() {
+        log.info("[squilla:setup] registering filters")
+        filters.add("list_docs",       "./filters/list_docs")
+        filters.add("doc_neighbors",   "./filters/doc_neighbors")
+        filters.add("list_posts",      "./filters/list_posts")
+        filters.add("post_categories", "./filters/post_categories")
+        filters.add("list_extensions", "./filters/list_extensions")
+        filters.add("list_themes",     "./filters/list_themes")
+    }
+}

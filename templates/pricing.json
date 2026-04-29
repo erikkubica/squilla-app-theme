@@ -1,0 +1,68 @@
+{
+  "name": "Pricing",
+  "description": "Page header + pricing card with FAQ.",
+  "thumbnail": "",
+  "blocks": [
+    {
+      "type": "page-header",
+      "fields": {
+        "sub": "Squilla is GPL-3.0. The repo is the product. There is no paid tier, no managed offering, no enterprise SKU — and no plans for any of those.",
+        "title": "There is no pricing.",
+        "eyebrow": "§ pricing"
+      }
+    },
+    {
+      "type": "pricing-card",
+      "fields": {
+        "faq": [
+          {
+            "a": "No, and there are no plans for one. Run it yourself or run nothing.",
+            "q": "Is there a managed/hosted version?"
+          },
+          {
+            "a": "No. The kernel doesn't know what an enterprise is.",
+            "q": "Is there an enterprise tier?"
+          },
+          {
+            "a": "The license can't. GPL-3.0 is one-way.",
+            "q": "Will pricing change later?"
+          }
+        ],
+        "badge": "FREE · GPL-3.0 · FOREVER",
+        "price": "$0",
+        "primary": {
+          "url": "/docs/installation",
+          "text": "docker compose up",
+          "target": "_self"
+        },
+        "features": [
+          {
+            "text": "Full kernel + all built-in extensions"
+          },
+          {
+            "text": "~50 MCP tools across 15 domains"
+          },
+          {
+            "text": "Sub-50ms TTFB target"
+          },
+          {
+            "text": "No telemetry · no CLA"
+          },
+          {
+            "text": "GPL-3.0 license"
+          },
+          {
+            "text": "Community support (Discord, GitHub)"
+          }
+        ],
+        "subtitle": "no usage limits · no seat caps · no feature gates",
+        "faq_label": "// FAQ",
+        "secondary": {
+          "url": "https://github.com/squilla-cms/squilla",
+          "text": "View on GitHub ↗",
+          "target": "_blank"
+        }
+      }
+    }
+  ]
+}

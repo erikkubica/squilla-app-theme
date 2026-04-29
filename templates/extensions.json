@@ -1,0 +1,19 @@
+{
+  "name": "Extensions Catalog",
+  "description": "Page header + auto-rendered grid of all installed extensions.",
+  "thumbnail": "",
+  "blocks": [
+    {
+      "type": "page-header",
+      "fields": {
+        "sub": "Each extension is a Go plugin binary, a React micro-frontend, SQL migrations, and a manifest — bundled together. The kernel never reaches inside.",
+        "title": "A package manager, but the packages are sovereign.",
+        "eyebrow": "§ extensions"
+      }
+    },
+    {
+      "type": "extensions-catalog",
+      "fields": {}
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+// setup/forms.tengo — Themed forms registered with the forms-extension.
+//
+// Each form has a backing layout under themes/squilla/forms/<slug>.html
+// using the theme's CSS classes. Pages render forms via:
+//   {{ safeHTML (event "forms:render" (dict "form_id" "<slug>")) }}
+//
+// Stub for now — populated once the design's contact / newsletter sections
+// are inventoried.
+
+events := import("core/events")
+assets := import("core/assets")
+log    := import("core/log")
+
+export {
+    run: func() {
+        log.info("[squilla:setup] registering themed forms")
+
+        // ─── Newsletter ───────────────────────────────────────
+        newsletter_layout := assets.read("forms/newsletter.html")
+        if !is_error(newsletter_layout) && newsletter_layout != "" {
+            events.emit("forms:upsert", {
+                slug:   "newsletter",
+                name:   "Newsletter Signup",
+                layout: newsletter_layout,
+                fields: [
+                    { id: "email", type: "email", label: "Email", required: true, placeholder: "you@example.com" }
+                ]
+            })
+        }
+
+        // ─── Contact ──────────────────────────────────────────
+        contact_layout := assets.read("forms/contact.html")
+        if !is_error(contact_layout) && contact_layout != "" {
+            events.emit("forms:upsert", {
+                slug:   "contact",
+                name:   "Contact",
+                layout: contact_layout,
+                fields: [
+                    { id: "name",    type: "text",     label: "Name",    required: true },
+                    { id: "email",   type: "email",    label: "Email",   required: true },
+                    { id: "message", type: "textarea", label: "Message", required: true }
+                ]
+            })
+        }
+    }
+}

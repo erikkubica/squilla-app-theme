@@ -1,0 +1,15 @@
+<section class="arch-lifecycle">
+  <div class="container container-wide">
+    <div class="h-eyebrow">{{.eyebrow}}</div>
+    <h2 class="arch-lifecycle__heading">{{.heading}}</h2>
+    <div class="arch-lifecycle__table">
+      {{ range .rows }}
+        <div class="arch-lifecycle__row">
+          <span class="arch-lifecycle__t">{{.time}}</span>
+          <span class="arch-lifecycle__k">{{.label}}</span>
+          <span class="arch-lifecycle__v">{{ safeHTML .detail }}</span>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</section>

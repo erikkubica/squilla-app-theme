@@ -1,0 +1,35 @@
+<section class="theme-showcase">
+  <div class="container container-wide">
+    <div class="theme-showcase__grid" data-cols="2-1">
+      <div>
+        <div class="h-eyebrow">{{.eyebrow}}</div>
+        <h2 class="theme-showcase__heading">{{ safeHTML .heading }}</h2>
+        <p class="theme-showcase__lead">{{ safeHTML .lead }}</p>
+
+        <div class="theme-showcase__rows">
+          {{ range .rows }}
+            <div class="theme-showcase__row" data-color="{{.color}}">
+              <div class="theme-showcase__row-key">
+                <span class="theme-showcase__row-chip"></span>
+                {{.key}}
+              </div>
+              <div class="theme-showcase__row-val">{{.value}}</div>
+            </div>
+          {{ end }}
+        </div>
+
+        <div class="theme-showcase__callout">{{.callout}}</div>
+      </div>
+
+      <div class="code" data-language="{{or .code_language "plaintext"}}">
+        <div class="code-header">
+          <span class="dot dot-coral"></span>
+          <span class="dot dot-amber"></span>
+          <span class="dot dot-lime"></span>
+          <span class="filename">{{.code_file}}</span>
+        </div>
+        {{ safeHTML .code_body }}
+      </div>
+    </div>
+  </div>
+</section>

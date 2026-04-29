@@ -1,0 +1,17 @@
+{
+  "slug": "doc-content",
+  "name": "Doc Content",
+  "description": "A trusted-HTML body block, used by docs and posts. Editors paste rich text. The on-this-page TOC in the docs layout reads h2/h3 from the rendered output.",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "body",
+      "label": "Body",
+      "type": "richtext",
+      "help": "Rich text. h2 and h3 headings get auto-IDs and feed the on-this-page list."
+    }
+  ],
+  "test_data": {
+    "body": "<h2>The CoreAPI surface</h2><p>The CoreAPI is the single Go interface that exposes all CMS capabilities to plugins, scripts, and the MCP server. It has ~35 methods across 15 domains. Three adapters wrap it: the Tengo modules, the gRPC SquillaHost service, and the internal Go interface used by core handlers.</p><h2>Domains</h2><ul><li><strong>Nodes</strong> — CRUD + query</li><li><strong>NodeTypes</strong> — register / get / list / update / delete</li><li><strong>Taxonomies</strong> — register / list</li><li><strong>Terms</strong> — list / create / update / delete</li><li><strong>Settings</strong> — get / set / get-all</li><li><strong>Events</strong> — emit / subscribe</li><li><strong>Email</strong> — send (via event bus → provider plugin)</li><li><strong>Menus</strong> — CRUD</li><li><strong>Routes</strong> — register / remove</li><li><strong>Filters</strong> — register / apply</li><li><strong>Media</strong> — upload / get / query / delete</li><li><strong>Users</strong> — get / query (read-only)</li><li><strong>HTTP</strong> — outbound fetch</li><li><strong>Log</strong> — leveled logging with caller prefix</li><li><strong>DataStore</strong> — DataGet / DataQuery / DataCreate / DataUpdate / DataDelete / DataExec (raw SQL)</li><li><strong>FileStorage</strong> — StoreFile / DeleteFile</li></ul><h2>Capability guard</h2>"
+  }
+}

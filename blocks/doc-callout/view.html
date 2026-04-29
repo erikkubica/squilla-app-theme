@@ -1,0 +1,6 @@
+{{- /* doc-callout — bare div with the prose-context-aware class.
+       Spacing comes from `.prose > * + *` natural rhythm. */ -}}
+<div class="doc-callout" data-variant="{{.variant}}">
+  <div class="doc-callout__label">{{.label}}</div>
+  <div class="doc-callout__body">{{ safeHTML .body }}</div>
+</div>

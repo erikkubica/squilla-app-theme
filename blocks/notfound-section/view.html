@@ -1,0 +1,22 @@
+<section class="notfound">
+  <div class="notfound__motif" data-squilla-eye data-size="520" data-density="dense" aria-hidden="true"></div>
+
+  <div class="container container-narrow notfound__inner">
+    <div class="notfound__http">{{.label}}</div>
+
+    <div class="notfound__num">{{.code}}</div>
+
+    <h2 class="notfound__heading">{{.heading}}</h2>
+    <p class="notfound__lead">{{.lead}}</p>
+
+    <div class="notfound__console">
+      {{ range .console_lines }}<div>{{ safeHTML .html }}</div>{{ end }}
+    </div>
+
+    <div class="notfound__buttons">
+      {{ range .buttons }}
+        <a class="btn{{ if .is_primary }} btn-primary{{ end }}" href="{{.link.url}}"{{ with .link.target }} target="{{.}}"{{ end }}>{{.link.text}}</a>
+      {{ end }}
+    </div>
+  </div>
+</section>

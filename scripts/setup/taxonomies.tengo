@@ -1,0 +1,51 @@
+// setup/taxonomies.tengo — Taxonomy registrations for the Squilla theme.
+//
+// Two custom taxonomies:
+//   - source       : "official" / "community" / "verified" — applies to
+//                    extensions and themes in the marketplace catalog.
+//   - doc_section  : top-level grouping for documentation pages
+//                    (e.g. "getting-started", "extensions", "themes",
+//                    "scripting", "api"). Used to render the docs sidebar
+//                    grouped by section.
+//
+// The default "category" taxonomy ships with core for posts/pages, so we
+// don't redeclare it here.
+
+taxonomies := import("core/taxonomies")
+log        := import("core/log")
+
+export {
+    run: func() {
+        log.info("[squilla:setup] registering taxonomies")
+
+        taxonomies.register({
+            slug:         "source",
+            label:        "Source",
+            label_plural: "Sources",
+            description:  "Where this extension/theme comes from (official, community, verified).",
+            hierarchical: false,
+            node_types:   ["extension", "theme"]
+        })
+
+        taxonomies.register({
+            slug:         "doc_section",
+            label:        "Doc Section",
+            label_plural: "Doc Sections",
+            description:  "Top-level grouping for documentation pages.",
+            hierarchical: false,
+            node_types:   ["documentation"]
+        })
+
+        // Re-register the default `category` taxonomy with `post` so the
+        // admin's post-edit form shows the category selector. (Core seeds
+        // `category` for nothing by default; themes wire it up.)
+        taxonomies.register({
+            slug:         "category",
+            label:        "Category",
+            label_plural: "Categories",
+            description:  "Blog post categories.",
+            hierarchical: false,
+            node_types:   ["post"]
+        })
+    }
+}

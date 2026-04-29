@@ -1,0 +1,140 @@
+{
+  "slug": "legal-tabs",
+  "name": "Legal — tabbed text",
+  "description": "Tabbed legal content. Each tab has a slug + label + a list of (heading, body) sections. JS toggles visibility based on URL hash (#license, #privacy, …) — refresh keeps the active tab.",
+  "category": "squilla",
+  "field_schema": [
+    {
+      "key": "tabs",
+      "label": "Tabs",
+      "type": "repeater",
+      "sub_fields": [
+        {
+          "label": "Tab slug (URL hash)",
+          "type": "text",
+          "key": "slug"
+        },
+        {
+          "label": "Tab label",
+          "type": "text",
+          "key": "label"
+        },
+        {
+          "label": "Sections",
+          "type": "repeater",
+          "sub_fields": [
+            {
+              "label": "Heading",
+              "type": "text",
+              "key": "heading"
+            },
+            {
+              "label": "Body (HTML allowed)",
+              "type": "richtext",
+              "key": "body"
+            }
+          ],
+          "key": "sections"
+        }
+      ]
+    }
+  ],
+  "test_data": {
+    "tabs": [
+      {
+        "slug": "license",
+        "label": "License",
+        "sections": [
+          {
+            "body": "Squilla is licensed under the <span style=\"color: var(--accent)\">GNU General Public License v3.0</span>. You can use, modify, and distribute it. If you distribute a modified version, you must release the source under the same license. The full text is in the LICENSE file at the root of the repository. The summary above is not a substitute.",
+            "heading": "License — GPL-3.0"
+          },
+          {
+            "body": "Free as in freedom, and free as in price. There is no commercial license tier, no SaaS escape hatch, no enterprise add-on. The repository is the product.",
+            "heading": "What \"free\" means here"
+          },
+          {
+            "body": "Contributors do not sign a Contributor License Agreement. You retain copyright in your contributions; you license them under GPL-3.0 by submitting a PR.",
+            "heading": "No CLA"
+          }
+        ]
+      },
+      {
+        "slug": "privacy",
+        "label": "Privacy",
+        "sections": [
+          {
+            "body": "The Squilla CMS itself collects nothing. No telemetry. No phone-home. No anonymous metrics. The binary doesn't make outbound network calls unless you configure an extension that does.",
+            "heading": "What we collect"
+          },
+          {
+            "body": "This marketing site uses no cookies, no analytics, no third-party trackers. Server logs (IP, user-agent, path, timestamp) are kept for 14 days for abuse detection, then deleted.",
+            "heading": "This website"
+          },
+          {
+            "body": "Fonts are loaded from Google Fonts. If that bothers you, build the site locally — the source is in the repo.",
+            "heading": "Third parties"
+          }
+        ]
+      },
+      {
+        "slug": "terms",
+        "label": "Terms",
+        "sections": [
+          {
+            "body": "You can read it. You can link to it. You can scrape it (the robots.txt is permissive). You cannot pretend you wrote it.",
+            "heading": "Use of this site"
+          },
+          {
+            "body": "Squilla is provided \"as is\", without warranty of any kind. See the GPL-3.0 license for the legally-binding version of that sentence.",
+            "heading": "No warranty"
+          },
+          {
+            "body": "\"Squilla\" and the compound-eye mark are unregistered trademarks of the Squilla project. Use them to refer to the project. Don't use them to brand a fork.",
+            "heading": "Trademarks"
+          }
+        ]
+      },
+      {
+        "slug": "security",
+        "label": "Security",
+        "sections": [
+          {
+            "body": "Email <span style=\"color: var(--accent)\">security@squilla.dev</span> with reproduction steps. PGP key is on the keyserver. We respond within 72 hours.",
+            "heading": "Reporting a vulnerability"
+          },
+          {
+            "body": "Standard 90 days from acknowledgement. We can negotiate longer for severe issues; we won't sit on something past 90 days for marketing reasons.",
+            "heading": "Disclosure timeline"
+          },
+          {
+            "body": "None. We're a small project on a zero-revenue license. We will publicly thank you and add you to the acknowledgements page.",
+            "heading": "Bug bounty"
+          }
+        ]
+      },
+      {
+        "slug": "brand",
+        "label": "Brand",
+        "sections": [
+          {
+            "body": "The compound-eye dot cluster represents Squilla's segmented architecture and multi-spectrum perception. Don't recolor it; the iridescent palette is part of the identity.",
+            "heading": "The mark"
+          },
+          {
+            "body": "Set in JetBrains Mono Medium. Lowercase always. The trailing slash is part of it; please don't drop it.",
+            "heading": "The wordmark"
+          },
+          {
+            "body": "Use the kit in articles, talks, screenshots, blog posts. Link back if you can.",
+            "heading": "Do"
+          },
+          {
+            "body": "Don't combine the mark with another logo. Don't suggest we endorse your product. Don't ship a fork called \"Squilla X\".",
+            "heading": "Don't"
+          }
+        ]
+      }
+    ]
+  }
+}

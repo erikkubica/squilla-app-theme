@@ -1,0 +1,21 @@
+{
+  "name": "Blog Index",
+  "description": "Page header + paginated blog list (6 posts/page, AJAX category filter).",
+  "thumbnail": "",
+  "blocks": [
+    {
+      "type": "page-header",
+      "fields": {
+        "sub": "Long-form posts from the people building Squilla. We don't post often — only when there's something worth reading.",
+        "title": "Engineering, philosophy, releases.",
+        "eyebrow": "§ blog"
+      }
+    },
+    {
+      "type": "blog-list",
+      "fields": {
+        "page_size": 6
+      }
+    }
+  ]
+}

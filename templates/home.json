@@ -1,0 +1,336 @@
+{
+  "name": "Squilla Homepage",
+  "description": "Hero, pillars, architecture, MCP showcase, extensions grid, theme showcase, performance, footer CTA.",
+  "thumbnail": "",
+  "blocks": [
+    {
+      "type": "sq-hero",
+      "fields": {
+        "lead": "Squilla is an open-source, Go-based content management system built around one idea: an AI agent should be able to build, populate, and operate an entire website with zero human intervention. Every operation is exposed as an <span style=\"color: var(--accent)\">MCP tool</span>. Every feature lives in a sovereign gRPC extension. The kernel stays small, the system stays fast.",
+        "eyebrow": "AI-native · kernel-class · mantis-shrimp-fast",
+        "primary": {
+          "url": "/docs/installation",
+          "text": "docker compose up",
+          "target": "_self"
+        },
+        "headline": "The CMS where AI does the work.",
+        "tertiary": {
+          "url": "/about",
+          "text": "read the brief →",
+          "target": "_self"
+        },
+        "secondary": {
+          "url": "https://github.com/squilla-cms/squilla",
+          "text": "View on GitHub",
+          "target": "_blank"
+        }
+      }
+    },
+    {
+      "type": "pillars",
+      "fields": {
+        "p1_body": "~50 MCP tools across 15 domains. An agent can register custom node types, seed content, activate themes, manage extensions, render previews — all through structured calls. No filesystem access required.",
+        "p1_code": "core.node.create({\n  type: \"recipe\",\n  fields: {…}\n})",
+        "p2_body": "The core is a minimal kernel: nodes, rendering, auth, CoreAPI. Everything feature-specific (media, email, forms, SEO) is a gRPC plugin extension that owns its full stack — database tables, business logic, admin UI, migrations.",
+        "p2_code": "$ ls extensions/\nforms/        media/\nemail/        sitemap/",
+        "p3_body": "Atomic operations for hot-swapped config maps. Pre-resolved layouts. JSONB + GIN indexes. PostgreSQL connection pooling. No N+1 queries. The CMS gets out of the way.",
+        "p3_code": "GET /recipes/scallops\n→ 23ms · 200 OK\n  ttfb=18ms render=5ms",
+        "p1_title": "AI-Native, MCP-First",
+        "p2_title": "Kernel + Extensions",
+        "p3_title": "Sub-50ms TTFB"
+      }
+    },
+    {
+      "type": "arch-diagram",
+      "fields": {
+        "lead": "Squilla's architecture is borrowed from operating systems: the kernel does the minimum required to be a CMS, and everything else is a sovereign extension. Disable an extension and there is no dead code in core. Add a new extension and it brings its own database tables, HTTP routes, admin UI pages, scripts, and migrations.",
+        "rule": "If disabling an extension would leave dead code in core, that code belongs in the extension, not the core.",
+        "layers": [
+          {
+            "desc": "Fiber HTTP · pre-resolved layouts · cached",
+            "color": "ink-3",
+            "label": "PUBLIC WEB"
+          },
+          {
+            "desc": "Model Context Protocol · ~50 tools · stdio + http",
+            "color": "coral",
+            "label": "MCP SERVER"
+          },
+          {
+            "desc": "nodes · rendering · auth · event bus · capability gates",
+            "color": "teal",
+            "label": "KERNEL (CoreAPI)"
+          },
+          {
+            "desc": "HashiCorp go-plugin · bidirectional · GRPCBroker",
+            "color": "violet",
+            "label": "gRPC PLUGIN BUS"
+          },
+          {
+            "desc": "media · forms · email · sitemap · blocks · providers",
+            "color": "magenta",
+            "label": "EXTENSIONS"
+          },
+          {
+            "desc": "JSONB · GIN indexes · per-extension migrations · pooling",
+            "color": "lime",
+            "label": "POSTGRESQL 16"
+          }
+        ],
+        "legend": [
+          {
+            "key": "kernel",
+            "val": "internal/cms · internal/coreapi"
+          },
+          {
+            "key": "extensions",
+            "val": "extensions/*/plugin.go"
+          },
+          {
+            "key": "themes",
+            "val": "themes/*/theme.tengo"
+          }
+        ],
+        "eyebrow": "§ architecture",
+        "heading": "A kernel<br/>for kernels.",
+        "rule_label": "HARD RULE"
+      }
+    },
+    {
+      "type": "mcp-console",
+      "fields": {
+        "lead": "Squilla exposes ~50 Model Context Protocol tools across 15 domains. An AI agent can drive the entire CMS through structured API calls — create node types, seed content, activate themes, install extensions, preview rendered pages.",
+        "stats": [
+          {
+            "label": "tools",
+            "value": "~50"
+          },
+          {
+            "label": "domains",
+            "value": "15"
+          },
+          {
+            "label": "capability gates",
+            "value": "24"
+          },
+          {
+            "label": "avg call latency",
+            "value": "32ms"
+          }
+        ],
+        "eyebrow": "§ MCP showcase",
+        "heading": "Every operation<br/>is a tool an<br/>AI can call.",
+        "all_link": {
+          "url": "/docs/mcp-tools",
+          "text": "view all 50 tools →",
+          "target": "_self"
+        },
+        "endpoint": "mcp://squilla.local",
+        "session_id": "session a4f9e2",
+        "transcript": [
+          {
+            "t": "sys",
+            "text": "agent connected · session a4f9e2 · capabilities=24/24 · tools=50"
+          },
+          {
+            "t": "user",
+            "text": "Build a recipe blog with 10 example recipes."
+          },
+          {
+            "t": "plan",
+            "text": "6-step plan: theme → activation → nodetype → seed → preview → menu"
+          },
+          {
+            "t": "call",
+            "dur": 14,
+            "tool": "core.theme.list",
+            "color": "teal",
+            "args_text": "tags: [\"recipe\", \"food\"]"
+          },
+          {
+            "t": "res",
+            "text": "found 3 themes · selecting hello-vietnam (best schema match)"
+          },
+          {
+            "t": "call",
+            "dur": 31,
+            "tool": "core.theme.activate",
+            "color": "lime",
+            "args_text": "id: \"hello-vietnam\""
+          },
+          {
+            "t": "res",
+            "text": "activated · seeded 4 node types · 1 menu · 12 settings"
+          },
+          {
+            "t": "call",
+            "dur": 22,
+            "tool": "core.nodetype.create",
+            "color": "violet",
+            "args_text": "slug: \"recipe\", fields: 7"
+          },
+          {
+            "t": "res",
+            "text": "recipe type registered · table content_recipes created"
+          },
+          {
+            "t": "call",
+            "dur": 84,
+            "tool": "core.node.create",
+            "color": "magenta",
+            "args_text": "type: \"recipe\", batch: 10"
+          },
+          {
+            "t": "res",
+            "text": "10 recipes drafted · ids=[101..110]"
+          },
+          {
+            "t": "call",
+            "dur": 19,
+            "tool": "core.render.node_preview",
+            "color": "coral",
+            "args_text": "url: \"/recipes/scallops\""
+          },
+          {
+            "t": "res",
+            "text": "rendered · 4.1KB · ttfb=18ms · ok"
+          },
+          {
+            "t": "call",
+            "dur": 11,
+            "tool": "core.menu.update",
+            "color": "amber",
+            "args_text": "items: 4"
+          },
+          {
+            "t": "res",
+            "text": "navigation wired · publishing…"
+          },
+          {
+            "t": "done",
+            "text": "site live at http://localhost:3000 · 10 recipes published in 12.4s"
+          }
+        ],
+        "pause_label": "❚❚ pause",
+        "capabilities": "capabilities 24/24",
+        "replay_label": "↻ replay"
+      }
+    },
+    {
+      "type": "extensions-grid",
+      "fields": {
+        "cta": {
+          "url": "/docs/extension-grpc",
+          "text": "build your own extension",
+          "target": "_self"
+        },
+        "lead": "Squilla ships with reference extensions that exercise every part of the extension API. They are not core code in disguise — they're the same gRPC plugins you'd build yourself.",
+        "eyebrow": "§ built-in extensions",
+        "heading": "Six extensions out of the box.<br/>Built like a third-party would build them."
+      }
+    },
+    {
+      "type": "theme-showcase",
+      "fields": {
+        "lead": "A Squilla theme is a self-contained package: layouts, partials, content blocks, assets, Tengo scripts that seed content on activation. Activating a theme runs its <code style=\"color: var(--accent)\">theme.tengo</code> script — registering node types, taxonomies, and seeding pages — with zero server restart.",
+        "rows": [
+          {
+            "key": "Layouts",
+            "color": "teal",
+            "value": "Page-level templates. .node · .app · .user"
+          },
+          {
+            "key": "Partials",
+            "color": "violet",
+            "value": "Reusable fragments. Same context plus .partial"
+          },
+          {
+            "key": "Blocks",
+            "color": "magenta",
+            "value": "Atomic content units. Self-contained, schema-defined, render with their own field data only."
+          }
+        ],
+        "callout": "Activate a theme. The CMS reorganizes itself around it. No restart.",
+        "eyebrow": "§ themes",
+        "heading": "Themes are<br/>sovereign too.",
+        "code_body": "<pre><code>core    := import(\"core/cms\")\nnodes   := import(\"core/nodes\")\nevents  := import(\"core/events\")\n\n// register the recipe node type\nnodes.register_type({\n  slug: \"recipe\",\n  fields: [\n    {name: \"hero_image\",   type: \"media\"},\n    {name: \"prep_minutes\", type: \"int\"},\n    {name: \"servings\",     type: \"int\"},\n    {name: \"ingredients\",  type: \"repeater\"},\n    {name: \"instructions\", type: \"richtext\"},\n  ]\n})\n\n// seed a starter recipe\ncore.node_create({\n  type:  \"recipe\",\n  title: \"Caramelized scallops\",\n  fields: { prep_minutes: 18, servings: 2 }\n})\n\nevents.emit(\"theme.seeded\", { theme: \"hello-vietnam\" })</code></pre>",
+        "code_file": "themes/hello-vietnam/theme.tengo",
+        "code_language": "javascript"
+      }
+    },
+    {
+      "type": "perf-section",
+      "fields": {
+        "stats": [
+          {
+            "label": "p50",
+            "value": "21ms"
+          },
+          {
+            "label": "p95",
+            "value": "38ms"
+          },
+          {
+            "label": "p99",
+            "value": "46ms"
+          }
+        ],
+        "bullets": [
+          {
+            "text": "Atomic configuration maps — hot-swapped without locks"
+          },
+          {
+            "text": "Pre-resolved layout trees — no template lookup at request time"
+          },
+          {
+            "text": "JSONB + GIN indexes for content — sub-millisecond field queries"
+          },
+          {
+            "text": "PostgreSQL connection pooling — saturated under load"
+          },
+          {
+            "text": "No N+1 queries — eager-loaded relations across all read paths"
+          },
+          {
+            "text": "Sub-50ms TTFB target on public pages, measured in CI"
+          }
+        ],
+        "eyebrow": "§ performance",
+        "heading": "Built for the metric<br/>that matters: TTFB.",
+        "tag_text": "under budget",
+        "ttfb_label": "LIVE TTFB · /recipes/scallops",
+        "budget_text": "50ms budget",
+        "ttfb_initial": 23
+      }
+    },
+    {
+      "type": "footer-cta",
+      "fields": {
+        "lead": "Five extensions active, one theme seeded. You're three minutes from publishing.",
+        "eyebrow": "§ try it",
+        "heading": "Three minutes from publishing.",
+        "primary": {
+          "url": "/docs/installation",
+          "text": "docker compose up",
+          "target": "_self"
+        },
+        "secondary": {
+          "url": "https://github.com/squilla-cms/squilla",
+          "text": "View on GitHub ↗",
+          "target": "_blank"
+        },
+        "console_lines": [
+          {
+            "html": "<span style=\"color: var(--ink-3)\">$</span> <span style=\"color: var(--accent)\">git clone</span> github.com/squilla/squilla"
+          },
+          {
+            "html": "<span style=\"color: var(--ink-3)\">$</span> <span style=\"color: var(--accent)\">docker compose up</span> --build"
+          },
+          {
+            "html": "<span style=\"color: var(--ink-3)\">→ app at localhost:3000 · admin login printed to logs</span>"
+          }
+        ]
+      }
+    }
+  ]
+}

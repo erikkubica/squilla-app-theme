@@ -1,0 +1,28 @@
+{{- /* Themes catalog — pulls real theme nodes. */ -}}
+{{- $themes := filter "list_themes" (dict "limit" 500) -}}
+<section class="th-cat">
+  <div class="container container-wide">
+    <div class="th-cat__grid" data-grid="3">
+      {{ range $themes }}
+        <div class="th-cat__card" data-color="{{.color}}">
+          <div class="th-cat__preview">
+            <div class="eyegrid th-cat__preview-grid" aria-hidden="true"></div>
+            <div class="th-cat__preview-fade" aria-hidden="true"></div>
+            <div class="th-cat__preview-text">
+              <div class="th-cat__preview-lbl">THEME PREVIEW</div>
+              <div class="th-cat__preview-name">{{.slug}}</div>
+            </div>
+          </div>
+          <div class="th-cat__body">
+            <div class="th-cat__row">
+              <span class="th-cat__name">{{.title}}</span>
+              <span class="th-cat__ver">v{{.version}}</span>
+            </div>
+            <p class="th-cat__desc">{{.tagline}}</p>
+            <div class="th-cat__stack">by <span>{{.author}}</span></div>
+          </div>
+        </div>
+      {{ end }}
+    </div>
+  </div>
+</section>

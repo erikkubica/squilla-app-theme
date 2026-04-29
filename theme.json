@@ -1,0 +1,84 @@
+{
+  "slug":        "squilla",
+  "name":        "Squilla",
+  "version":     "0.1.0",
+  "description": "The official Squilla marketing, marketplace, and docs theme.",
+  "author":      "Squilla Team",
+
+  "styles":  [
+    { "handle": "theme-css", "src": "styles/theme.css", "position": "head" }
+  ],
+  "scripts": [
+    { "handle": "theme-js",  "src": "scripts/theme.js",  "position": "foot" }
+  ],
+
+  "layouts": [
+    { "slug": "default", "name": "Default",  "file": "default.html", "is_default": true },
+    { "slug": "docs",    "name": "Docs (3-column)",            "file": "docs.html" },
+    { "slug": "post",    "name": "Blog post (centered prose)", "file": "post.html" },
+    { "slug": "error",   "name": "Error (404)",                "file": "error.html" }
+  ],
+
+  "partials": [
+    { "slug": "site-header",     "name": "Site Header",     "file": "site-header.html" },
+    { "slug": "site-footer",     "name": "Site Footer",     "file": "site-footer.html" },
+    { "slug": "docs-index",      "name": "Docs sidebar",    "file": "docs-index.html" },
+    { "slug": "docs-prev-next",  "name": "Docs prev/next",  "file": "docs-prev-next.html" }
+  ],
+
+  "blocks": [
+    { "slug": "intro-placeholder",   "dir": "intro-placeholder" },
+    { "slug": "doc-content",         "dir": "doc-content" },
+    { "slug": "doc-callout",         "dir": "doc-callout" },
+    { "slug": "doc-codeblock",       "dir": "doc-codeblock" },
+    { "slug": "doc-image",           "dir": "doc-image" },
+    { "slug": "doc-gallery",         "dir": "doc-gallery" },
+    { "slug": "sq-hero",             "dir": "sq-hero" },
+    { "slug": "pillars",             "dir": "pillars" },
+    { "slug": "arch-diagram",        "dir": "arch-diagram" },
+    { "slug": "mcp-console",         "dir": "mcp-console" },
+    { "slug": "extensions-grid",     "dir": "extensions-grid" },
+    { "slug": "theme-showcase",      "dir": "theme-showcase" },
+    { "slug": "perf-section",        "dir": "perf-section" },
+    { "slug": "footer-cta",          "dir": "footer-cta" },
+    { "slug": "page-header",         "dir": "page-header" },
+    { "slug": "features-grid",       "dir": "features-grid" },
+    { "slug": "arch-lifecycle",      "dir": "arch-lifecycle" },
+    { "slug": "extensions-catalog",  "dir": "extensions-catalog" },
+    { "slug": "themes-catalog",      "dir": "themes-catalog" },
+    { "slug": "text-block",          "dir": "text-block" },
+    { "slug": "about-principles",    "dir": "about-principles" },
+    { "slug": "about-name",          "dir": "about-name" },
+    { "slug": "blog-list",           "dir": "blog-list" },
+    { "slug": "blog-post-meta",      "dir": "blog-post-meta" },
+    { "slug": "showcase-grid",       "dir": "showcase-grid" },
+    { "slug": "pricing-card",        "dir": "pricing-card" },
+    { "slug": "legal-tabs",          "dir": "legal-tabs" },
+    { "slug": "notfound-section",    "dir": "notfound-section" }
+  ],
+
+  "templates": [
+    { "slug": "home",         "file": "home.json" },
+    { "slug": "features",     "file": "features.json" },
+    { "slug": "architecture", "file": "architecture.json" },
+    { "slug": "extensions",   "file": "extensions.json" },
+    { "slug": "themes",       "file": "themes.json" },
+    { "slug": "about",        "file": "about.json" },
+    { "slug": "blog",         "file": "blog.json" },
+    { "slug": "showcase",     "file": "showcase.json" },
+    { "slug": "pricing",      "file": "pricing.json" },
+    { "slug": "legal",        "file": "legal.json" },
+    { "slug": "changelog",    "file": "changelog.json" },
+    { "slug": "contact",      "file": "contact.json" }
+  ],
+
+  "assets": [
+    { "key": "showcase-squilla",          "src": "images/showcase-squilla.jpg",          "alt": "squilla.app marketing site screenshot",          "width": 1440, "height": 900 },
+    { "key": "showcase-hello-vietnam",    "src": "images/showcase-hello-vietnam.jpg",    "alt": "Hello Vietnam demo theme screenshot",            "width": 1440, "height": 900 },
+    { "key": "showcase-curriculum-vitae", "src": "images/showcase-curriculum-vitae.jpg", "alt": "Curriculum Vitae demo theme screenshot",         "width": 1440, "height": 900 }
+  ],
+
+  "image_sizes": [
+    { "name": "showcase-thumb", "width": 450, "height": 350, "mode": "crop" }
+  ]
+}

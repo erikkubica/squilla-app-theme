@@ -1,0 +1,51 @@
+// list_themes.tengo — query theme marketplace listings.
+//   {{ filter "list_themes" (dict "limit" 50) }}
+
+nodes := import("core/nodes")
+
+input := value
+if is_undefined(input) { input = {} }
+limit := 50
+if !is_undefined(input.limit) { limit = input.limit }
+
+PALETTE := ["teal", "violet", "coral", "lime", "magenta", "amber"]
+
+res := nodes.query({
+    node_type: "theme",
+    status:    "published",
+    limit:     limit,
+    order_by:  "title asc"
+})
+
+if is_error(res) {
+    response = []
+} else {
+    out := []
+    for i, n in res.nodes {
+        f := n.fields_data
+        if is_undefined(f) { f = {} }
+
+        source_slug := ""
+        if !is_undefined(f.source) {
+            sv := f.source
+            if is_string(sv) { source_slug = sv } else if !is_undefined(sv.slug) { source_slug = sv.slug }
+        }
+
+        out = append(out, {
+            id:        n.id,
+            slug:      n.slug,
+            title:     n.title,
+            url:       n.full_url,
+            tagline:   f.tagline,
+            source:    source_slug,
+            version:   f.version,
+            author:    f.author,
+            downloads: f.downloads,
+            rating:    f.rating,
+            price:     f.price,
+            featured:  f.featured,
+            color:     PALETTE[i % len(PALETTE)]
+        })
+    }
+    response = out
+}
