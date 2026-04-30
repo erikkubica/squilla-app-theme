@@ -323,6 +323,12 @@
     // mid-browse). Keyboard: ←/→ navigate, Esc closes.
     const lb = host.querySelector('[data-gtabs-lb]');
     if (!lb) return;
+    // Move the lightbox to <body> so it escapes the section's stacking
+    // context (`.page > * { z-index: 1 }` in theme.css traps anything
+    // inside, even position:fixed children, behind the sticky header at
+    // z-index 50 in the page-level context). Reparenting once at init is
+    // the cheapest way to win without restructuring the page wrapper.
+    if (lb.parentNode !== document.body) document.body.appendChild(lb);
     const lbImg = lb.querySelector('.gtabs-lb__img');
     const lbPos = lb.querySelector('[data-lb-pos]');
     const lbAlt = lb.querySelector('[data-lb-alt-text]');
