@@ -355,17 +355,40 @@ export {
                 ]
             } },
             { type: "gallery-tabs", fields: {
-                eyebrow: "§ behind the curtain",
-                title:   "The making-of.",
+                eyebrow: "§ admin",
+                title:   "The admin, end-to-end.",
                 tabs: [
-                    { slug: "studio", label: "Studio", caption: "<p>Photos coming soon — placeholders for now.</p>", images: [
-                        { image: {}, alt: "placeholder" }, { image: {}, alt: "placeholder" }, { image: {}, alt: "placeholder" }
+                    { slug: "content", label: "Content", caption: "<p>Dashboard, content nodes, content types, taxonomies, terms, menus, and languages — every authoring surface in one shell.</p>", images: [
+                        { image: { url: "theme-asset:admin-dashboard" },         alt: "Squilla admin dashboard" },
+                        { image: { url: "theme-asset:admin-node-listing" },      alt: "Content listing" },
+                        { image: { url: "theme-asset:admin-node-edit" },         alt: "Editing a content node" },
+                        { image: { url: "theme-asset:admin-content-type-edit" }, alt: "Editing a content type" },
+                        { image: { url: "theme-asset:admin-taxonomy-edit" },     alt: "Editing a taxonomy" },
+                        { image: { url: "theme-asset:admin-term-listing" },      alt: "Term listing" },
+                        { image: { url: "theme-asset:admin-term-edit" },         alt: "Editing a term" },
+                        { image: { url: "theme-asset:admin-menu-edit" },         alt: "Menu editor" },
+                        { image: { url: "theme-asset:admin-languages-list" },    alt: "Languages list" }
                     ] },
-                    { slug: "builds", label: "Builds", caption: "<p>Photos coming soon — placeholders for now.</p>", images: [
-                        { image: {}, alt: "placeholder" }, { image: {}, alt: "placeholder" }, { image: {}, alt: "placeholder" }
+                    { slug: "media", label: "Media", caption: "<p>Library grid, picker popup, and image optimisation pipeline — first-class media handling provided by the bundled <code>media-manager</code> extension.</p>", images: [
+                        { image: { url: "theme-asset:admin-media-grid" },      alt: "Media library grid" },
+                        { image: { url: "theme-asset:admin-media-popup" },     alt: "Media picker popup" },
+                        { image: { url: "theme-asset:admin-image-optimizer" }, alt: "Image optimiser" }
                     ] },
-                    { slug: "life",   label: "Life",   caption: "<p>Photos coming soon — placeholders for now.</p>", images: [
-                        { image: {}, alt: "placeholder" }, { image: {}, alt: "placeholder" }, { image: {}, alt: "placeholder" }, { image: {}, alt: "placeholder" }
+                    { slug: "theme", label: "Theme", caption: "<p>Themes, layouts, templates, and block types — design surfaces editable from the admin without leaving the browser.</p>", images: [
+                        { image: { url: "theme-asset:admin-theme-listing" },      alt: "Theme listing" },
+                        { image: { url: "theme-asset:admin-theme-files" },        alt: "Theme files browser" },
+                        { image: { url: "theme-asset:admin-layout-edit" },        alt: "Layout editor" },
+                        { image: { url: "theme-asset:admin-layout-block-edit" },  alt: "Editing a layout block" },
+                        { image: { url: "theme-asset:admin-templates" },          alt: "Templates list" },
+                        { image: { url: "theme-asset:admin-template-edit" },      alt: "Template editor" },
+                        { image: { url: "theme-asset:admin-block-type-listing" }, alt: "Block type listing" },
+                        { image: { url: "theme-asset:admin-block-type-new" },     alt: "New block type" }
+                    ] },
+                    { slug: "system", label: "System", caption: "<p>Extensions and email — the operational surface for everything that isn't content. All extensions are first-class, including the ones bundled with the kernel.</p>", images: [
+                        { image: { url: "theme-asset:admin-extension-listing" },      alt: "Extension listing" },
+                        { image: { url: "theme-asset:admin-email-template-listing" }, alt: "Email template listing" },
+                        { image: { url: "theme-asset:admin-email-log" },              alt: "Email log detail" },
+                        { image: { url: "theme-asset:admin-email-sender-settings" },  alt: "Email sender settings" }
                     ] }
                 ]
             } }

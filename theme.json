@@ -78,7 +78,35 @@
     { "key": "showcase-squilla",          "src": "images/showcase-squilla.jpg",          "alt": "squilla.app marketing site screenshot",          "width": 1440, "height": 900 },
     { "key": "showcase-hello-vietnam",    "src": "images/showcase-hello-vietnam.jpg",    "alt": "Hello Vietnam demo theme screenshot",            "width": 1440, "height": 900 },
     { "key": "showcase-curriculum-vitae", "src": "images/showcase-curriculum-vitae.jpg", "alt": "Curriculum Vitae demo theme screenshot",         "width": 1440, "height": 900 },
-    { "key": "team-erik",                 "src": "images/team-erik.jpg",                 "alt": "Erik Kubica, founder",                            "width": 600,  "height": 600 }
+    { "key": "team-erik",                 "src": "images/team-erik.jpg",                 "alt": "Erik Kubica, founder",                            "width": 600,  "height": 600 },
+
+    { "key": "admin-dashboard",           "src": "images/dashboard.png",                 "alt": "Squilla admin dashboard" },
+    { "key": "admin-node-listing",        "src": "images/node-listing.png",              "alt": "Content listing in the Squilla admin" },
+    { "key": "admin-node-edit",           "src": "images/node-edit.png",                 "alt": "Editing a content node in the Squilla admin" },
+    { "key": "admin-content-type-edit",   "src": "images/content-type-edit.png",         "alt": "Editing a content type in the Squilla admin" },
+    { "key": "admin-taxonomy-edit",       "src": "images/taxonomy-edit.png",             "alt": "Editing a taxonomy in the Squilla admin" },
+    { "key": "admin-term-listing",        "src": "images/term-listing.png",              "alt": "Term listing in the Squilla admin" },
+    { "key": "admin-term-edit",           "src": "images/term-edit.png",                 "alt": "Editing a term in the Squilla admin" },
+    { "key": "admin-menu-edit",           "src": "images/menu-edit.png",                 "alt": "Menu editor in the Squilla admin" },
+    { "key": "admin-languages-list",      "src": "images/languages-list.png",            "alt": "Languages list in the Squilla admin" },
+
+    { "key": "admin-media-grid",          "src": "images/media-grid.png",                "alt": "Media library grid in the Squilla admin" },
+    { "key": "admin-media-popup",         "src": "images/media-popup.png",               "alt": "Media picker popup in the Squilla admin" },
+    { "key": "admin-image-optimizer",     "src": "images/image-optimizer.png",           "alt": "Image optimisation pipeline in the Squilla admin" },
+
+    { "key": "admin-theme-listing",       "src": "images/theme-listing.png",             "alt": "Theme listing in the Squilla admin" },
+    { "key": "admin-theme-files",         "src": "images/theme-files.png",               "alt": "Theme files browser in the Squilla admin" },
+    { "key": "admin-layout-edit",         "src": "images/layout-edit.png",               "alt": "Layout editor in the Squilla admin" },
+    { "key": "admin-layout-block-edit",   "src": "images/layout-block-edit.png",         "alt": "Editing a layout block in the Squilla admin" },
+    { "key": "admin-templates",           "src": "images/templates.png",                 "alt": "Templates list in the Squilla admin" },
+    { "key": "admin-template-edit",       "src": "images/template-edit.png",             "alt": "Template editor in the Squilla admin" },
+    { "key": "admin-block-type-listing",  "src": "images/block-type-listing.png",        "alt": "Block type listing in the Squilla admin" },
+    { "key": "admin-block-type-new",      "src": "images/block-type-new.png",            "alt": "Creating a new block type in the Squilla admin" },
+
+    { "key": "admin-extension-listing",   "src": "images/extension-listing.png",         "alt": "Extension listing in the Squilla admin" },
+    { "key": "admin-email-template-listing", "src": "images/email-template-listing.png", "alt": "Email template listing in the Squilla admin" },
+    { "key": "admin-email-log",           "src": "images/email-log-listing-detail.png",  "alt": "Email log detail in the Squilla admin" },
+    { "key": "admin-email-sender-settings", "src": "images/email-sender-settings.png",   "alt": "Email sender settings in the Squilla admin" }
   ],
 
   "image_sizes": [

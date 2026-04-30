@@ -27,37 +27,46 @@
     }
   ],
   "test_data": {
-    "eyebrow": "§ gallery",
-    "title": "Behind the curtain.",
+    "eyebrow": "§ admin",
+    "title": "The admin, end-to-end.",
     "tabs": [
       {
-        "slug": "studio",
-        "label": "Studio",
-        "caption": "<p>Photos coming soon — placeholders for now.</p>",
+        "slug": "content",
+        "label": "Content",
+        "caption": "<p>Dashboard, content nodes, content types, taxonomies, terms, menus, and languages — every authoring surface in one shell.</p>",
         "images": [
-          { "image": {}, "alt": "placeholder" },
-          { "image": {}, "alt": "placeholder" },
-          { "image": {}, "alt": "placeholder" }
+          { "image": {}, "alt": "dashboard" },
+          { "image": {}, "alt": "node listing" },
+          { "image": {}, "alt": "node edit" }
         ]
       },
       {
-        "slug": "builds",
-        "label": "Builds",
-        "caption": "<p>Photos coming soon — placeholders for now.</p>",
+        "slug": "media",
+        "label": "Media",
+        "caption": "<p>Library grid, picker popup, and image optimisation.</p>",
         "images": [
-          { "image": {}, "alt": "placeholder" },
-          { "image": {}, "alt": "placeholder" }
+          { "image": {}, "alt": "media grid" },
+          { "image": {}, "alt": "media popup" },
+          { "image": {}, "alt": "image optimiser" }
         ]
       },
       {
-        "slug": "life",
-        "label": "Life",
-        "caption": "<p>Photos coming soon — placeholders for now.</p>",
+        "slug": "theme",
+        "label": "Theme",
+        "caption": "<p>Themes, layouts, templates, and block types.</p>",
         "images": [
-          { "image": {}, "alt": "placeholder" },
-          { "image": {}, "alt": "placeholder" },
-          { "image": {}, "alt": "placeholder" },
-          { "image": {}, "alt": "placeholder" }
+          { "image": {}, "alt": "theme listing" },
+          { "image": {}, "alt": "layout edit" },
+          { "image": {}, "alt": "template edit" }
+        ]
+      },
+      {
+        "slug": "system",
+        "label": "System",
+        "caption": "<p>Extensions and email — the operational surface.</p>",
+        "images": [
+          { "image": {}, "alt": "extensions" },
+          { "image": {}, "alt": "email templates" }
         ]
       }
     ]
