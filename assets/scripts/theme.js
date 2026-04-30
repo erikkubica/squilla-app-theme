@@ -316,6 +316,75 @@
     const fallback = tabs[0].dataset.tab;
     const initial = (window.location.hash || '#' + fallback).slice(1);
     apply(tabs.some(t => t.dataset.tab === initial) ? initial : fallback, false);
+
+    // Lightbox — clicking a thumb opens the full-size variant. Slide list
+    // is built from the *currently visible* panel's cells so navigation
+    // wraps the active tab only (prevents jumping between Content/Theme
+    // mid-browse). Keyboard: ←/→ navigate, Esc closes.
+    const lb = host.querySelector('[data-gtabs-lb]');
+    if (!lb) return;
+    const lbImg = lb.querySelector('.gtabs-lb__img');
+    const lbPos = lb.querySelector('[data-lb-pos]');
+    const lbAlt = lb.querySelector('[data-lb-alt-text]');
+    const prevBtn = lb.querySelector('[data-lb-prev]');
+    const nextBtn = lb.querySelector('[data-lb-next]');
+    const closeBtn = lb.querySelector('[data-lb-close]');
+
+    let slides = [];
+    let cursor = 0;
+    let lastFocus = null;
+
+    const render = () => {
+      const slide = slides[cursor];
+      if (!slide) return;
+      lbImg.src = slide.full;
+      lbImg.alt = slide.alt || '';
+      lbPos.textContent = (cursor + 1) + ' / ' + slides.length;
+      lbAlt.textContent = slide.alt || '';
+      prevBtn.disabled = slides.length < 2;
+      nextBtn.disabled = slides.length < 2;
+    };
+
+    const open = (cell) => {
+      const panel = cell.closest('.gtabs__panel');
+      if (!panel) return;
+      const cells = $$('[data-lb-open]', panel);
+      slides = cells.map(c => ({ full: c.dataset.lbFull, alt: c.dataset.lbAlt || '' }));
+      cursor = cells.indexOf(cell);
+      if (cursor < 0) cursor = 0;
+      lastFocus = cell;
+      lb.hidden = false;
+      document.body.style.overflow = 'hidden';
+      render();
+      closeBtn.focus();
+    };
+
+    const close = () => {
+      lb.hidden = true;
+      document.body.style.overflow = '';
+      lbImg.removeAttribute('src');
+      if (lastFocus) lastFocus.focus();
+    };
+
+    const step = (delta) => {
+      if (slides.length < 2) return;
+      cursor = (cursor + delta + slides.length) % slides.length;
+      render();
+    };
+
+    $$('[data-lb-open]', host).forEach(cell => {
+      cell.addEventListener('click', () => open(cell));
+    });
+    prevBtn.addEventListener('click', () => step(-1));
+    nextBtn.addEventListener('click', () => step(1));
+    closeBtn.addEventListener('click', close);
+    lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+    document.addEventListener('keydown', (e) => {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') { e.preventDefault(); close(); }
+      else if (e.key === 'ArrowLeft')  { e.preventDefault(); step(-1); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
+    });
   };
   const initGtabsAll = () => $$('[data-squilla-gtabs]').forEach(initGtabs);
 

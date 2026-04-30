@@ -110,6 +110,7 @@
   ],
 
   "image_sizes": [
-    { "name": "showcase-thumb", "width": 450, "height": 350, "mode": "crop" }
+    { "name": "showcase-thumb", "width": 450, "height": 350, "mode": "crop" },
+    { "name": "gallery-thumb",  "width": 540, "height": 405, "mode": "crop" }
   ]
 }

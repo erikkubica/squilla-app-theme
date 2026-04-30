@@ -13,9 +13,19 @@
       {{ range $i, $t := .tabs }}
         <div class="gtabs__panel" data-panel="{{$t.slug}}"{{ if ne $i 0 }} hidden{{ end }}>
           <div class="gtabs__grid">
-            {{ range $t.images }}
-              {{ if .image.url }}
-                <img class="gtabs__img" src="{{ .image.url }}" alt="{{ or .alt .image.alt }}" loading="lazy">
+            {{ range $idx, $img := $t.images }}
+              {{ if $img.image.url }}
+                <button type="button" class="gtabs__cell"
+                        data-lb-open
+                        data-lb-full="{{ $img.image.url }}"
+                        data-lb-alt="{{ or $img.alt $img.image.alt }}"
+                        aria-label="Open {{ or $img.alt $img.image.alt `screenshot` }} full size">
+                  <img class="gtabs__img"
+                       src="{{ image_url $img.image.url "gallery-thumb" }}"
+                       alt="{{ or $img.alt $img.image.alt }}"
+                       loading="lazy"
+                       width="540" height="405">
+                </button>
               {{ else }}
                 <div class="gtabs__img gtabs__img--ph" role="img" aria-label="placeholder image">
                   <span>image</span>
@@ -27,5 +37,21 @@
         </div>
       {{ end }}
     </div>
+  </div>
+
+  {{/* Lightbox markup — single instance per gallery, hidden until opened.
+       JS scans the active panel's cells on open, so the slide list always
+       matches the visible tab. Keyboard: ←/→ navigate, Esc closes. */}}
+  <div class="gtabs-lb" data-gtabs-lb hidden role="dialog" aria-modal="true" aria-label="Image preview">
+    <button type="button" class="gtabs-lb__close" data-lb-close aria-label="Close">&times;</button>
+    <button type="button" class="gtabs-lb__nav gtabs-lb__nav--prev" data-lb-prev aria-label="Previous image">&larr;</button>
+    <figure class="gtabs-lb__stage">
+      <img class="gtabs-lb__img" alt="">
+      <figcaption class="gtabs-lb__caption">
+        <span class="gtabs-lb__pos" data-lb-pos></span>
+        <span class="gtabs-lb__alt" data-lb-alt-text></span>
+      </figcaption>
+    </figure>
+    <button type="button" class="gtabs-lb__nav gtabs-lb__nav--next" data-lb-next aria-label="Next image">&rarr;</button>
   </div>
 </section>
