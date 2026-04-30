@@ -56,11 +56,19 @@ if is_error(res) {
             excerpt = n.fields_data.excerpt
         }
 
-        // Crude read-time estimate: 1 minute per 250 chars of excerpt+title.
-        chars := len(n.title) + len(excerpt)
-        minutes := chars / 250
-        if minutes < 1 { minutes = 1 }
-        read := string(minutes) + " min"
+        // Read-time: prefer the editor-set fields_data.read_time so the list
+        // and the post page never disagree. Fall back to a 250-chars/min
+        // heuristic only when the field is blank.
+        read := ""
+        if !is_undefined(n.fields_data) && !is_undefined(n.fields_data.read_time) {
+            read = n.fields_data.read_time
+        }
+        if read == "" {
+            chars := len(n.title) + len(excerpt)
+            minutes := chars / 250
+            if minutes < 1 { minutes = 1 }
+            read = string(minutes) + " min read"
+        }
 
         // Date — slice the first 10 chars of published_at (YYYY-MM-DDTHH:...).
         date := ""

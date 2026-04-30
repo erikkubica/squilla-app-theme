@@ -1,0 +1,38 @@
+{
+  "slug": "about-team",
+  "name": "About — team",
+  "description": "Team grid. Each member has a name, alias, role, optional photo, and an is_ai flag. AI members render with an identical 'C' monogram (the joke is that they're all the same model wearing different hats).",
+  "category": "squilla",
+  "field_schema": [
+    { "key": "eyebrow", "label": "Eyebrow", "type": "text" },
+    { "key": "title",   "label": "Title",   "type": "text" },
+    { "key": "sub",     "label": "Sub-copy (HTML allowed)", "type": "richtext" },
+    {
+      "key": "members",
+      "label": "Members",
+      "type": "repeater",
+      "sub_fields": [
+        { "key": "name",  "label": "Name",            "type": "text" },
+        { "key": "alias", "label": "Alias / handle",  "type": "text", "help": "e.g. Master, Claude" },
+        { "key": "role",  "label": "Role",            "type": "text" },
+        { "key": "photo", "label": "Photo (leave blank for AI personas)", "type": "image", "help": "Real headshot for human members. AI personas auto-render the C-monogram." },
+        { "key": "is_ai", "label": "AI persona?",     "type": "toggle", "default": false, "help": "When on, the avatar renders as a 'C' monogram and the card gets a dashed border + // LLM tag." }
+      ]
+    },
+    { "key": "footnote", "label": "Footnote (HTML allowed)", "type": "richtext" }
+  ],
+  "test_data": {
+    "eyebrow": "§ team",
+    "title": "Six humans. One of them real.",
+    "sub": "<p>Squilla is built by Erik and a tireless team of \"Claude\" personas — different names, different roles, same model. The joke writes itself; the work is real.</p>",
+    "members": [
+      { "name": "Erik Kubica",   "alias": "Master",  "role": "Founder & engineer", "photo": { "url": "/theme/assets/images/team-erik.jpg", "alt": "Erik Kubica" }, "is_ai": false },
+      { "name": "Claudia",       "alias": "Claude",  "role": "Human resources",    "photo": {}, "is_ai": true },
+      { "name": "Fred",          "alias": "Claude",  "role": "Software architect", "photo": {}, "is_ai": true },
+      { "name": "Tom",           "alias": "Claude",  "role": "Design",             "photo": {}, "is_ai": true },
+      { "name": "Léa",           "alias": "Claude",  "role": "QA & testing",       "photo": {}, "is_ai": true },
+      { "name": "Max",           "alias": "Claude",  "role": "DevOps & infra",     "photo": {}, "is_ai": true }
+    ],
+    "footnote": "<p>Yes, every \"Claude\" above is the same underlying model. We give them different names because it's funnier than \"Claude (1 of 5)\" in standups.</p>"
+  }
+}

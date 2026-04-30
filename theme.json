@@ -54,6 +54,8 @@
     { "slug": "showcase-grid",       "dir": "showcase-grid" },
     { "slug": "pricing-card",        "dir": "pricing-card" },
     { "slug": "legal-tabs",          "dir": "legal-tabs" },
+    { "slug": "about-team",          "dir": "about-team" },
+    { "slug": "gallery-tabs",        "dir": "gallery-tabs" },
     { "slug": "notfound-section",    "dir": "notfound-section" }
   ],
 
@@ -75,7 +77,8 @@
   "assets": [
     { "key": "showcase-squilla",          "src": "images/showcase-squilla.jpg",          "alt": "squilla.app marketing site screenshot",          "width": 1440, "height": 900 },
     { "key": "showcase-hello-vietnam",    "src": "images/showcase-hello-vietnam.jpg",    "alt": "Hello Vietnam demo theme screenshot",            "width": 1440, "height": 900 },
-    { "key": "showcase-curriculum-vitae", "src": "images/showcase-curriculum-vitae.jpg", "alt": "Curriculum Vitae demo theme screenshot",         "width": 1440, "height": 900 }
+    { "key": "showcase-curriculum-vitae", "src": "images/showcase-curriculum-vitae.jpg", "alt": "Curriculum Vitae demo theme screenshot",         "width": 1440, "height": 900 },
+    { "key": "team-erik",                 "src": "images/team-erik.jpg",                 "alt": "Erik Kubica, founder",                            "width": 600,  "height": 600 }
   ],
 
   "image_sizes": [

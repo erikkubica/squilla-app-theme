@@ -10,6 +10,13 @@
       "type": "text"
     },
     {
+      "key": "narrow",
+      "label": "Narrow container",
+      "type": "toggle",
+      "default": true,
+      "help": "On = 64ch reading column. Off = full-width grid (use on landing-style sections)."
+    },
+    {
       "key": "items",
       "label": "Principles",
       "type": "repeater",

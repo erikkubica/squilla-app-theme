@@ -301,6 +301,25 @@
   const initLegalAll = () => $$('[data-squilla-legal]').forEach(initLegal);
 
   // ─────────────────────────────────────────────
+  // 7b. Gallery tabs — hash-based, refresh-persistent
+  // ─────────────────────────────────────────────
+  const initGtabs = (host) => {
+    const tabs = $$('.gtabs__tab', host);
+    const panels = $$('.gtabs__panel', host);
+    if (!tabs.length) return;
+    const apply = (id, push) => {
+      tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.tab === id ? 'true' : 'false'));
+      panels.forEach(p => { p.hidden = p.dataset.panel !== id; });
+      if (push) history.replaceState(null, '', '#' + id);
+    };
+    tabs.forEach(t => t.addEventListener('click', () => apply(t.dataset.tab, true)));
+    const fallback = tabs[0].dataset.tab;
+    const initial = (window.location.hash || '#' + fallback).slice(1);
+    apply(tabs.some(t => t.dataset.tab === initial) ? initial : fallback, false);
+  };
+  const initGtabsAll = () => $$('[data-squilla-gtabs]').forEach(initGtabs);
+
+  // ─────────────────────────────────────────────
   // 8. Docs shell — search + sidebar collapse
   //    URL param: ?q=<query>
   // ─────────────────────────────────────────────
@@ -424,6 +443,7 @@
     initBlog();
     initExt();
     initLegalAll();
+    initGtabsAll();
     initDocsAll();
     initNotFound();
     initHighlight();

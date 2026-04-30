@@ -1,0 +1,33 @@
+<section class="about-team">
+  <div class="container">
+    {{ with .eyebrow }}<div class="h-eyebrow">{{.}}</div>{{ end }}
+    {{ with .title }}<h2 class="about-team__title">{{.}}</h2>{{ end }}
+    {{ with .sub }}<div class="about-team__sub">{{ safeHTML . }}</div>{{ end }}
+
+    <ul class="about-team__grid">
+      {{ range .members }}
+        <li class="about-team__card{{ if .is_ai }} is-ai{{ end }}">
+          <div class="about-team__avatar" aria-hidden="true">
+            {{ if and (not .is_ai) .photo.url }}
+              <img src="{{ .photo.url }}" alt="{{ or .photo.alt .name }}">
+            {{ else }}
+              <svg class="about-team__monogram" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI">
+                <circle cx="32" cy="32" r="32" fill="var(--accent)"></circle>
+                <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-family="JetBrains Mono, monospace" font-size="34" font-weight="600" fill="#0b0d10">C</text>
+              </svg>
+            {{ end }}
+          </div>
+          <div class="about-team__meta">
+            <div class="about-team__name">
+              {{.name}}<span class="about-team__alias"> aka. <em>{{.alias}}</em></span>
+            </div>
+            <div class="about-team__role">{{.role}}</div>
+            {{ if .is_ai }}<div class="about-team__tag" title="Large language model. Specifically, Claude.">// LLM</div>{{ end }}
+          </div>
+        </li>
+      {{ end }}
+    </ul>
+
+    {{ with .footnote }}<p class="about-team__foot">{{ safeHTML . }}</p>{{ end }}
+  </div>
+</section>

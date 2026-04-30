@@ -1,0 +1,2042 @@
+{
+  "terms": [
+    {
+      "slug": "getting-started",
+      "name": "Getting Started"
+    },
+    {
+      "slug": "content-editing",
+      "name": "Content Editing"
+    },
+    {
+      "slug": "extensions",
+      "name": "Extensions"
+    },
+    {
+      "slug": "themes",
+      "name": "Themes"
+    },
+    {
+      "slug": "scripting",
+      "name": "Scripting"
+    },
+    {
+      "slug": "api",
+      "name": "API Reference"
+    }
+  ],
+  "docs": [
+    {
+      "slug": "introduction",
+      "title": "Introduction",
+      "section_slug": "getting-started",
+      "section_name": "Getting Started",
+      "summary": "What Squilla is and why it exists.",
+      "order": 10,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>The CMS where AI does the work</h2><p>Squilla is a Go-based, AI-native CMS built on a <strong>kernel + extension</strong> model. The core is a minimal Go binary that provides infrastructure only \u2014 content nodes, rendering, auth, the CoreAPI, the MCP server, and the VDUS engine. Every user-visible feature ships as an independent extension with its own gRPC plugin, admin micro-frontend, database tables, and SQL migrations.</p><blockquote>If the kernel can't answer in 50ms, the kernel is doing too much.<cite>\u2014 Internal design doc, v0.2</cite></blockquote><h2>Why we built it</h2><p>Existing CMS options force a choice: be developer-friendly OR be content-editor-friendly; be fast OR be flexible; be open-source OR be AI-ready. Squilla refuses the trade.</p><ul><li>The kernel is <strong>Linux-small</strong></li><li>The extension model is <strong>Debian-clean</strong></li><li>The MCP layer is <strong>OpenAI-native</strong></li><li>The performance is <strong>Go-native</strong></li><li>The GPL-3.0 license is <strong>forever</strong></li></ul><h2>The hard rule</h2><p>If disabling an extension would leave dead code in core, that code belongs in the extension, not core. Core provides only the generic plumbing that <em>any</em> extension could reuse.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "Image optimization, WebP conversion, cache routing \u2192 media extension (NOT core). Email template management \u2192 email extension (NOT core). Public route proxy mechanism \u2192 core (generic, any extension can use it).",
+            "label": "HARD RULE",
+            "variant": "danger"
+          },
+          "type": "doc-callout"
+        },
+        {
+          "fields": {
+            "body": "<h2>Where to next</h2><p>Read <a href=\"/docs/installation\">Installation</a> for the docker-compose path, or jump straight to <a href=\"/docs/quickstart\">Quickstart</a> if you have a Squilla container already running. The <a href=\"/docs/api-mcp\">MCP Endpoints</a> reference is the entry point for AI-driven workflows.</p>"
+          },
+          "type": "doc-content"
+        }
+      ]
+    },
+    {
+      "slug": "installation",
+      "title": "Installation",
+      "section_slug": "getting-started",
+      "section_name": "Getting Started",
+      "summary": "Install Squilla via Docker or from source.",
+      "order": 20,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>Prerequisites</h2><ul><li>Docker 24+ with Compose v2</li><li>PostgreSQL 16 (or use the bundled compose service)</li><li>Optional: an MCP-aware AI client (Claude Desktop, Cursor, the Anthropic <code>mcp</code> CLI)</li></ul><h2>Quickstart with Docker</h2><p>The fastest path to a running Squilla is the bundled compose file. It boots PostgreSQL 16, the Squilla core, and the seven reference extensions:</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<pre><code>git clone https://github.com/erikkubica/squilla.git\ncd squilla\ndocker compose up --build\n\n# open http://localhost:8099\n# admin login is printed once on first boot</code></pre>",
+            "file": "$ shell",
+            "language": "bash",
+            "show_dots": true
+          },
+          "type": "doc-codeblock"
+        },
+        {
+          "fields": {
+            "body": "The default admin password is printed exactly once, to the container's stdout, on first boot. Capture it. There's no \u201cforgot password\u201d flow for the bootstrap admin \u2014 if you lose it, you'll re-bootstrap (or update the user row directly via the data-store MCP tools).",
+            "label": "HEADS UP",
+            "variant": "heads-up"
+          },
+          "type": "doc-callout"
+        },
+        {
+          "fields": {
+            "body": "<hr/><h2>Build from source</h2><p>If you want to hack on the kernel:</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<pre><code>git clone https://github.com/erikkubica/squilla.git\ncd squilla\nmake deploy-local\n# admin UI rebuilds, plugins compile, container restarts</code></pre>",
+            "file": "$ shell",
+            "language": "bash",
+            "show_dots": true
+          },
+          "type": "doc-codeblock"
+        },
+        {
+          "fields": {
+            "body": "<h3>Hot-deploying just the theme or a single extension</h3><p>While developing, you don't need to rebuild the container for theme or extension changes. The repo ships <code>make theme</code> and per-extension hot-deploy targets that copy the rebuilt directory into the running container and trigger a re-scan via <code>core.theme.rescan</code> / <code>core.extension.rescan</code>. The fs watcher picks new directories up automatically; the rescan call is the explicit, idempotent trigger.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h3>Verifying the install</h3><p>A healthy Squilla responds at <code>/admin/api/boot</code> with a 200 and a small JSON manifest. The public homepage is at <code>/</code>; on a fresh install with the bundled compose file, the active theme is <code>squilla</code> and the home page is the seeded marketing copy you saw on this site.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "Run <code>docker compose logs -f app</code> in another terminal during your first session \u2014 Tengo seed errors, plugin startup messages, and theme-activation logs only show there.",
+            "label": "TIP",
+            "variant": "tip"
+          },
+          "type": "doc-callout"
+        }
+      ]
+    },
+    {
+      "slug": "quickstart",
+      "title": "Quickstart",
+      "section_slug": "getting-started",
+      "section_name": "Getting Started",
+      "summary": "Your first Squilla site in five minutes.",
+      "order": 30,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>Goal</h2><p>By the end of this page you'll have created a custom node type, seeded three nodes, and rendered them on a public page \u2014 entirely through the MCP interface, with zero filesystem access.</p><h2>Step 1: connect via MCP</h2><p>Squilla exposes a Model Context Protocol server at <code>/mcp</code>. Point your MCP client (Claude Desktop, Cursor, the Anthropic <code>mcp</code> CLI) at it with a bearer token from <code>/admin/settings/tokens</code>.</p><h2>Step 2: register a content type</h2><p>The <code>core.nodetype.create</code> tool registers a new content type with its own field schema. The CMS auto-creates the JSONB GIN index for fast queries.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<pre><code>core.nodetype.create({\n  slug: \"recipe\",\n  label: \"Recipe\",\n  label_plural: \"Recipes\",\n  url_prefixes: { en: \"recipes\" },\n  field_schema: [\n    { name: \"hero_image\",   type: \"image\" },\n    { name: \"prep_minutes\", type: \"number\" },\n    { name: \"servings\",     type: \"number\" }\n  ]\n})</code></pre>",
+            "file": "MCP call",
+            "language": "javascript",
+            "show_dots": true
+          },
+          "type": "doc-codeblock"
+        },
+        {
+          "fields": {
+            "body": "<h3>Why JSONB</h3><p>All node fields_data live in a single JSONB column with a GIN index. Custom types don't get their own SQL tables \u2014 adding a node type is a metadata-only operation. Reads are sub-millisecond for typical field queries.</p><h2>Step 2: seed nodes</h2><p>Bulk-create three recipes:</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<pre><code>core.node.create({\n  type: \"recipe\",\n  title: \"Caramelised scallops\",\n  status: \"published\",\n  fields_data: { prep_minutes: 18, servings: 2 }\n})</code></pre>",
+            "file": "MCP call",
+            "language": "javascript",
+            "show_dots": true
+          },
+          "type": "doc-codeblock"
+        },
+        {
+          "fields": {
+            "body": "<h2>Step 3: render preview</h2><p>Without committing to a theme, you can preview a node with <code>core.render.node_preview</code>. The CMS resolves the slug, runs the rendering pipeline, and returns the HTML.</p><hr/><h2>What you didn't have to do</h2><ul><li>Touch the filesystem</li><li>Restart the server</li><li>Run a database migration</li><li>Recompile anything</li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "The whole flow is reversible: <code>core.nodetype.delete</code> drops the type and orphans nothing.",
+            "label": "NOTE",
+            "variant": "note"
+          },
+          "type": "doc-callout"
+        }
+      ]
+    },
+    {
+      "slug": "editing-features",
+      "title": "Editing Features",
+      "section_slug": "content-editing",
+      "section_name": "Content Editing",
+      "summary": "A whirlwind tour of everything Squilla's admin UI can do.",
+      "order": 10,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>Familiar by design</h2><p>The Squilla admin UI was made to resemble something most people already know: <strong>WordPress</strong>. If you've used WP, you'll find your bearings in minutes \u2014 node types are post types, taxonomies are taxonomies, the media library looks like the media library, menus look like menus.</p><h3>TL;DR \u2014 imagine WordPress with these plugins pre-installed</h3><ul><li><strong>Fluent Forms</strong> \u2014 built-in form builder with conditional logic</li><li><strong>Advanced Custom Fields</strong> \u2014 custom fields on basically everything</li><li><strong>WPML</strong> \u2014 multi-language content (basic but workable)</li><li><strong>PostSMTP / Resend provider</strong> \u2014 pluggable email delivery</li><li><strong>Email templates</strong> \u2014 layouts + templates + rules engine</li><li><strong>Image optimizer</strong> \u2014 WebP, multi-size, quality controls, originals backup</li></ul><p>Everything below is shipped, in the box, on a fresh install.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Content editing</h2><p>Full CRUD on every primitive, accessible from the sidebar.</p><h3>Node types (post types)</h3><p>Manage at <code>/admin/node-types</code>. Each node type supports excerpt and a featured image (thumbnail) out of the box. Define a custom field schema per type, choose which taxonomies it accepts, configure URL prefixes per language. Adding a node type is metadata-only \u2014 no SQL migration, fields live in JSONB with a GIN index.</p><h3>Taxonomies and terms</h3><p>Manage at <code>/admin/taxonomies</code>. Hierarchical or flat. Terms are per-language with linked translations \u2014 see the i18n section below.</p><h3>Menus</h3><p>Manage at <code>/admin/menus</code>. Drag-and-drop nesting, item types include static URLs and node-linked items. Node-linked items resolve by slug, so renaming the target page doesn't break the menu.</p><h3>SEO</h3><p>For now: site title and description (per-language) plus an automatically generated Yoast-style sitemap via the <code>sitemap-generator</code> extension. Per-node SEO fields (meta title, description) are on every node's edit screen.</p><h3>Media manager</h3><p>Manage at <code>/admin/media</code>. Grid view, list view, search, alt-text editing. Multi-image-size support with automatic WebP conversion and original-file backups. Reoptimize on demand. Quality, sizes, and formats are configurable. Provided by the <code>media-manager</code> extension.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "All of these \u2014 node types, taxonomies, menus, media \u2014 are also drivable through MCP via the <code>core.*</code> tool surface. The admin UI and the AI agent are looking at the exact same data.",
+            "label": "NOTE",
+            "variant": "note"
+          },
+          "type": "doc-callout"
+        },
+        {
+          "fields": {
+            "body": "<h2>Custom fields</h2><p>Squilla's custom-field system is the most pervasive feature of the admin UI. Custom fields can be attached to:</p><ul><li><strong>Node types</strong> \u2014 fields stored in <code>fields_data</code> on each node</li><li><strong>Taxonomy terms</strong> \u2014 per-term metadata</li><li><strong>Layout blocks (partials)</strong> \u2014 page-level fields, e.g. a hero override per page <em>(page-level only for now; global per-partial values are planned)</em></li><li><strong>Content blocks</strong> \u2014 the regular block editor surface</li></ul><h3>Available field types</h3><p>A wide catalogue out of the box: text, textarea, richtext, number, email, url, select, radio, checkbox, multi-select, repeater (nested sub-fields), image / media picker, file picker, date picker, color, term picker, link picker, true/false, JSON, and more. List the canonical set via <code>core.field_types.list</code>.</p><h3>Per-field configuration</h3><p>Every field supports:</p><ul><li><strong>Width</strong> \u2014 half / third / full grid columns, controllable per breakpoint</li><li><strong>Required</strong> \u2014 admin-side validation</li><li><strong>Help label</strong> \u2014 hint text shown beneath the input <em>(also surfaced through MCP so the AI understands what the field is for)</em></li><li><strong>Default value</strong></li><li><strong>Placeholder</strong></li></ul><p>Repeaters can nest other field types as <code>sub_fields</code>, including additional repeaters.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "Field schema entries on a <strong>block</strong> use <code>\"key\":</code>. Field schema entries on a <strong>node type</strong> registered through Tengo use <code>\"name\":</code>. Easy to mix up \u2014 the admin renders empty inputs when they don't match.",
+            "label": "HEADS UP",
+            "variant": "heads-up"
+          },
+          "type": "doc-callout"
+        },
+        {
+          "fields": {
+            "body": "<h2>Multi-language (i18n)</h2><p>Configured at <code>/admin/settings/languages</code>. The current implementation is intentionally pragmatic \u2014 closer to a v1 MVP than to WPML's full feature set.</p><h3>What works</h3><ul><li>Add languages from a list, mark one as default</li><li>Pick the editing language with the language switcher in the admin top bar (sets the <code>X-Admin-Language</code> header for all admin requests)</li><li>Each node has a <code>language_code</code> column; translations of the same logical content are <strong>linked</strong> via a shared <code>translation_group_id</code></li><li>The public-site language switcher follows the link \u2014 clicking <em>Slovak</em> on an English post takes you to that post's Slovak version, not the homepage or a 404</li><li>Taxonomy terms are per-language with the same translation-group linking; create a translation via <code>POST /admin/api/terms/&lt;id&gt;/translations</code></li><li>Site settings rows are per-language with default-language fallback. There is no separate <em>translatable</em> flag \u2014 every settings field is implicitly per-locale, and reads fall back to the default language when no localised value exists</li><li>URL prefixes per node type can differ per language (e.g. <code>/recipes</code> vs <code>/recepty</code>)</li></ul><h3>What's not WPML-grade (yet)</h3><ul><li>No bulk translation workflow / queues</li><li>No per-string translation tables for theme strings (themes inherit per-locale settings instead)</li><li>No translation memory or external service connectors</li></ul><p>Good for an MVP launch with two or three languages; the linked-translation model gives you a solid foundation to grow into.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Theming surface</h2><p>The admin shows three distinct theme primitives, each editable from the UI.</p><h3>Layouts</h3><p>Top-level page chrome (e.g. <em>default</em>, <em>2-col</em>, <em>my-special-layout</em>). Layouts are theme- or extension-owned by default. They can be <strong>detached</strong> from their source so you own them and can edit freely from <code>/admin/layouts</code>, or even created from scratch in the admin without touching the filesystem.</p><h3>Layout blocks (a.k.a. layout partials)</h3><p>Reusable fragments shared across multiple layouts \u2014 site header, site footer, sidebar, etc. The naming says \"blocks\" but you can think of them as <strong>partials</strong>. They support custom fields, but those fields are <strong>page-level only</strong>: each page can override the partial's field values for itself. A global way to set a partial's custom-field values for all pages at once is on the roadmap.</p><h3>Content blocks</h3><p>The lego bricks of a page body \u2014 hero, gallery, CTA, two-column text, code block, callout, etc. Authored as <code>block.json</code> + <code>view.html</code> in a theme or extension, or created from scratch in the admin. Content blocks have full custom-field support and live in <code>blocks_data</code> on the node.</p><h3>Detach / reattach</h3><p>Theme-owned layouts and blocks can be <strong>detached</strong> to user-owned (so admin edits stick across theme reinstalls) and later <strong>reattached</strong> to discard custom edits and follow the theme again.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Mailing</h2><p>Provided by the <code>email-manager</code> extension plus pluggable provider extensions. Manage at <code>/admin/email</code>.</p><h3>What's included</h3><ul><li><strong>Email layouts</strong> \u2014 outer wrapper templates (header/footer/branding)</li><li><strong>Email templates</strong> \u2014 individual messages composed against a layout, with custom-field-style placeholders</li><li><strong>Logs</strong> \u2014 every send recorded with provider response, status, retry state</li><li><strong>Providers</strong> \u2014 <code>smtp-provider</code> (gRPC plugin) and <code>resend-provider</code> (Tengo extension, ~20 lines). Activate one; switch by deactivating + activating another</li><li><strong>Rules</strong> \u2014 <em>when X happens, send template Y to Z</em>. Supports core lifecycle events (e.g. <em>user registers \u2192 welcome email</em>, <em>page deleted \u2192 notify editors</em>) plus extension-emitted events. Multi-recipient, conditional, multi-template per rule</li></ul><p>If you've used PostSMTP for delivery and FluentSMTP-style routing in WP, this is the equivalent.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Forms</h2><p>Provided by the <code>forms</code> extension. The design is a hybrid of two WordPress plugins \u2014 <em>Contact Form 7</em>'s custom-HTML escape hatch and <em>Fluent Forms</em>' visual builder.</p><h3>What you get</h3><ul><li><strong>Visual field builder</strong> \u2014 text, email, number, select, radio, checkbox, file upload, date, hidden, honeypot, and more</li><li><strong>Custom HTML mode</strong> \u2014 drop into raw HTML when the visual builder isn't enough; the extension still wires up validation and submission</li><li><strong>Multi-condition logic</strong> \u2014 show/hide/require fields based on AND/OR groups using <code>=</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>, <code>contains</code>, etc.</li><li><strong>Multiple notifications per form</strong> \u2014 each with its own template, recipients, and conditions</li><li><strong>Webhooks</strong> \u2014 POST submissions to external services with retry</li><li><strong>Submission database</strong> \u2014 every submission stored, browsable, exportable</li><li><strong>Honeypot &amp; rate limiting</strong> \u2014 built-in spam defenses</li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Users and roles</h2><h3>Users</h3><p>Manage at <code>/admin/users</code>. For now, a basic profile is enough for content-editing and admin work \u2014 name, email, password, language preference, role assignments. Password resets via the admin UI; CLI fallback via <code>./squilla reset-password</code>.</p><h3>Roles</h3><p>Manage at <code>/admin/roles</code>. Fine-grained access control with <strong>capabilities</strong> across two axes:</p><h4>Module capabilities</h4><p>Toggle access to each core module: admin access, manage users, manage roles, manage emails, manage menus, manage settings, manage media, manage themes, manage extensions, etc.</p><h4>Node access control</h4><p>Per role, set a default access level (<em>none / read / write</em>) for each node type, with overrides per individual node when needed. So you can grant a user write access to <code>blog_post</code> only, read-only to <code>page</code>, and nothing on <code>internal_doc</code>.</p><h3>Email subscriptions</h3><p>Per-role and per-user subscriptions to lifecycle events of any built-in entity:</p><ul><li>Block type \u2014 create / update / delete</li><li>Layout + layout block \u2014 create / update / delete</li><li>Menu \u2014 create / update / delete</li><li>Node \u2014 create / update / delete (filterable by node type)</li><li>User \u2014 create / update / delete</li></ul><p>Subscribe to one specific verb, several, or all. Pairs with the email-manager rule engine to wire up custom notifications.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "This page is a deliberately broad sweep \u2014 meant as a checklist of things even the people who built Squilla forget exists. For deeper how-tos on each area, follow the section links in the sidebar.",
+            "label": "TIP",
+            "variant": "tip"
+          },
+          "type": "doc-callout"
+        }
+      ]
+    },
+    {
+      "slug": "nodes",
+      "title": "Nodes",
+      "section_slug": "content-editing",
+      "section_name": "Content Editing",
+      "summary": "The unified content primitive and how to edit one.",
+      "order": 20,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>What a node is</h2><p>Everything you publish in Squilla \u2014 a page, a blog post, a recipe, a doc article, a portfolio entry \u2014 is a <strong>node</strong>. There's no separate <code>pages</code>, <code>posts</code>, <code>recipes</code> table; one <code>content_nodes</code> table holds them all, distinguished by their <code>node_type</code>. Custom fields live in JSONB columns with a GIN index, so adding a new kind of content is metadata-only \u2014 no SQL migration.</p><h3>The columns that matter</h3><ul><li><code>node_type</code> \u2014 which schema applies (<code>page</code>, <code>post</code>, <code>recipe</code>, etc.)</li><li><code>status</code> \u2014 <code>draft</code> or <code>published</code></li><li><code>language_code</code> \u2014 which language this row is in</li><li><code>translation_group_id</code> \u2014 links translations of the same logical content</li><li><code>slug</code>, <code>title</code>, <code>excerpt</code></li><li><code>featured_image</code> \u2014 thumbnail / OG image, an object <code>{url, alt, ...}</code></li><li><code>blocks_data</code> \u2014 array of <code>{type, fields}</code> content blocks</li><li><code>fields_data</code> \u2014 the node-type-level custom fields</li><li><code>taxonomies</code> \u2014 attached terms keyed by taxonomy slug</li><li><code>seo_settings</code> \u2014 meta title / description override</li><li><code>layout_slug</code> \u2014 optional per-node layout override</li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>The edit screen</h2><p>Find the list at <code>/admin/nodes/&lt;type&gt;</code> (e.g. <code>/admin/nodes/page</code>). Click any row to open the edit screen, or hit \"New\" to create one.</p><h3>Anatomy</h3><p>The edit screen is a familiar two-column layout:</p><ul><li><strong>Top bar</strong> \u2014 title, slug (auto-generated from title, editable, validated unique within type+language), status toggle, language switcher, Save button</li><li><strong>Main column</strong> \u2014 the block editor and any node-type-level custom fields, plus a tab for layout-block (partial) field overrides if the active layout uses partials with fields</li><li><strong>Sidebar</strong> \u2014 featured image, excerpt, taxonomies, translations, layout override, SEO panel</li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>The block editor</h2><p>The main column hosts the block editor. Click <strong>Add block</strong> to open the block library \u2014 a searchable picker of every block registered by the active theme, by extensions, and any custom blocks you've built in <code>/admin/blocks</code>. Click a block to insert it.</p><h3>Per-block actions</h3><ul><li><strong>Up / Down arrows</strong> \u2014 move a block up or down in the stack</li><li><strong>Duplicate</strong> \u2014 clone with the same field values</li><li><strong>Delete</strong> \u2014 remove from the node</li><li><strong>Collapse</strong> \u2014 hide field details, keep the block in place</li></ul><p>Each block renders its own <code>field_schema</code> as a form: text, richtext, image picker, repeater, and so on. Fields are validated client-side against the schema (required, type) before save.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Sidebar panels</h2><h3>Featured image</h3><p>Opens the media library modal. Pick or upload an image. Used as thumbnail in lists, OG image for social shares, and accessible via <code>.node.featured_image</code> in templates.</p><h3>Excerpt</h3><p>Plain text summary. Used in archive listings, search results, and as the default <code>og:description</code> when no SEO override is set.</p><h3>Taxonomies</h3><p>One multi-select per taxonomy attached to the node type. Selecting a term stores it as <code>{slug, name}</code> object in <code>taxonomies.&lt;taxonomy_slug&gt;</code>.</p><h3>Translations</h3><p>Lists existing translations linked via <code>translation_group_id</code>. Click <em>Add translation</em>, choose a language, and a fresh node is cloned into the same group. See the <a href=\"/docs/multi-language\">Multi-language</a> page for details.</p><h3>Layout override</h3><p>By default a node uses its node-type's default layout. Override here when this specific node needs a different layout (e.g. a landing page using a wide layout while regular pages use the default).</p><h3>SEO</h3><p>Meta title and meta description. Empty falls back to title and excerpt respectively.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "Top-level node uses <code>fields_data:</code> \u2014 blocks INSIDE <code>blocks_data</code> use <code>fields:</code>. Mismatching either silently drops the data. The save endpoint warns at runtime, but the admin UI handles this for you when you stay inside the editor.",
+            "label": "HEADS UP",
+            "variant": "heads-up"
+          },
+          "type": "doc-callout"
+        }
+      ]
+    },
+    {
+      "slug": "node-types",
+      "title": "Node Types",
+      "section_slug": "content-editing",
+      "section_name": "Content Editing",
+      "summary": "Defining custom post types from the admin UI.",
+      "order": 30,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>Post types, but better</h2><p>If you're coming from WordPress, a <strong>node type</strong> is the equivalent of a custom post type. Built-in: <em>Page</em>, <em>Post</em>, <em>Documentation</em>. You can register as many custom types as you want \u2014 <em>Recipe</em>, <em>Trip</em>, <em>Product</em>, <em>Job</em>, anything. Each type owns a label, an icon, an optional plural label, a description, URL-prefix mappings per language, attached taxonomies, and a custom-field schema.</p><h3>Why it's cheap</h3><p>Nothing about a node type maps to a SQL table. Every node, of every type, lives in <code>content_nodes</code>; <code>fields_data</code> is JSONB with a GIN index. Adding a node type is a metadata-only operation \u2014 no migration, no downtime, instantly available to admin and to MCP.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Manage at <code>/admin/node-types</code></h2><p>The list view shows slug, label, icon, count of nodes, attached taxonomies. Click <strong>New node type</strong> to create one, or click any row to edit.</p><h3>The fields you set</h3><ul><li><strong>Slug</strong> \u2014 lowercase, snake_case, immutable after creation (URL paths depend on it)</li><li><strong>Label</strong> / <strong>Label plural</strong> \u2014 e.g. <em>Recipe</em> / <em>Recipes</em>; both required for the admin sidebar</li><li><strong>Icon</strong> \u2014 a Lucide icon name, shown in the sidebar nav</li><li><strong>Description</strong> \u2014 hint text for editors</li><li><strong>Supports</strong> \u2014 toggles for excerpt and featured image (a few types don't need them; turn off to hide the inputs)</li><li><strong>URL prefixes</strong> \u2014 a map of <code>language \u2192 prefix</code>, e.g. <code>{en: \"recipes\", sk: \"recepty\"}</code>. Public URL is <code>/&lt;prefix&gt;/&lt;slug&gt;</code></li><li><strong>Attached taxonomies</strong> \u2014 multi-select of taxonomy slugs. Each attached taxonomy gets a sidebar picker on the edit screen</li><li><strong>Field schema</strong> \u2014 the type-level custom fields editor (see <a href=\"/docs/custom-fields\">Custom Fields</a>)</li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<pre><code>core.nodetype.create({\n  slug:         \"recipe\",\n  label:        \"Recipe\",\n  label_plural: \"Recipes\",\n  url_prefixes: { en: \"recipes\", sk: \"recepty\" },\n  taxonomies:   [\"category\", \"tag\"],\n  field_schema: [\n    { name: \"hero_image\",   type: \"image\",  width: \"full\" },\n    { name: \"prep_minutes\", type: \"number\", width: \"third\" },\n    { name: \"cook_minutes\", type: \"number\", width: \"third\" },\n    { name: \"servings\",     type: \"number\", width: \"third\" },\n    { name: \"ingredients\",  type: \"repeater\", sub_fields: [\n      { name: \"qty\",  type: \"text\" },\n      { name: \"item\", type: \"text\" }\n    ]}\n  ]\n})</code></pre>",
+            "file": "MCP call",
+            "language": "javascript",
+            "show_dots": true
+          },
+          "type": "doc-codeblock"
+        },
+        {
+          "fields": {
+            "body": "Field schema entries on a node type use <code>\"name\":</code>. Field schema entries on a <strong>block</strong> (<code>block.json</code>) use <code>\"key\":</code>. Mixing the two produces empty admin inputs even when <code>fields_data</code> is correctly populated. The admin schema editor enforces the right one for the surface you're editing.",
+            "label": "HEADS UP",
+            "variant": "heads-up"
+          },
+          "type": "doc-callout"
+        },
+        {
+          "fields": {
+            "body": "<h2>Editing an existing type</h2><p>You can change the label, plural, icon, description, supports, URL prefixes, attached taxonomies, and field schema at any time. Existing nodes are preserved as-is \u2014 changes only affect new edits. Renaming a field key in the schema does <em>not</em> rewrite existing <code>fields_data</code>; the admin will show those values in a \"legacy\" group on the edit screen until you migrate them.</p><h3>Deleting</h3><p>Deleting a node type doesn't delete its nodes \u2014 they become <strong>dormant</strong> (hidden from admin, preserved in DB). Recreating the same slug resurrects them. Use this as a safe undo path.</p>"
+          },
+          "type": "doc-content"
+        }
+      ]
+    },
+    {
+      "slug": "custom-fields",
+      "title": "Custom Fields",
+      "section_slug": "content-editing",
+      "section_name": "Content Editing",
+      "summary": "The pervasive metadata system attached to almost everything.",
+      "order": 40,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>Custom fields, everywhere</h2><p>Custom fields are Squilla's most pervasive feature. If you're used to ACF in WordPress, you'll feel at home \u2014 except they're built into the kernel, defined declaratively, stored as JSONB, and exposed verbatim through MCP.</p><h3>Where they attach</h3><ul><li><strong>Node types</strong> \u2014 the type-level schema, edited at <code>/admin/node-types</code>. Values stored in <code>fields_data</code> on each node</li><li><strong>Taxonomy terms</strong> \u2014 per-term metadata, schema edited per taxonomy</li><li><strong>Layout blocks (partials)</strong> \u2014 page-level overrides; each page can set its own values for a partial's fields. Global per-partial values are on the roadmap</li><li><strong>Content blocks</strong> \u2014 the block.json field schema; values stored on each block instance in <code>blocks_data</code></li></ul><p>Same editor UX everywhere. Same field type catalogue. Same validation rules.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>The field type catalogue</h2><p>Run <code>core.field_types.list</code> for the canonical, up-to-date list with <code>how_to</code> guidance. The current set:</p><h3>Text</h3><ul><li><code>text</code> \u2014 single-line input</li><li><code>textarea</code> \u2014 multi-line plain text</li><li><code>richtext</code> \u2014 WYSIWYG (TipTap-based), produces sanitized HTML</li><li><code>email</code>, <code>url</code>, <code>tel</code> \u2014 type-specific inputs with validation</li></ul><h3>Numbers / booleans</h3><ul><li><code>number</code> \u2014 with min/max/step</li><li><code>true_false</code> \u2014 toggle switch</li></ul><h3>Choice</h3><ul><li><code>select</code> \u2014 dropdown</li><li><code>radio</code> \u2014 inline radios</li><li><code>checkbox</code> \u2014 single boolean</li><li><code>multi_select</code> \u2014 multiple values</li></ul><h3>Media / picker</h3><ul><li><code>image</code> \u2014 single image, opens media library</li><li><code>file</code> \u2014 any media file</li><li><code>gallery</code> \u2014 ordered list of images</li><li><code>term</code> \u2014 picks a taxonomy term, stores <code>{slug,name}</code></li><li><code>link</code> \u2014 stores <code>{label,url,target}</code>; picker can resolve to a node slug</li><li><code>relation</code> \u2014 picks one or more nodes (filterable by node type)</li></ul><h3>Date</h3><ul><li><code>date</code>, <code>datetime</code>, <code>time</code></li></ul><h3>Other</h3><ul><li><code>color</code> \u2014 color picker</li><li><code>json</code> \u2014 raw JSON editor (for power users)</li><li><code>repeater</code> \u2014 array of sub-records, see below</li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Per-field configuration</h2><p>Every field, regardless of type, supports the same configuration knobs:</p><ul><li><strong>Key / Name</strong> \u2014 the JSON key under which the value is stored. <code>key:</code> on blocks, <code>name:</code> on node types and term schemas</li><li><strong>Label</strong> \u2014 user-facing label in the admin form</li><li><strong>Required</strong> \u2014 admin-side validation; save blocked if empty</li><li><strong>Default</strong> \u2014 prefilled when creating a new node / term / block instance</li><li><strong>Placeholder</strong> \u2014 input placeholder text</li><li><strong>Help label</strong> \u2014 hint text rendered beneath the input. <em>Also exposed through MCP and core.field_types.list, so an AI agent operating the CMS understands the intent of each field</em></li><li><strong>Width</strong> \u2014 grid column span. Default is full width; configurable as half / third / quarter / two-thirds / three-quarters with optional breakpoint overrides (<code>sm</code>, <code>md</code>, <code>lg</code>)</li><li><strong>Conditional display</strong> \u2014 show/hide based on another field's value</li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "Help labels aren't decoration. They're the channel by which the CMS tells the AI agent what a field is for. <em>\"Cooking time in minutes; leave 0 if instant\"</em> is dramatically better than <em>\"Time\"</em>, both for human editors and for agents calling <code>core.node.create</code>.",
+            "label": "NOTE",
+            "variant": "note"
+          },
+          "type": "doc-callout"
+        },
+        {
+          "fields": {
+            "body": "<h2>Repeaters</h2><p>A repeater stores an ordered array of sub-records. Each sub-record has its own field schema declared under <code>sub_fields</code>. Sub-fields can be of any type \u2014 including more repeaters \u2014 so you can model complex shapes (FAQ items, ingredient groups, image galleries with captions and links).</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<pre><code>{\n  \"name\":  \"faqs\",\n  \"label\": \"Frequently asked questions\",\n  \"type\":  \"repeater\",\n  \"min\":   1,\n  \"max\":   20,\n  \"button_label\": \"Add FAQ\",\n  \"sub_fields\": [\n    { \"name\": \"question\", \"type\": \"text\",     \"required\": true },\n    { \"name\": \"answer\",   \"type\": \"richtext\", \"required\": true }\n  ]\n}</code></pre>",
+            "file": "field_schema example",
+            "language": "json",
+            "show_dots": true
+          },
+          "type": "doc-codeblock"
+        },
+        {
+          "fields": {
+            "body": "Term-typed fields require a <code>term_node_type</code> in the schema, and values must be stored as <code>{slug, name}</code> objects \u2014 not bare slug strings \u2014 so the admin pre-selects correctly. Templates accept either shape on render. <code>select</code> / <code>radio</code> options must be plain strings (<code>[\"a\",\"b\"]</code>), never <code>[{label,value}]</code> objects \u2014 the admin will reject them.",
+            "label": "HEADS UP",
+            "variant": "heads-up"
+          },
+          "type": "doc-callout"
+        }
+      ]
+    },
+    {
+      "slug": "taxonomies-terms",
+      "title": "Taxonomies & Terms",
+      "section_slug": "content-editing",
+      "section_name": "Content Editing",
+      "summary": "Group nodes by category, tag, or anything custom \u2014 in any language.",
+      "order": 50,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>Taxonomies vs terms</h2><p>A <strong>taxonomy</strong> is the bucket type \u2014 <em>Category</em>, <em>Tag</em>, <em>Cuisine</em>, <em>Difficulty</em>. A <strong>term</strong> is an instance inside that bucket \u2014 <em>Italian</em> in <em>Cuisine</em>, <em>Easy</em> in <em>Difficulty</em>. Same model as WordPress.</p><p>Taxonomies are attached to one or more node types: the same <em>Tag</em> taxonomy can apply to <code>blog_post</code>, <code>recipe</code>, <code>portfolio_entry</code> at once.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Manage taxonomies at <code>/admin/taxonomies</code></h2><p>List, create, edit, delete. Per taxonomy you set:</p><ul><li><strong>Slug</strong> \u2014 lowercase, immutable after creation</li><li><strong>Label</strong> / <strong>Label plural</strong></li><li><strong>Hierarchical</strong> \u2014 boolean. <em>true</em> for category-style nesting, <em>false</em> for flat tag-style</li><li><strong>Attached node types</strong> \u2014 multi-select of node-type slugs that should expose this taxonomy</li><li><strong>Term field schema</strong> \u2014 custom fields per term (see <a href=\"/docs/custom-fields\">Custom Fields</a>). Lets you decorate terms with images, descriptions, color tags, anything</li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Manage terms</h2><p>Terms are scoped per <em>node type + taxonomy + language</em>. Open a node-type list page (e.g. <code>/admin/nodes/recipe</code>) and use the <strong>Taxonomies</strong> tab to manage terms for that type, or browse the dedicated terms screens via the sidebar.</p><h3>Per-term fields</h3><ul><li><strong>Slug</strong> \u2014 auto-generated from name, editable</li><li><strong>Name</strong></li><li><strong>Parent</strong> \u2014 only if the taxonomy is hierarchical</li><li><strong>Description</strong></li><li>Custom field values from the term schema</li></ul><h3>Reorder &amp; nest</h3><p>Drag rows to reorder. For hierarchical taxonomies, drag onto another row to nest.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Per-language with linked translations</h2><p>Terms are per-language. Slug uniqueness is scoped to <code>(node_type, taxonomy, slug, language_code)</code> \u2014 so you can have <code>cuisine/italian</code> in English and <code>cuisine/talianska</code> in Slovak, both pointing at the same logical term.</p><p>Linking is done via <code>translation_group_id</code>. Translate an existing term:</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<pre><code>POST /admin/api/terms/&lt;id&gt;/translations\nContent-Type: application/json\n\n{ \"language_code\": \"sk\" }</code></pre>",
+            "file": "REST",
+            "language": "bash",
+            "show_dots": true
+          },
+          "type": "doc-codeblock"
+        },
+        {
+          "fields": {
+            "body": "<p>The source row gets a fresh <code>translation_group_id</code> if it didn't already have one; the clone joins the same group with the new language. The admin UI exposes this through the term editor's <strong>Translations</strong> tab \u2014 you don't normally call the route directly.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "When a node references a term via a <strong>term-typed custom field</strong>, store the value as <code>{slug, name}</code>, not a bare slug string. The admin's term-field component requires the object form to pre-select. Templates accept either shape on render.",
+            "label": "HEADS UP",
+            "variant": "heads-up"
+          },
+          "type": "doc-callout"
+        },
+        {
+          "fields": {
+            "body": "<h2>Attaching terms to a node</h2><p>On the node edit screen, every taxonomy attached to that node type renders as a multi-select in the sidebar. Selecting a term stores it in <code>taxonomies.&lt;taxonomy_slug&gt;</code> as an array of <code>{slug, name}</code> objects.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<pre><code>{\n  \"category\": [{ \"slug\": \"engineering\", \"name\": \"Engineering\" }],\n  \"tag\":      [\n    { \"slug\": \"go\",  \"name\": \"Go\" },\n    { \"slug\": \"cms\", \"name\": \"CMS\" }\n  ]\n}</code></pre>",
+            "file": "node.taxonomies",
+            "language": "json",
+            "show_dots": true
+          },
+          "type": "doc-codeblock"
+        }
+      ]
+    },
+    {
+      "slug": "menus",
+      "title": "Menus",
+      "section_slug": "content-editing",
+      "section_name": "Content Editing",
+      "summary": "Build site navigation with rename-stable, per-language menus.",
+      "order": 60,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>Menus model the navigation</h2><p>Menus are named, ordered, optionally-nested lists of links. The active theme picks them up by slug at render time \u2014 e.g. a layout calls <code>{{ index .app.menus \"main-nav\" }}</code> to render the primary navigation. Themes can declare <em>placements</em> (header, footer, sidebar, mobile-only) and pull a different menu into each.</p><p>Manage at <code>/admin/menus</code>. Each menu has slug, name, and an items list. Items can nest arbitrarily deep.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Item types</h2><h3>Static URL</h3><p>A label + URL + target (<code>_self</code>, <code>_blank</code>). Use for external links or hand-crafted paths.</p><h3>Node-linked</h3><p>A label + a <strong>page slug</strong>. The slug is resolved to the current public URL at render time, so <em>renaming the target node doesn't break the menu</em>. If the node is deleted or unpublished, the item is dropped from the rendered menu.</p><h3>Children</h3><p>Any item can have child items. The admin UI lets you drag-nest with no depth limit; the theme decides whether to render dropdowns, accordions, or flatten beyond a certain depth.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<pre><code>core.menu.upsert({\n  slug: \"main-nav\",\n  name: \"Main navigation\",\n  items: [\n    { label: \"Home\",  page: \"home\" },\n    { label: \"Docs\",  page: \"introduction\" },\n    { label: \"Blog\",  page: \"blog-index\", children: [\n      { label: \"Engineering\", url: \"/blog/category/engineering\" },\n      { label: \"Product\",     url: \"/blog/category/product\"     }\n    ]},\n    { label: \"GitHub\", url: \"https://github.com/erikkubica/squilla\", target: \"_blank\" }\n  ]\n})</code></pre>",
+            "file": "MCP call",
+            "language": "javascript",
+            "show_dots": true
+          },
+          "type": "doc-codeblock"
+        },
+        {
+          "fields": {
+            "body": "Menu input uses <code>label:</code>, but the rendered menu items expose <code>.title</code>. Inside templates iterate items and read <code>.title</code> and <code>.url</code> \u2014 <code>{{ .label }}</code> is empty. <code>core.menu.upsert</code> fully replaces the items list on save (no partial merging).",
+            "label": "HEADS UP",
+            "variant": "heads-up"
+          },
+          "type": "doc-callout"
+        },
+        {
+          "fields": {
+            "body": "<h2>Per-language menus</h2><p>Menus are scoped per language \u2014 a menu in English and one in Slovak are separate rows that share a slug. The admin top-bar language switcher picks which menu you're editing. Themes pull the menu matching the current request's locale and fall back to the default language if it doesn't exist.</p><h3>Linking translated nodes in items</h3><p>Node-linked items resolve through the language-aware router. An item linking to page slug <em>about</em> renders <code>/about</code> on the English site and <code>/o-nas</code> on the Slovak site \u2014 assuming both translations share a <code>translation_group_id</code>.</p>"
+          },
+          "type": "doc-content"
+        }
+      ]
+    },
+    {
+      "slug": "media",
+      "title": "Media",
+      "section_slug": "content-editing",
+      "section_name": "Content Editing",
+      "summary": "Upload, optimize, and pick media \u2014 with WebP + multi-size out of the box.",
+      "order": 70,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>The media manager</h2><p>The <code>media-manager</code> extension owns the media library. It runs at <code>/admin/media</code> with both <strong>grid</strong> (thumbnails) and <strong>list</strong> (filename, size, mime, dimensions, uploaded date) views. Search by filename, filter by mime type, sort by date or size.</p><h3>What you can upload</h3><p>Anything: images (jpeg, png, webp, avif, gif, svg), videos (mp4, webm), audio (mp3, m4a, ogg), documents (pdf, docx, xlsx). Per-format size limits configurable in <code>/admin/settings/media</code>.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Uploading</h2><ul><li><strong>Drag &amp; drop</strong> a single file or many onto the library page</li><li><strong>Click upload</strong> for a file picker</li><li><strong>Paste from clipboard</strong> \u2014 ctrl/cmd+V on the library page lifts an image from the OS clipboard</li><li><strong>Import from URL</strong> \u2014 paste a public URL; the server downloads and stores it (<code>core.media.import_url</code>)</li></ul><h3>Per-file metadata</h3><p>Click any file to open the editor sheet. You can edit:</p><ul><li><strong>Alt text</strong> \u2014 per-language; falls back to default-language alt if not set</li><li><strong>Caption</strong></li><li><strong>Description</strong></li><li><strong>Slug</strong> \u2014 the public URL slug at <code>/media/&lt;slug&gt;</code></li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Image optimization</h2><h3>Multi-size variants</h3><p>Every image upload generates a configurable set of size variants. Defaults: <em>thumbnail</em> (300px), <em>medium</em> (768px), <em>large</em> (1536px), plus the original. Add your own at <code>/admin/settings/media</code> \u2014 each entry is <code>{ slug, width, height?, fit }</code>. Theme/extension code can request a specific size by slug.</p><h3>WebP conversion</h3><p>Originals are kept as-is and a WebP variant is generated for each size. The public URL emitter chooses WebP for clients that send <code>Accept: image/webp</code>, and falls back to the original format otherwise.</p><h3>Reoptimize on demand</h3><p>Changed your size list, quality settings, or want to switch to AVIF later? <strong>Reoptimize</strong> regenerates all variants from the original. Bulk action available from the library list view.</p><h3>Quality controls</h3><p>Per-format quality (1\u2013100), JPEG progressive on/off, PNG compression level, WebP effort \u2014 all configurable.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "Originals are <em>backed up</em>, never replaced. You can lower quality, change formats, or delete variants \u2014 the original byte-stream is preserved so reoptimize is always lossless on input.",
+            "label": "TIP",
+            "variant": "tip"
+          },
+          "type": "doc-callout"
+        },
+        {
+          "fields": {
+            "body": "<h2>The media picker</h2><p>The picker is a modal embedded everywhere a node, term, or block needs media \u2014 featured image, image custom fields, gallery fields, file fields. From the modal you can:</p><ul><li>Browse the library with grid/list/search/filter</li><li>Upload a new file inline (drag-drop into the modal)</li><li>Multi-select for gallery fields</li><li>Edit alt-text and caption inline before confirming</li></ul><p>Confirmed selections are stored as full media objects: <code>{ id, slug, url, alt, width, height, sizes: { thumbnail: {...}, medium: {...} } }</code>. Theme templates resolve the right variant by reading <code>.sizes.&lt;slug&gt;.url</code>.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Public URL routing</h2><p>Every media file resolves at <code>/media/&lt;slug&gt;</code> (or <code>/media/&lt;slug&gt;@&lt;size&gt;.&lt;format&gt;</code> for size variants). The route is owned by the media-manager extension and adds <code>Cache-Control</code>, <code>ETag</code>, and the right MIME type. Direct <code>/storage/...</code> paths are not exposed publicly \u2014 they're an implementation detail.</p>"
+          },
+          "type": "doc-content"
+        }
+      ]
+    },
+    {
+      "slug": "multi-language",
+      "title": "Multi-language",
+      "section_slug": "content-editing",
+      "section_name": "Content Editing",
+      "summary": "Per-language content, terms, and settings with linked translations.",
+      "order": 80,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>The MVP we ship</h2><p>Squilla's i18n is intentionally pragmatic. The model is closer to a competent v1 than to a feature-complete WPML clone, but the foundation \u2014 linked translations on nodes and terms, per-language URL routing, per-language settings with default fallback \u2014 is solid enough to scale into.</p><h3>What's in the box</h3><ul><li>Add languages, mark a default</li><li>Edit any node, term, or setting in any language</li><li>Public site routes per language with per-node-type URL prefixes</li><li>Public language switcher follows linked translations</li><li>Settings inherit from the default language when not localized</li></ul><h3>What's not (yet)</h3><ul><li>No bulk translation workflow / queues</li><li>No translation memory or external service connectors</li><li>No per-string translation tables for theme-hardcoded copy (use settings instead)</li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Configuring languages</h2><p>Manage at <code>/admin/settings/languages</code>. Each language row has:</p><ul><li><strong>Code</strong> \u2014 ISO 639-1 (e.g. <code>en</code>, <code>sk</code>, <code>de</code>)</li><li><strong>Name</strong> \u2014 display name in the admin and in the site language switcher</li><li><strong>Direction</strong> \u2014 ltr / rtl</li><li><strong>Default</strong> \u2014 exactly one language is marked default</li><li><strong>Active</strong> \u2014 inactive languages stay in DB but disappear from the public site and admin switchers</li></ul><h3>Default-language fallback</h3><p>Reads scope to the requesting language. If no row exists for that language, the kernel falls back to the default-language row. So you can roll out new languages incrementally \u2014 untranslated content shows in the default language rather than 404'ing.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Editing in a specific language</h2><p>The admin top bar carries a <strong>language switcher</strong>. Picking a language sets the <code>X-Admin-Language</code> header on every admin request. From that point:</p><ul><li>Lists scope to that language (you only see that language's posts unless you toggle \"all\")</li><li>Save writes go to that language's row</li><li>Settings reads pick the localized row first, default-language second</li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Linked translations on nodes</h2><p>Each node has <code>language_code</code> + <code>translation_group_id</code>. To translate a node:</p><ol><li>Open the source node</li><li>Click <strong>Add translation</strong> in the Translations sidebar panel</li><li>Pick the target language</li><li>The kernel clones the node into that language with a fresh slug, joins both rows under one <code>translation_group_id</code></li></ol><p>From then on, the public site's language switcher follows the group: clicking <em>Slovak</em> on the English page navigates to the Slovak version, not to the homepage or 404. The translations panel always shows every member of the group with quick-edit links.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Linked translations on terms</h2><p>Identical model. Slug uniqueness is scoped to <code>(node_type, taxonomy, slug, language_code)</code> \u2014 you can have <code>cuisine/italian</code> in English and <code>cuisine/talianska</code> in Slovak, both in the same group.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<pre><code>POST /admin/api/terms/&lt;id&gt;/translations\nContent-Type: application/json\n\n{ \"language_code\": \"sk\" }</code></pre>",
+            "file": "REST",
+            "language": "bash",
+            "show_dots": true
+          },
+          "type": "doc-codeblock"
+        },
+        {
+          "fields": {
+            "body": "<h2>Per-language settings</h2><p>The <code>site_settings</code> table carries a <code>language_code</code> on every row. Reads scope to the caller's locale (admin uses <code>X-Admin-Language</code>; public uses request locale) and fall back to the default-language row when no per-locale value exists.</p><p>There is <strong>no <code>translatable</code> flag</strong> on the schema. Every settings field is implicitly per-locale. Set the same key in each language to localize; leave a language unset to inherit from default.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "Migration 0040 backfilled every existing settings row with a real <code>language_code</code>. The legacy shared sentinel (<code>language_code = ''</code>) is gone \u2014 every row has a real language.",
+            "label": "NOTE",
+            "variant": "note"
+          },
+          "type": "doc-callout"
+        },
+        {
+          "fields": {
+            "body": "<h2>URL prefixes per language</h2><p>Each node type has a <code>url_prefixes</code> map. Same node type can have different prefixes per language: <code>{ en: \"recipes\", sk: \"recepty\" }</code> means the recipe at slug <code>scallops</code> renders at <code>/recipes/scallops</code> in English and <code>/recepty/scallops</code> in Slovak. Note that the slug itself is also per-language \u2014 each translated row has its own slug.</p>"
+          },
+          "type": "doc-content"
+        }
+      ]
+    },
+    {
+      "slug": "seo",
+      "title": "SEO",
+      "section_slug": "content-editing",
+      "section_name": "Content Editing",
+      "summary": "Per-node meta, site-wide settings, and a Yoast-style sitemap.",
+      "order": 90,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>What ships in v0.1.0</h2><p>SEO controls in Squilla today are deliberately small \u2014 the things you actually need to ship and rank, with sane defaults. No hundred-tab Yoast clone (yet).</p><h3>Per-node</h3><ul><li><strong>Meta title</strong> \u2014 falls back to <code>title</code> if empty</li><li><strong>Meta description</strong> \u2014 falls back to <code>excerpt</code> if empty</li><li><strong>Featured image</strong> \u2014 used as <code>og:image</code> automatically</li></ul><p>Edit on the node screen's <em>SEO</em> sidebar panel.</p><h3>Site-wide</h3><ul><li><strong>Site title</strong> + <strong>tagline</strong> (per-language)</li><li><strong>Default OG image</strong> for pages without a featured image</li><li><strong>Robots</strong> \u2014 site-wide index/noindex toggle</li></ul><p>Manage at <code>/admin/settings/seo</code>.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>What the public site emits</h2><p>For every node-rendered page, the layout's <code>&lt;head&gt;</code> includes:</p><ul><li><code>&lt;title&gt;</code> \u2014 meta_title \u2192 title \u2192 site title</li><li><code>&lt;meta name=\"description\"&gt;</code> \u2014 meta_description \u2192 excerpt</li><li>OpenGraph tags \u2014 <code>og:title</code>, <code>og:description</code>, <code>og:image</code>, <code>og:type</code>, <code>og:url</code></li><li>Twitter card tags \u2014 <code>twitter:card</code>, <code>twitter:title</code>, <code>twitter:description</code>, <code>twitter:image</code></li><li>Canonical URL \u2014 the public URL of this node in this language</li><li><code>hreflang</code> alternates \u2014 one per linked translation in the group</li></ul><p>Themes can override or extend any of these by editing the layout template.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>The sitemap</h2><p>The <code>sitemap-generator</code> extension produces a Yoast-style <em>sitemap index</em> + per-type sitemaps automatically.</p><ul><li><code>/sitemap.xml</code> \u2014 index of all per-type sitemaps</li><li><code>/sitemap-&lt;type&gt;.xml</code> \u2014 e.g. <code>/sitemap-page.xml</code>, <code>/sitemap-blog_post.xml</code></li><li>Per-type inclusion configurable at <code>/admin/settings/seo</code></li><li>Auto-includes <code>status: published</code> nodes; drafts excluded</li><li>Per-language sub-sitemaps when more than one language is active</li><li>Includes <code>&lt;lastmod&gt;</code> from <code>updated_at</code></li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "Want a node out of the sitemap? Set <code>status: draft</code> or unpublish it. There's no per-node \"noindex\" toggle yet \u2014 it's on the roadmap. Site-wide noindex (e.g. for staging) is honored.",
+            "label": "HEADS UP",
+            "variant": "heads-up"
+          },
+          "type": "doc-callout"
+        }
+      ]
+    },
+    {
+      "slug": "layouts-partials",
+      "title": "Layouts & Partials",
+      "section_slug": "content-editing",
+      "section_name": "Content Editing",
+      "summary": "Edit page chrome and reusable partials from the admin \u2014 detach, reattach, or build from scratch.",
+      "order": 100,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>Three theme primitives, all editable in the admin</h2><p>Squilla exposes three editable theme primitives in the admin UI: <strong>layouts</strong>, <strong>layout blocks</strong> (partials), and <strong>content blocks</strong>. This page covers the first two; <a href=\"/docs/content-blocks\">Content Blocks</a> covers the lego bricks of node bodies.</p><h3>What's a layout</h3><p>A layout is the page-level chrome \u2014 the <code>&lt;html&gt;</code> wrapper, the head metadata, the site header / footer placement, and the slot where the node's blocks render. Examples: <em>default</em>, <em>2-col</em>, <em>landing</em>, <em>docs</em> (the layout this very page is rendered with).</p><h3>What's a layout block (a.k.a. partial)</h3><p>A reusable fragment included from one or more layouts \u2014 site header, site footer, sidebar, breadcrumb. Conceptually they're partials; the legacy naming says \"layout blocks\". A rename is on the roadmap.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Manage at <code>/admin/layouts</code></h2><p>The list shows every registered layout with name, slug, source (theme / extension / user), assigned node types, and a preview thumbnail when available.</p><h3>Three sources</h3><ul><li><strong>Theme-owned</strong> \u2014 read-only by default; comes with the active theme</li><li><strong>Extension-owned</strong> \u2014 read-only; an extension shipped this layout</li><li><strong>User-owned</strong> \u2014 fully editable; created in the admin or detached from a theme/extension</li></ul><h3>Detach</h3><p>Click <strong>Detach</strong> on any theme/extension layout. The kernel copies the layout's template into a new user-owned row that overrides the source. From then on, your edits stick across theme reinstalls. <strong>Reattach</strong> deletes the user-owned override and falls back to the source.</p><h3>Create from scratch</h3><p>Hit <strong>New layout</strong> for a blank user-owned layout: name, slug, description, template_code (Go html/template), assignable node types.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<pre><code>&lt;!doctype html&gt;\n&lt;html lang=\"{{ .request.language }}\"&gt;\n  &lt;head&gt;{{ template \"head\" . }}&lt;/head&gt;\n  &lt;body&gt;\n    {{ renderLayoutBlock \"site-header\" }}\n    &lt;main&gt;{{ .node.blocks_html }}&lt;/main&gt;\n    {{ renderLayoutBlock \"site-footer\" }}\n  &lt;/body&gt;\n&lt;/html&gt;</code></pre>",
+            "file": "minimal user-owned layout",
+            "language": "html",
+            "show_dots": true
+          },
+          "type": "doc-codeblock"
+        },
+        {
+          "fields": {
+            "body": "Layouts and partials are loaded into the renderer cache at theme activation. After editing a theme-owned layout on disk you must re-activate the theme. User-owned layouts (admin-edited) bust the cache automatically on save.",
+            "label": "HEADS UP",
+            "variant": "heads-up"
+          },
+          "type": "doc-callout"
+        },
+        {
+          "fields": {
+            "body": "<h2>Layout assignment</h2><p>Each node type pins a default layout (configured in <code>/admin/node-types</code>). Per-node overrides live in the node edit screen's sidebar (<em>Layout override</em> picker). Resolution order at render time:</p><ol><li>Per-node override, if set</li><li>Node-type default layout</li><li>The theme's catch-all <code>default</code> layout</li></ol>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Layout blocks (partials)</h2><p>Manage at <code>/admin/layout-blocks</code>. Same source model as layouts (theme / extension / user-owned, with detach + reattach). Each layout block has:</p><ul><li><strong>Slug</strong> \u2014 the identifier used by <code>renderLayoutBlock \"&lt;slug&gt;\"</code></li><li><strong>Name</strong> + <strong>description</strong></li><li><strong>Template code</strong> (Go html/template)</li><li><strong>Field schema</strong> \u2014 page-level overrides; see below</li></ul><h3>Page-level field overrides</h3><p>If a partial has a <code>field_schema</code>, every node using a layout that includes that partial gets a <strong>Layout block fields</strong> tab on its edit screen. Set the values for that page; the partial's template reads them as <code>.partial.&lt;field_key&gt;</code>.</p><p>This is the path for things like a per-page hero image override, a per-page CTA tweak, a per-page sidebar variant. Useful for marketing pages without forcing every change into the node's <code>blocks_data</code>.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "Today partial fields are <strong>page-level only</strong>. There's no global \"set this partial's field for every page\" option \u2014 you set it on each page individually, or default it in the partial's schema. Global per-partial values are on the roadmap.",
+            "label": "NOTE",
+            "variant": "note"
+          },
+          "type": "doc-callout"
+        }
+      ]
+    },
+    {
+      "slug": "content-blocks",
+      "title": "Content Blocks",
+      "section_slug": "content-editing",
+      "section_name": "Content Editing",
+      "summary": "Lego bricks of node bodies \u2014 pick from the library or build your own.",
+      "order": 110,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>What a content block is</h2><p>A content block is a typed, reusable fragment that an editor drops into a node body. <em>Hero</em>, <em>Two-column text</em>, <em>Gallery</em>, <em>CTA</em>, <em>Code sample</em>, <em>Callout</em> \u2014 the kinds of building blocks every CMS calls something different. In Squilla they live as <code>{ type, fields }</code> objects in each node's <code>blocks_data</code> array.</p><h3>Where they come from</h3><ul><li><strong>Theme-owned</strong> \u2014 declared in <code>themes/&lt;t&gt;/blocks/&lt;slug&gt;/</code> as <code>block.json</code> + <code>view.html</code></li><li><strong>Extension-owned</strong> \u2014 same shape, shipped by an extension (e.g. <code>content-blocks</code> ships a stock library)</li><li><strong>User-owned</strong> \u2014 created in the admin or detached from a theme/extension block</li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Manage at <code>/admin/blocks</code></h2><p>Lists every registered block with slug, label, source, field count. Click a block to view its schema and template; theme/extension blocks are read-only until detached.</p><h3>Create a custom block</h3><p>Click <strong>New block</strong>. Fill in:</p><ul><li><strong>Slug</strong> \u2014 must be unique. Prefix theme blocks (e.g. <code>sq-hero</code>, <code>mytheme-cta</code>) to avoid collisions</li><li><strong>Label</strong></li><li><strong>Field schema</strong> \u2014 the editor form; uses <code>key:</code>, see <a href=\"/docs/custom-fields\">Custom Fields</a></li><li><strong>HTML template</strong> \u2014 Go <code>html/template</code> source rendered with <code>.fields</code> and <code>.node</code></li><li><strong>Test data</strong> \u2014 sample values used by the live preview in the editor</li></ul><h3>Detach &amp; reattach</h3><p><strong>Detach</strong> a theme/extension block to take ownership and edit. <strong>Reattach</strong> discards your edits and follows the source.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<pre><code>{\n  \"slug\": \"sq-cta\",\n  \"label\": \"Call to action\",\n  \"field_schema\": [\n    { \"key\": \"heading\", \"type\": \"text\",  \"required\": true },\n    { \"key\": \"body\",    \"type\": \"richtext\" },\n    { \"key\": \"button\",  \"type\": \"link\" }\n  ],\n  \"test_data\": {\n    \"heading\": \"Try Squilla today\",\n    \"body\":    \"&lt;p&gt;Open source. Self-hostable.&lt;/p&gt;\",\n    \"button\":  { \"label\": \"Get started\", \"url\": \"/docs/quickstart\" }\n  }\n}</code></pre>",
+            "file": "block.json (excerpt)",
+            "language": "json",
+            "show_dots": true
+          },
+          "type": "doc-codeblock"
+        },
+        {
+          "fields": {
+            "body": "<code>test_data</code> must cover every field in <code>field_schema</code>. The admin renders <code>test_data</code> as the live preview when the editor first opens a fresh block. A missing entry shows as a broken empty area until you fill the field.",
+            "label": "HEADS UP",
+            "variant": "heads-up"
+          },
+          "type": "doc-callout"
+        },
+        {
+          "fields": {
+            "body": "<h2>The in-node editor</h2><p>On any node edit screen, the <strong>main column</strong> hosts the block editor:</p><ul><li><strong>Add block</strong> \u2014 opens the block library (searchable, grouped by category if a theme tags blocks)</li><li><strong>Up / Down arrows</strong> \u2014 move a block up or down in the stack</li><li><strong>Duplicate</strong> \u2014 clone with the same field values</li><li><strong>Delete</strong></li><li><strong>Collapse</strong> \u2014 hide field details, keep the block in place</li></ul><p>Each inserted block renders its own field schema as a sub-form. Saving a node writes the entire <code>blocks_data</code> array atomically.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Template scope</h2><p>Block <code>view.html</code> templates see only the block's own fields at the root of the data context, plus <code>.node</code> for the parent node. They do <em>not</em> see <code>.app</code>, settings, or menus \u2014 those belong in the layout. This isolation is intentional: blocks are atomic, easy to reason about, and reusable across themes.</p><h3>Optional per-block CSS / JS</h3><p>Drop <code>style.css</code> or <code>script.js</code> alongside <code>view.html</code> in a theme/extension block. The kernel scopes them to the block (BEM-prefixed for CSS; module-loaded for JS) and only emits them on pages that actually use the block.</p>"
+          },
+          "type": "doc-content"
+        }
+      ]
+    },
+    {
+      "slug": "forms",
+      "title": "Forms",
+      "section_slug": "content-editing",
+      "section_name": "Content Editing",
+      "summary": "CF7-style: write the HTML, declare a field schema, get validation, notifications, webhooks, and submission storage.",
+      "order": 120,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>HTML you write, validation we wire</h2><p>The <code>forms</code> extension is closer to <em>Contact Form 7</em> than to a drag-and-drop form builder. <strong>You always write the HTML yourself.</strong> The admin gives you a small editor for the form's <em>field schema</em> (the metadata layer) and an HTML editor for the markup. The extension binds the two by matching <code>name=\"&lt;field&gt;\"</code> attributes in your HTML to entries in the schema.</p><p>There is <strong>no visual form builder</strong>, and one is not planned. If you've used CF7, the mental model is: <em>I write the form, the plugin handles submit, validation, notifications, storage</em>.</p><p>Manage at <code>/admin/forms</code>. Each form has a name, slug, field schema, HTML body, notifications, webhooks, settings, and a submissions log.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Field schema</h2><p>The schema is a typed list of inputs the form expects. Each entry describes one field by <code>name</code> and a <code>type</code>. The schema is what the rest of the system reads from \u2014 validation rules, conditional logic, notification placeholders, webhook payload shape, the submissions table.</p><h3>Why a schema if HTML is custom?</h3><p>Because the HTML alone is opaque \u2014 a raw <code>&lt;input name=\"email\"&gt;</code> doesn't tell the server it's an email, that it's required, that it should be redacted from logs, or that it should be the recipient address on a notification. The schema carries that intent; the HTML carries the layout.</p><h3>Schema field types</h3><ul><li><code>text</code>, <code>textarea</code>, <code>email</code>, <code>tel</code>, <code>url</code>, <code>number</code></li><li><code>select</code>, <code>radio</code>, <code>checkbox</code>, <code>multi_select</code></li><li><code>file</code> (size + mime restrictions)</li><li><code>date</code>, <code>datetime</code>, <code>time</code></li><li><code>hidden</code>, <code>honeypot</code></li></ul><p>Per-field config: <em>name</em>, <em>label</em>, <em>required</em>, <em>default value</em>, <em>placeholder</em>, <em>help text</em>, <em>options</em> (for select/radio).</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>The HTML body</h2><p>You author the form markup directly. The extension renders your HTML as-is on the public site, wraps it in a <code>&lt;form&gt;</code> with the right action / method / CSRF, and binds inputs to the schema by their <code>name</code> attribute. You're free to use whatever classes, layout, and ARIA the rest of your theme expects.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<pre><code>&lt;div class=\"grid sm:grid-cols-2 gap-4\"&gt;\n  &lt;label&gt;\n    Name\n    &lt;input name=\"name\" required /&gt;\n  &lt;/label&gt;\n  &lt;label&gt;\n    Email\n    &lt;input name=\"email\" type=\"email\" required /&gt;\n  &lt;/label&gt;\n&lt;/div&gt;\n\n&lt;label&gt;\n  Message\n  &lt;textarea name=\"message\" rows=\"6\" required&gt;&lt;/textarea&gt;\n&lt;/label&gt;\n\n&lt;input type=\"text\" name=\"website\" class=\"sq-honeypot\" tabindex=\"-1\" autocomplete=\"off\" /&gt;\n\n&lt;button type=\"submit\"&gt;Send&lt;/button&gt;</code></pre>",
+            "file": "form HTML (excerpt)",
+            "language": "html",
+            "show_dots": true
+          },
+          "type": "doc-codeblock"
+        },
+        {
+          "fields": {
+            "body": "If a schema entry has no matching <code>name=\"\u2026\"</code> in the HTML (or vice versa), the form still works \u2014 but you lose validation / notification placeholders for that field. Keep the two in sync.",
+            "label": "HEADS UP",
+            "variant": "heads-up"
+          },
+          "type": "doc-callout"
+        },
+        {
+          "fields": {
+            "body": "<h2>Conditional logic</h2><p>Each field in the schema can have a <strong>conditions</strong> rule that decides whether it shows, is hidden, or is required. A rule is groups-of-conditions:</p><ul><li><strong>Match</strong> \u2014 <em>all</em> (AND) or <em>any</em> (OR) of the conditions in this group</li><li><strong>Conditions</strong> \u2014 <code>{ field, operator, value }</code> entries</li></ul><p>Operators: <code>=</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>, <code>contains</code>, <code>starts_with</code>, <code>ends_with</code>, <code>is_empty</code>, <code>is_not_empty</code>.</p><p>Multiple groups can combine. Conditional logic runs both client-side (live show/hide) and server-side (validation can't be bypassed).</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Notifications</h2><p>Each form can have any number of <strong>notifications</strong> that fire on submission. Per notification:</p><ul><li><strong>Subject</strong> \u2014 with <code>{{field_name}}</code> placeholder interpolation</li><li><strong>Body</strong> \u2014 rich editor, same placeholders</li><li><strong>Recipients</strong> \u2014 static list, from-field (<code>{{email}}</code>), or pulled from a role's email-subscriptions</li><li><strong>From / Reply-To</strong></li><li><strong>Conditions</strong> \u2014 only fire if conditions met (e.g. only email sales when <em>type = quote</em>)</li><li><strong>Email template</strong> \u2014 optional reference to an email-manager template instead of inline body</li></ul><p>Notifications are delivered through the active email-manager provider \u2014 SMTP, Resend, or whatever is wired.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Webhooks</h2><p>Per form, configure any number of <strong>webhooks</strong>. Each webhook is <code>{ url, method, headers, body_template, retries, backoff }</code>. The body template renders the submission as JSON by default, or you can hand-craft the payload with the same <code>{{field_name}}</code> placeholders. Failed POSTs retry on configurable backoff.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Submissions</h2><p>Every submission is stored in DB. Browse at <code>/admin/forms/&lt;slug&gt;/submissions</code> with search, filter, sort. Each row shows submitted values, IP address, user agent, source URL, timestamps, and notification + webhook delivery status. Export to CSV or JSON. Mark spam, restore, delete.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Spam &amp; abuse</h2><ul><li><strong>Honeypot</strong> field \u2014 declare a field with <code>type: \"honeypot\"</code> in the schema and place a matching hidden input in your HTML. Submissions where it's filled are silently discarded</li><li><strong>Rate limiting</strong> \u2014 per-IP and per-session, configurable</li><li><strong>Required-referrer</strong> \u2014 reject submissions not coming from your domain</li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Embedding a form</h2><p>Two paths:</p><ul><li><strong>Form block</strong> \u2014 the <code>forms-form</code> content block; pick a form by slug from a dropdown in the block editor</li><li><strong>Template helper</strong> \u2014 <code>{{ form \"&lt;slug&gt;\" }}</code> renders inline in any layout, partial, or theme template</li></ul>"
+          },
+          "type": "doc-content"
+        }
+      ]
+    },
+    {
+      "slug": "mailing",
+      "title": "Mailing",
+      "section_slug": "content-editing",
+      "section_name": "Content Editing",
+      "summary": "Layouts, templates, providers, rules, and a log \u2014 everything for transactional email.",
+      "order": 130,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>The email-manager extension</h2><p>All outgoing email goes through the <code>email-manager</code> extension. No other extension speaks raw SMTP \u2014 they fire a <code>core.email.send</code> call, the manager picks it up, applies the layout/template, hands it to the active provider, and logs the result.</p><p>Manage at <code>/admin/email</code>. Five surfaces inside: <em>Layouts</em>, <em>Templates</em>, <em>Providers</em>, <em>Rules</em>, <em>Logs</em>.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Email layouts</h2><p>Manage at <code>/admin/email/layouts</code>. A layout is the outer wrapper \u2014 brand header, footer, signature, unsubscribe link. Templates pick a layout to wrap themselves in.</p><h3>What you set</h3><ul><li><strong>Slug</strong></li><li><strong>Name</strong></li><li><strong>HTML template</strong> \u2014 Go html/template, must include <code>{{ .body }}</code> where the message body slots in</li><li><strong>Plain-text template</strong> \u2014 separate template for the plain-text part of multipart messages</li><li><strong>Default</strong> \u2014 mark one layout as the default; new templates inherit it</li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Email templates</h2><p>Manage at <code>/admin/email/templates</code>. A template is a single message \u2014 welcome email, password reset, order confirmation. Each template has:</p><ul><li><strong>Slug</strong> \u2014 referenced by rules and forms</li><li><strong>Subject</strong> \u2014 with <code>{{variable}}</code> interpolation</li><li><strong>Body</strong> \u2014 rich editor, same interpolation</li><li><strong>Layout</strong> \u2014 picker; defaults to the layout marked default</li><li><strong>Variables</strong> \u2014 declared schema (custom-field-style), so the admin's preview can render with sample values</li></ul><h3>Preview</h3><p>The <strong>Preview</strong> button renders the template against the variables schema's sample values, exactly like the recipient would see it.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Providers</h2><p>Pluggable. Today:</p><ul><li><code>smtp-provider</code> \u2014 gRPC plugin, talks to any SMTP server (Postmark, SES SMTP relay, your own MTA)</li><li><code>resend-provider</code> \u2014 Tengo extension, ~20 lines, talks to Resend.com</li></ul><p>Activate exactly one as the active provider. To switch, deactivate the current one and activate another. Manage at <code>/admin/email/providers</code>; provider-specific settings (API key, SMTP host/port/auth) are exposed by the provider extension.</p><h3>Roadmap</h3><p>SES native, Postmark native, Mailgun, SendGrid \u2014 all welcome as community extensions. The provider contract is a single event subscription.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Rules</h2><p>Manage at <code>/admin/email/rules</code>. A rule says <em>when X event fires, send template Y to recipients Z</em>. Each rule has:</p><ul><li><strong>Trigger event</strong> \u2014 picker pulling from the live event bus catalog: <code>node.created</code>, <code>node.updated</code>, <code>node.deleted</code>, <code>user.registered</code>, <code>user.password_reset_requested</code>, <code>form.submitted</code>, <code>media.uploaded</code>, plus any extension-emitted event</li><li><strong>Conditions</strong> \u2014 same operators as forms; e.g. <code>node.node_type = \"page\"</code></li><li><strong>Recipients</strong> \u2014 static, from-event-payload (<code>{{user.email}}</code>), or from-role-subscription (every user subscribed to this event in this role)</li><li><strong>Template</strong> \u2014 picker</li><li><strong>Throttle</strong> \u2014 optional, e.g. \"max 1 per user per hour\"</li><li><strong>Active</strong> \u2014 toggle</li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "Combine rules with <a href=\"/docs/roles-permissions\">role-level email subscriptions</a> to wire up automatic notifications: <em>\"any role with the <code>node:created:page</code> subscription gets the page-published email\"</em>.",
+            "label": "TIP",
+            "variant": "tip"
+          },
+          "type": "doc-callout"
+        },
+        {
+          "fields": {
+            "body": "<h2>Logs</h2><p>Browse at <code>/admin/email/logs</code>. Every send recorded with:</p><ul><li>Timestamp, provider, status (<em>queued</em>, <em>sent</em>, <em>failed</em>, <em>bounced</em>, <em>complained</em>)</li><li>To / From / Subject / template / rule</li><li>Provider response (raw)</li><li>Retry count and last-retry timestamp</li><li>Rendered body (HTML + text) for forensic review</li></ul><p>Click any row to inspect; failed deliveries can be <strong>resent</strong> with one click.</p>"
+          },
+          "type": "doc-content"
+        }
+      ]
+    },
+    {
+      "slug": "users",
+      "title": "Users",
+      "section_slug": "content-editing",
+      "section_name": "Content Editing",
+      "summary": "Manage admin accounts \u2014 profiles, languages, password resets, soft-delete.",
+      "order": 140,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>Basic, on purpose</h2><p>The user model is intentionally minimal in v0.1.0 \u2014 enough for content editing and admin work, not yet a full identity platform. Manage at <code>/admin/users</code>.</p><h3>Profile fields</h3><ul><li><strong>Name</strong></li><li><strong>Email</strong> \u2014 unique, used for login</li><li><strong>Password</strong></li><li><strong>Language preference</strong> \u2014 pre-selects the editing-language switcher when this user logs in</li><li><strong>Roles</strong> \u2014 multi-role assignment; capabilities are unioned across all assigned roles</li><li><strong>Active</strong> \u2014 toggle</li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Lifecycle</h2><h3>Create</h3><p>Click <strong>New user</strong> at <code>/admin/users</code>. The admin can either set a password directly or send an invite email (delivered through the email-manager). The invite email includes a one-time setup link.</p><h3>Soft-delete</h3><p>Deactivating a user (toggling <em>Active</em> off) removes their ability to log in but preserves authored content links. <em>Hard-delete</em> available too \u2014 reassigns or nulls authored content references depending on the relation.</p><h3>Password reset</h3><p>Two paths:</p><ul><li><strong>From the admin</strong> \u2014 click <em>Send reset link</em> on a user row; email-manager dispatches the password-reset template to that user</li><li><strong>By the user</strong> \u2014 \"Forgot password\" on the login page; same dispatch path</li></ul>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "Lost the bootstrap admin password? Use the CLI: <code>docker exec -it &lt;app&gt; ./squilla reset-password &lt;email&gt; &lt;new-password&gt;</code>. Idempotent; uses the same password hasher as signup. Works without SMTP. The <code>ADMIN_PASSWORD</code> env var only takes effect during first-boot seed (when no admin exists yet) \u2014 it does not reset an existing user's password.",
+            "label": "HEADS UP",
+            "variant": "heads-up"
+          },
+          "type": "doc-callout"
+        },
+        {
+          "fields": {
+            "body": "<h2>Email subscriptions</h2><p>Every user can subscribe to lifecycle events on top of any subscriptions inherited from their roles. Manage from the user's profile sheet, or via <a href=\"/docs/roles-permissions\">role-level subscriptions</a> for bulk wiring.</p><p>Events available: block-type, layout / layout-block, menu, node (filterable per node type), user. Per event, subscribe to <em>create</em>, <em>update</em>, <em>delete</em>, or all. The email-manager rules engine pairs with these subscriptions to wire up notifications.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>What's not in v0.1.0</h2><ul><li>SSO / OAuth / SAML \u2014 password-only login today</li><li>2FA / TOTP \u2014 roadmap</li><li>Per-user API tokens (admin tokens issued at <code>/admin/settings/tokens</code> are not user-scoped yet)</li><li>Audit log of user activity \u2014 there's an audit log of <em>MCP</em> calls but not full per-user admin actions</li></ul><p>None of these are blocked by architecture; they're just not in this release.</p>"
+          },
+          "type": "doc-content"
+        }
+      ]
+    },
+    {
+      "slug": "roles-permissions",
+      "title": "Roles & Permissions",
+      "section_slug": "content-editing",
+      "section_name": "Content Editing",
+      "summary": "Fine-grained access control: module capabilities, per-node-type ACLs, and event subscriptions.",
+      "order": 150,
+      "blocks": [
+        {
+          "fields": {
+            "body": "<h2>Two axes of access</h2><p>Manage at <code>/admin/roles</code>. Roles control access along two independent axes:</p><ul><li><strong>Module capabilities</strong> \u2014 which admin sections this role can see and operate</li><li><strong>Node access control</strong> \u2014 which content this role can read or write, defaulted per node-type with per-node overrides</li></ul><p>Plus a third axis bolted on for convenience: <strong>email subscriptions</strong> for lifecycle events.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Module capabilities</h2><p>Toggles per role for each core admin module:</p><ul><li><strong>Admin access</strong> \u2014 can the user enter <code>/admin/*</code> at all</li><li><strong>Manage users</strong></li><li><strong>Manage roles</strong></li><li><strong>Manage settings</strong></li><li><strong>Manage menus</strong></li><li><strong>Manage media</strong></li><li><strong>Manage taxonomies</strong></li><li><strong>Manage themes</strong></li><li><strong>Manage extensions</strong></li><li><strong>Manage layouts &amp; partials</strong></li><li><strong>Manage content blocks</strong></li><li><strong>Manage emails</strong> (layouts, templates, providers, rules, logs)</li><li><strong>Manage forms</strong></li><li><strong>View audit log</strong></li></ul><p>Capabilities are checked at every admin endpoint and at every CoreAPI call. There is no override \u2014 even superadmins are evaluated.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Node access control</h2><h3>Default level per node type</h3><p>Per role, set a default access level for each registered node type:</p><ul><li><strong>none</strong> \u2014 invisible to this role</li><li><strong>read</strong> \u2014 can list and view, can't edit</li><li><strong>write</strong> \u2014 full CRUD on nodes of this type</li></ul><p>Example: an <em>Editor</em> role might be <em>write</em> on <code>blog_post</code>, <em>read</em> on <code>page</code>, <em>none</em> on <code>internal_doc</code>.</p><h3>Per-node overrides</h3><p>Open any node and use the <strong>Permissions</strong> sidebar panel (visible to roles with <em>Manage roles</em>). Add an explicit allow/deny entry for any role on this specific node \u2014 useful when a single draft needs to be reviewed by a wider group than the type-level default permits.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "Common pattern: a <em>Translator</em> role gets <em>read</em> on every node type, and per-node <em>write</em> overrides only on the translation rows they're assigned. The default is safe; the override is targeted.",
+            "label": "TIP",
+            "variant": "tip"
+          },
+          "type": "doc-callout"
+        },
+        {
+          "fields": {
+            "body": "<h2>Email subscriptions per role</h2><p>Each role declares which lifecycle events its members get emailed about. The email-manager rules engine reads these subscriptions to decide who to send to when a rule's recipients are set to <em>from-role-subscription</em>.</p><h3>Subscribable entities</h3><ul><li><strong>Block type</strong> \u2014 create / update / delete</li><li><strong>Layout</strong> + <strong>layout block</strong> \u2014 create / update / delete</li><li><strong>Menu</strong> \u2014 create / update / delete</li><li><strong>Node</strong> \u2014 create / update / delete, filterable per node type</li><li><strong>User</strong> \u2014 create / update / delete</li></ul><h3>Per-event verb selection</h3><p>For each entity, subscribe to one verb (create only), several (create + delete), or all. Multi-verb selections are rendered as comma-separated chips in the role editor.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "<h2>Multi-role users</h2><p>Users can hold multiple roles. Capabilities are unioned across all assigned roles \u2014 if any role grants the cap, the user has it. Node access uses the most-permissive level across roles.</p><h3>Built-in roles</h3><p>Out of the box: <em>Administrator</em> (everything), <em>Editor</em> (content modules + write on standard node types), <em>Author</em> (write only on their own nodes), <em>Subscriber</em> (no admin access). Built-in roles are editable; you can also create your own.</p>"
+          },
+          "type": "doc-content"
+        },
+        {
+          "fields": {
+            "body": "Capability checks live at the kernel level \u2014 not just the React admin. Hitting an admin REST endpoint directly without the right cap returns 403, even from MCP. The same guard applies to CoreAPI calls from extensions and Tengo scripts.",
+            "label": "NOTE",
+            "variant": "note"
+          },
+          "type": "doc-callout"
+        }
+      ]
+    },
+    {
+      "slug": "extensions-intro",
+      "title": "Extensions Overview",
+      "section_slug": "extensions",
+      "section_name": "Extensions",
+      "summary": "What extensions are, how they extend the kernel, and the three authoring surfaces.",
+      "order": 10,
+      "blocks": [
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Sovereign packages</h2><p>An extension is a self-contained package that ships its full stack. Each extension owns its database tables, business logic, admin UI, scripts, and SQL migrations. The kernel never reaches inside.</p><p>That isolation is the point. A panicking gRPC plugin cannot take down the kernel; a buggy Tengo handler cannot escape its sandbox; a half-broken admin micro-frontend cannot crash the SPA shell. The reference implementation is seven extensions shipped in-tree (<code>media-manager</code>, <code>forms</code>, <code>email-manager</code>, <code>sitemap-generator</code>, <code>smtp-provider</code>, <code>resend-provider</code>, <code>content-blocks</code>) plus <code>hello-extension</code> as the kit-tour.</p><h2>The three authoring surfaces</h2><p>An extension can mix and match three surfaces. You don't need all three.</p><ul><li><strong>gRPC plugin</strong> \u2014 a Go binary launched by the kernel via HashiCorp <code>go-plugin</code>. Implements 5 RPC methods. Use this when you need real Go libraries, native CPU-bound work, long-running goroutines, or shared state in memory.</li><li><strong>Tengo scripts</strong> \u2014 sandboxed scripts under <code>scripts/</code>. No compilation, no binary, hot-reload on activation. Use this for event handlers, filters, lightweight HTTP routes. The <code>resend-provider</code> extension is ~20 lines of Tengo and zero Go.</li><li><strong>Admin UI micro-frontend</strong> \u2014 an isolated Vite build under <code>admin-ui/</code> that emits an ES module loaded by the SPA shell via import-map shims. Owns its routes, sidebar entries, forms, and slot injections.</li></ul>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Anatomy</h2><p>A complete extension under <code>extensions/&lt;slug&gt;/</code>:</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "filesystem",
+            "show_dots": true,
+            "language": "plaintext",
+            "body": "<pre><code>extensions/&lt;slug&gt;/\n  extension.json            # manifest (required)\n  cmd/plugin/main.go        # gRPC plugin entry (optional)\n  migrations/*.sql          # schema, applied on activation (optional)\n  admin-ui/                 # React micro-frontend (optional)\n    src/index.tsx\n    dist/index.js           # build output, referenced by manifest\n  scripts/                  # Tengo scripts (optional)\n    extension.tengo         # entry point\n    handlers/*.tengo\n    filters/*.tengo\n  blocks/&lt;slug&gt;/            # content blocks owned by this extension\n  assets/                   # bundled media imported on activation\n</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Lifecycle</h2><p>An extension moves through four stages, all idempotent and all driven by MCP tools or the admin UI:</p><ol><li><strong>Scan</strong> \u2014 <code>core.extension.rescan</code> walks <code>extensions/</code> and registers every <code>extension.json</code> it finds. Idempotent.</li><li><strong>Deploy</strong> \u2014 <code>core.extension.deploy</code> accepts a base64-zipped package, atomically swaps it into <code>extensions/&lt;slug&gt;/</code>, registers the row, and optionally activates. 50 MB cap.</li><li><strong>Activate</strong> \u2014 <code>core.extension.activate</code> fires the hot-activate pipeline: run new SQL migrations, load Tengo scripts, launch gRPC plugins, register blocks/field-types, fire the <code>extension.activated</code> event.</li><li><strong>Deactivate</strong> \u2014 <code>core.extension.deactivate</code> reverses the activation: emit <code>extension.deactivated</code>, unload scripts, stop plugins, drop blocks. Tables stay; data persists.</li></ol>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "HARD RULE",
+            "variant": "danger",
+            "body": "If disabling an extension would leave dead code in the kernel, that code belongs in the extension. Image optimisation, email templates, sitemap generation, public form submit endpoints \u2014 all extensions, never core."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Capabilities and the guard</h2><p>Every extension declares the kernel capabilities it intends to use in its manifest. Each CoreAPI call from a plugin or Tengo script is wrapped by the <code>CapabilityGuard</code>; calls outside the declared set return an error with no override. Internal kernel callers bypass the guard.</p><p>The capability namespace is <code>&lt;domain&gt;:&lt;verb&gt;</code> with 28 distinct strings: <code>nodes:read</code>, <code>nodes:write</code>, <code>nodes:delete</code>, <code>nodetypes:read</code>, <code>nodetypes:write</code>, <code>settings:read</code>, <code>settings:write</code>, <code>events:emit</code>, <code>events:subscribe</code>, <code>email:send</code>, <code>menus:read</code>, <code>menus:write</code>, <code>menus:delete</code>, <code>routes:register</code>, <code>filters:register</code>, <code>filters:apply</code>, <code>media:read</code>, <code>media:write</code>, <code>media:delete</code>, <code>users:read</code>, <code>http:fetch</code>, <code>log:write</code>, <code>data:read</code>, <code>data:write</code>, <code>data:delete</code>, <code>files:write</code>, <code>files:delete</code>, <code>admin_access</code>.</p><p>The full per-method matrix is in the <a href=\"/docs/api-coreapi\">CoreAPI Reference</a>. Inspect any installed extension's declared set with <code>core.extension.get(slug)</code>.</p>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "HEADS UP",
+            "variant": "heads-up",
+            "body": "<code>data:delete</code> falls back to <code>data:write</code> for backwards compatibility. If your extension only declares <code>data:write</code> it can still call <code>DataDelete</code>. Don't rely on this \u2014 declare the capability you actually need."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Public routes</h2><p>Extensions can claim public URL paths by listing them in <code>public_routes</code>. The kernel proxies matching requests to <code>HandleHTTPRequest</code> on the gRPC plugin. A reserved-path deny list (<code>/admin</code>, <code>/auth</code>, <code>/api/v1</code>, <code>/login</code>, <code>/logout</code>, <code>/register</code>, <code>/forgot-password</code>, <code>/reset-password</code>, <code>/me</code>) prevents extensions from shadowing kernel handlers.</p><p>Admin routes are simpler: any path under <code>/admin/api/ext/&lt;slug&gt;/*</code> is automatically proxied to the plugin. Sensitive request headers (<code>cookie</code>, <code>authorization</code>, <code>x-forwarded-for</code>, <code>x-real-ip</code>) are stripped before forwarding; the authenticated user id is passed in <code>user_id</code>.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "extension-manifest",
+      "title": "extension.json Reference",
+      "section_slug": "extensions",
+      "section_name": "Extensions",
+      "summary": "Every field the extension manifest accepts.",
+      "order": 15,
+      "blocks": [
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Required fields</h2><p>The manifest is parsed into <code>ExtensionManifest</code> in <code>internal/cms/extension_loader.go</code>. Three fields are mandatory:</p><ul><li><code>name</code> (string) \u2014 display name, e.g. <em>\"Forms\"</em>.</li><li><code>slug</code> (string) \u2014 kebab-case identifier; must equal the directory name under <code>extensions/</code>.</li><li><code>version</code> (string) \u2014 semver, e.g. <em>\"2.0.0\"</em>.</li></ul><p>Everything else is optional. The minimal extension is two lines of JSON in a directory.</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "extensions/hello/extension.json",
+            "show_dots": true,
+            "language": "json",
+            "body": "<pre><code>{\n  \"name\": \"Hello\",\n  \"slug\": \"hello\",\n  \"version\": \"0.1.0\"\n}</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Capability and ownership fields</h2><ul><li><code>capabilities</code> (string[]) \u2014 the CoreAPI permissions this extension may use. Calls outside the declared set return an error.</li><li><code>data_owned_tables</code> (string[]) \u2014 table names this extension owns. The data-store CoreAPI rejects reads/writes on tables that aren't owned (or kernel-private). Migrations create these tables.</li><li><code>provides</code> (string[]) \u2014 capabilities this extension <em>advertises</em>, e.g. <code>[\"forms\"]</code>. Used for inter-extension discovery; not enforced.</li><li><code>priority</code> (int) \u2014 execution order across extensions. Default 50; lower runs first.</li></ul><h2>gRPC plugin fields</h2><ul><li><code>plugins</code> ([{<code>binary</code>, <code>events</code>}]) \u2014 list of plugin binaries to launch. Empty (or missing) means Tengo-only or UI-only extension.</li></ul><h2>Routing fields</h2><ul><li><code>public_routes</code> ([{<code>method</code>, <code>path</code>}]) \u2014 public URL paths claimed by this extension. Method is uppercased automatically. Wildcard <code>*</code> captures the rest of the path. Reserved roots (<code>/admin</code>, <code>/auth</code>, <code>/api/v1</code>, etc.) are rejected.</li></ul><p>Admin proxy routes don't need declaration \u2014 anything under <code>/admin/api/ext/&lt;slug&gt;/*</code> is auto-proxied to the plugin's <code>HandleHTTPRequest</code>.</p>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Admin UI fields</h2><p>If your extension ships a micro-frontend, declare it under <code>admin_ui</code>:</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "extension.json",
+            "show_dots": true,
+            "language": "json",
+            "body": "<pre><code>\"admin_ui\": {\n  \"entry\": \"admin-ui/dist/index.js\",\n  \"routes\": [\n    { \"path\": \"/admin/forms\",        \"component\": \"FormsListPage\" },\n    { \"path\": \"/admin/forms/:id\",    \"component\": \"FormEditorPage\" }\n  ],\n  \"menu\": {\n    \"label\":    \"Forms\",\n    \"icon\":     \"FormInput\",\n    \"section\":  \"Content\",\n    \"position\": 30,\n    \"path\":     \"/admin/forms\"\n  },\n  \"slots\":       { \"node-editor.sidebar.bottom\": { \"component\": \"FormPickerSlot\" } },\n  \"field_types\": [ { \"slug\": \"vibe-form\", \"component\": \"VibeFormFieldInput\" } ]\n}</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<ul><li><code>entry</code> \u2014 relative path to the built ES module. <strong>Required if <code>admin_ui</code> is present.</strong> Not validated at activation; a typo silently breaks the UI.</li><li><code>routes</code> \u2014 admin-side React routes. <code>component</code> must be a named export from <code>entry</code>.</li><li><code>menu</code> \u2014 sidebar entry. <code>section</code> places it under a sidebar group; <code>position</code> orders within the group.</li><li><code>slots</code> \u2014 slot-injection points. Slot keys are hard-coded by the SPA shell (e.g. <code>node-editor.sidebar.bottom</code>).</li><li><code>field_types</code> \u2014 custom field-type registrations. Used in node-type / block field schemas via <code>type: \"vibe-form\"</code>.</li></ul>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Theme-asset fields</h2><p>An extension can ship blocks, layouts, partials, page templates, image sizes, settings, and assets \u2014 exactly like a theme.</p><ul><li><code>blocks</code> \u2014 content block definitions (slug, label, field_schema, html_template, test_data, icon, block_css, block_js, cache_output).</li><li><code>layouts</code> / <code>partials</code> \u2014 page-layout templates.</li><li><code>templates</code> \u2014 pre-built page block sequences for one-click insertion.</li><li><code>image_sizes</code> \u2014 crop dimensions registered with media-manager.</li><li><code>assets</code> ([{<code>key</code>, <code>src</code>, <code>alt</code>}]) \u2014 bundled images imported into the media library on activation.</li><li><code>settings_schema</code> (map of name \u2192 field) \u2014 extension-specific settings exposed in the admin.</li></ul>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "NOTE",
+            "variant": "note",
+            "body": "Extensions own data; themes own presentation. If you find yourself shipping migrations from a theme, you wanted an extension."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Validation</h2><p>The loader doesn't fail on a missing optional field \u2014 it just silently skips that surface. Unknown fields are ignored. Run <code>core.extension.standards</code> to audit your manifest against the recommended shape.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "extension-grpc",
+      "title": "Building a gRPC Extension",
+      "section_slug": "extensions",
+      "section_name": "Extensions",
+      "summary": "Author a Go extension as a HashiCorp go-plugin gRPC binary.",
+      "order": 20,
+      "blocks": [
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>The five RPC methods</h2><p>The plugin interface is defined in <code>proto/squilla_plugin.proto</code> and re-exported as <code>pkg/plugin.ExtensionPlugin</code>. A plugin must implement five RPCs; most extensions use one or two of them seriously and stub the rest.</p><ol><li><code>Initialize(hostConn *grpc.ClientConn) error</code> \u2014 receive a gRPC client connection back to the kernel's <code>SquillaHost</code> service. Build your CoreAPI client here.</li><li><code>GetSubscriptions() ([]*pb.Subscription, error)</code> \u2014 return the list of event names this plugin wants to receive.</li><li><code>HandleEvent(action string, payload []byte) (*pb.EventResponse, error)</code> \u2014 dispatch on action and act on the JSON payload. Optionally return HTML (used by template-injection events like <code>forms:render</code>).</li><li><code>HandleHTTPRequest(req *pb.PluginHTTPRequest) (*pb.PluginHTTPResponse, error)</code> \u2014 serve admin proxy and public-route requests.</li><li><code>Shutdown() error</code> \u2014 flush state on deactivation. Plugins are killed if Shutdown blocks for too long.</li></ol>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "cmd/plugin/main.go",
+            "show_dots": true,
+            "language": "go",
+            "body": "<pre><code>package main\n\nimport (\n  \"github.com/hashicorp/go-plugin\"\n  ext \"github.com/erikkubica/squilla/pkg/plugin\"\n)\n\nfunc main() {\n  plugin.Serve(&amp;plugin.ServeConfig{\n    HandshakeConfig: ext.Handshake,\n    Plugins: map[string]plugin.Plugin{\n      \"extension\": &amp;ext.ExtensionPluginGRPC{Impl: &amp;Impl{}},\n    },\n    GRPCServer: plugin.DefaultGRPCServer,\n  })\n}</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>The host client</h2><p><code>Initialize</code> hands you a gRPC <code>ClientConn</code> wired to the kernel's <code>SquillaHost</code> service. Wrap it in <code>coreapi.NewClient(conn)</code> to get a typed Go interface with all 46 CoreAPI methods.</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "plugin/main.go",
+            "show_dots": true,
+            "language": "go",
+            "body": "<pre><code>func (p *Impl) Initialize(conn *grpc.ClientConn) error {\n  p.host = coreapi.NewClient(conn)\n  return nil\n}\n\n// later, in HandleHTTPRequest:\nlist, err := p.host.QueryNodes(ctx, &amp;coreapi.NodeQueryRequest{\n  NodeType: \"recipe\",\n  Status:   \"published\",\n  Limit:    10,\n})</code></pre>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "HEADS UP",
+            "variant": "heads-up",
+            "body": "Every CoreAPI call is wrapped by <code>NewCapabilityGuard</code>. The guard rejects calls outside the declared capability set \u2014 there is no override. Extensions that need raw SQL must declare <code>data:write</code> AND set the <code>SQUILLA_MCP_ALLOW_RAW_SQL=1</code> kernel env."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>HandleHTTPRequest</h2><p>The kernel proxies two flavours of request to your plugin.</p><ul><li><strong>Admin</strong> \u2014 anything under <code>/admin/api/ext/&lt;slug&gt;/*</code>, gated by the <code>admin_access</code> capability and a logged-in session. The <code>path</code> field strips the prefix; <code>user_id</code> is set; sensitive headers are stripped.</li><li><strong>Public</strong> \u2014 exact paths declared in <code>public_routes</code>. <code>user_id</code> is always 0. Reserved kernel paths are blocked.</li></ul><p>Both share the same <code>PluginHTTPRequest</code> struct: <code>method</code>, <code>path</code>, <code>headers</code>, <code>body</code>, <code>query_params</code>, <code>path_params</code>, <code>user_id</code>. Return <code>PluginHTTPResponse</code> with <code>status</code>, <code>headers</code>, <code>body</code>.</p>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Build &amp; deploy</h2><p>Compile the plugin for the host's OS/arch:</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "$ shell",
+            "show_dots": true,
+            "language": "bash",
+            "body": "<pre><code>GOOS=linux GOARCH=amd64 go build -o extensions/forms/bin/forms-plugin ./extensions/forms/cmd/plugin\nmake hot-deploy-forms   # zips, base64-encodes, calls core.extension.deploy</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Migrations</h2><p>SQL files in <code>migrations/</code> run on activation in lexicographic order. Recommended naming: <code>NNNNNNNNNNNN_description.sql</code> (e.g. <code>20260101_init.sql</code>). The kernel records applied migrations in the <code>extension_migrations</code> table; re-activation only runs new files. <strong>There are no down-migrations</strong> \u2014 write idempotent up-migrations or expect to restore from backup.</p><h2>Hot-deploy</h2><p>The <code>core.extension.deploy</code> MCP tool unpacks a base64-encoded zip into <code>extensions/&lt;slug&gt;/</code> via an atomic directory swap, registers the row, runs migrations, optionally activates. 50 MB cap. Plugin binaries must already be compiled for the host's OS/arch \u2014 the deploy step will not cross-compile for you.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "extension-tengo",
+      "title": "Tengo-only Extensions",
+      "section_slug": "extensions",
+      "section_name": "Extensions",
+      "summary": "Lightweight extensions written purely in Tengo, no Go binary required.",
+      "order": 30,
+      "blocks": [
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>When to skip Go</h2><p>If your extension only needs to react to events, register filters, expose simple HTTP routes, or seed/transform content, you can ship it as a pure Tengo package \u2014 no Go binary, no protobuf, no go-plugin handshake. The reference implementation is <code>resend-provider</code>, which handles transactional email in roughly twenty lines.</p><p>Pick gRPC instead when you need Go libraries, native concurrency, long-lived in-memory state, or CPU-heavy work.</p><h2>Folder layout</h2>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "filesystem",
+            "show_dots": true,
+            "language": "plaintext",
+            "body": "<pre><code>extensions/&lt;slug&gt;/\n  extension.json         # capabilities[] declares what scripts may use\n  scripts/\n    extension.tengo      # entry point, runs once on activation\n    handlers/*.tengo     # event handlers, route handlers\n    filters/*.tengo      # filter handlers</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>What you can do</h2><ul><li>Subscribe to events via <code>events.on(name, script_path)</code> or <code>events.subscribe(name, script_path)</code>.</li><li>Register filter handlers via <code>filters.add(name, script_path)</code>.</li><li>Mount HTTP routes via <code>routes.register(method, path, script_path)</code>.</li><li>Read theme-relative files via <code>core/assets.read</code>.</li><li>Call any CoreAPI method through the <code>core/*</code> Tengo modules \u2014 gated by the manifest's <code>capabilities</code>.</li></ul><h2>What you cannot do</h2>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "DANGER",
+            "variant": "danger",
+            "body": "Tengo extensions cannot open arbitrary network connections (use <code>core/http</code>), read arbitrary files (use <code>core/assets</code>, scoped to the extension), or spawn subprocesses. The sandbox limits each invocation to 50,000 allocations and 10 seconds of execution. If you need any of those, ship a gRPC plugin."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Entry point</h2><p><code>scripts/extension.tengo</code> runs once on activation. Top-level statements execute immediately \u2014 there is no exported <code>main</code> function. Register handlers, subscribe to events, mount routes, and you're done.</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "scripts/extension.tengo",
+            "show_dots": true,
+            "language": "javascript",
+            "body": "<pre><code>events  := import(\"core/events\")\nfilters := import(\"core/filters\")\nroutes  := import(\"core/routes\")\nlog     := import(\"core/log\")\n\nlog.info(\"resend-provider starting\")\n\nevents.on(\"email.send\", \"./handlers/send_via_resend\")\nfilters.add(\"email.subject\", \"./filters/prefix_subject\", 90)\nroutes.register(\"GET\", \"/healthz\", \"./handlers/healthz\")</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Hot-deploy</h2><p>Same tool as gRPC: <code>core.extension.deploy</code> with a base64-zipped package. Tengo extensions activate instantly because there is no plugin process to start.</p><h2>Capabilities</h2><p>Tengo handlers run with the capabilities declared in the manifest. The capability guard is at the CoreAPI boundary \u2014 calling <code>core/nodes.create</code> from a script that doesn't declare <code>nodes:write</code> returns an error string from the module.</p>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Reload behaviour</h2><p>Activation reloads scripts. Deactivation unloads them and unregisters every handler/filter/route the extension's entry script registered. The kernel tracks ownership by extension slug, so two extensions can register handlers for the same event without colliding.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "themes-intro",
+      "title": "Themes Overview",
+      "section_slug": "themes",
+      "section_name": "Themes",
+      "summary": "Anatomy, lifecycle, and the layout-vs-partial-vs-block contract.",
+      "order": 10,
+      "blocks": [
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>What's in a theme</h2><p>A theme is a self-contained package under <code>themes/&lt;slug&gt;/</code> that owns the public-facing presentation. It declares layouts, partials, content blocks, page templates, settings pages, image sizes, assets, and a Tengo seed entry point. The kernel knows nothing about how your site looks \u2014 themes are the entire visual layer.</p><p>Themes do not own data. They cannot ship migrations or claim database tables. If you need either, you wanted an extension.</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "filesystem",
+            "show_dots": true,
+            "language": "plaintext",
+            "body": "<pre><code>themes/&lt;slug&gt;/\n  theme.json               # manifest\n  layouts/*.html           # page-level templates\n  partials/*.html          # reusable fragments rendered via {{renderLayoutBlock}}\n  blocks/&lt;slug&gt;/           # content blocks: block.json + view.html [+ style.css + script.js]\n  templates/*.json         # pre-built page block sequences for the editor\n  forms/*.html             # form layouts wired through forms-extension\n  assets/                  # CSS, JS, images shipped with the theme\n  scripts/                 # Tengo\n    theme.tengo            # entry point, runs on activation\n    seeds/*.tengo          # split seed modules\n    setup/*.tengo          # nodetypes, taxonomies, settings, menus\n    filters/*.tengo        # filter handlers</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Activation</h2><p>Activating a theme via <code>core.theme.activate</code> runs an in-process pipeline:</p><ol><li>Parse <code>theme.json</code> and upsert layouts, partials, blocks, image sizes, and settings-page snapshots into the kernel.</li><li>Synchronously publish the <code>theme.activated</code> event with the asset list. <code>media-manager</code> subscribes and imports declared assets into the media library, tagged <code>source='theme'</code>.</li><li>Atomically swap the theme-asset URL resolver so <code>/theme/assets/*</code> requests resolve against the new theme.</li><li>Load and execute <code>scripts/theme.tengo</code> top-level statements \u2014 the seed runs synchronously and blocks activation until complete.</li></ol><p>No server restart. No process boundary crossed. Activation is hot.</p>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "TIP",
+            "variant": "tip",
+            "body": "<code>core.theme.deploy</code> unpacks a base64-zipped package into <code>themes/&lt;slug&gt;/</code> via an atomic directory swap. 50 MB cap; <code>activate=true</code> hot-activates without restart. Combine with <code>make theme</code> for a one-command deploy from your dev box."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Layout vs partial vs block</h2><p>This is the #1 gotcha. The three template kinds see different data.</p><ul><li><strong>Layouts</strong> are page-level. They see <code>.app</code>, <code>.node</code>, <code>.user</code>, <code>.theme_settings</code>, plus everything <code>renderLayoutBlock</code> exposes.</li><li><strong>Partials</strong> are reusable fragments included via <code>{{renderLayoutBlock \"slug\"}}</code>. Inside a partial you have the layout context <em>plus</em> <code>.partial.*</code> \u2014 the partial's own field values resolved per-page from <code>layout_data</code>.</li><li><strong>Block views</strong> are atomic content units. They see <strong>only the block's own field values at root</strong>. <code>.app</code>, <code>.node</code>, <code>.user</code> are <strong>not</strong> in scope. Theme settings reach blocks via the <code>themeSetting</code> / <code>themeSettingsPage</code> template helpers.</li></ul><h2>Layout selection</h2><p>The renderer picks a layout for a node by walking this cascade until something matches:</p><ol><li><code>node.layout_slug</code> \u2014 explicit, portable across themes. Set on the node from the editor or the seed.</li><li><code>node.layout_id</code> \u2014 legacy, auto-synced to <code>layout_slug</code> on save.</li><li><code>layout-&lt;nodetype&gt;-&lt;slug&gt;</code> \u2014 language-scoped exact match.</li><li><code>layout-&lt;nodetype&gt;</code> \u2014 language-scoped nodetype catch-all.</li><li>The first layout in the active theme with <code>is_default: true</code>.</li></ol>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "HEADS UP",
+            "variant": "heads-up",
+            "body": "If no layout has <code>is_default: true</code> in <code>theme.json</code>, every node without an explicit <code>layout_slug</code> renders an empty fallback page. <code>core.theme.checklist</code> warns about this."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Detach &amp; reattach</h2><p>Theme-shipped layouts and content-block types are <strong>read-only via the API</strong> \u2014 the layout service refuses to update <code>source='theme'</code> rows with a <code>THEME_READONLY</code> error. To edit a layout from the admin without forking the theme, call <code>core.layout.detach</code> to flip its source to <code>'custom'</code>. <code>core.layout.reattach</code> reverses that and restores the theme template.</p><p>The same pair exists for content blocks: <code>core.block_types.detach</code> / <code>core.block_types.reattach</code>.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "theme-manifest",
+      "title": "theme.json Reference",
+      "section_slug": "themes",
+      "section_name": "Themes",
+      "summary": "Every field the theme manifest accepts.",
+      "order": 15,
+      "blocks": [
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Required fields</h2><ul><li><code>name</code> (string) \u2014 display name.</li><li><code>version</code> (string) \u2014 semver.</li><li><code>description</code> (string) \u2014 long-form description.</li><li><code>author</code> (string).</li></ul><p>The slug is implicit \u2014 it's the directory name under <code>themes/</code>. <code>core.theme.deploy</code> validates that the package's directory name is a clean slug.</p><h2>Layouts, partials, blocks, templates</h2><p>Each is an array of declarations. Each declaration carries a <code>slug</code>, a human <code>name</code>, the relative path under the theme to the source file, and its field schema.</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "themes/squilla/theme.json",
+            "show_dots": true,
+            "language": "json",
+            "body": "<pre><code>{\n  \"name\":        \"Squilla\",\n  \"version\":     \"0.2.0\",\n  \"description\": \"The marketing site theme.\",\n  \"author\":      \"Squilla\",\n\n  \"styles\":      [ { \"src\": \"styles/theme.css\" } ],\n  \"scripts\":     [ { \"src\": \"scripts/theme.js\" } ],\n\n  \"layouts\": [\n    { \"slug\": \"default\", \"name\": \"Default\", \"file\": \"layouts/default.html\", \"is_default\": true,\n      \"field_schema\": [] }\n  ],\n  \"partials\": [\n    { \"slug\": \"site-header\", \"name\": \"Site header\", \"file\": \"partials/site-header.html\",\n      \"field_schema\": [\n        { \"key\": \"cta_label\", \"type\": \"text\", \"default\": \"Get started\" }\n      ] }\n  ],\n  \"blocks\": [\n    { \"slug\": \"hero\", \"name\": \"Hero\", \"dir\": \"blocks/hero\" }\n  ],\n  \"templates\": [\n    { \"slug\": \"homepage\", \"name\": \"Marketing homepage\", \"file\": \"templates/homepage.json\" }\n  ],\n\n  \"image_sizes\":  [ { \"slug\": \"thumb\", \"width\": 320, \"height\": 240, \"crop\": \"center\" } ],\n  \"assets\":       [ { \"key\": \"logo\", \"src\": \"assets/logo.svg\", \"alt\": \"Squilla logo\" } ],\n\n  \"settings_pages\": [\n    { \"slug\": \"brand\",  \"name\": \"Brand\",  \"file\": \"settings/brand.json\"  },\n    { \"slug\": \"footer\", \"name\": \"Footer\", \"file\": \"settings/footer.json\" }\n  ]\n}</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Field schema convention</h2><p><strong>This trips everyone up.</strong> Field schema entries on layouts, partials, and blocks use <code>\"key\":</code>. Field schema entries on node types registered through Tengo (<code>core/nodetypes.register</code>) use <code>\"name\":</code>. Mixing them produces empty admin inputs even when <code>fields_data</code> is correct, because the form renderer matches values against the wrong key.</p>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "HEADS UP",
+            "variant": "heads-up",
+            "body": "block.json / theme.json field_schema \u2192 <code>\"key\"</code>. Tengo nodetypes.register field_schema \u2192 <code>\"name\"</code>. The MCP tool <code>core.guide</code> has this fact in its gotchas table."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Validation</h2><p><code>core.theme.checklist</code> walks a theme and flags missing <code>is_default</code>, undeclared assets used in seed data, layouts referenced from <code>templates/*.json</code> that don't exist, and missing <code>test_data</code> on blocks. Run it before shipping.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "theme-layouts",
+      "title": "Layouts and Partials",
+      "section_slug": "themes",
+      "section_name": "Themes",
+      "summary": "Page chrome, partials, template context, and the helper toolbox.",
+      "order": 20,
+      "blocks": [
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Layouts</h2><p>Layouts live in <code>layouts/*.html</code> and are referenced by slug from <code>theme.json</code>. The active node's layout is selected via the cascade described in the overview. A layout must include <code>{{.node.blocks_html}}</code> somewhere \u2014 that's the rendered block sequence for the current node. Most layouts also call <code>{{renderLayoutBlock \"site-header\"}}</code> and <code>{{renderLayoutBlock \"site-footer\"}}</code> for the chrome partials.</p><h2>Layout context</h2><p>Inside a layout you have:</p><ul><li><code>.app</code> \u2014 site-wide context: <code>HeadStyles</code>, <code>HeadScripts</code>, <code>FootScripts</code>, <code>HeadMeta</code>, <code>Settings</code>, <code>Languages</code>, <code>CurrentLang</code>, <code>BlockStyles</code>, <code>BlockScripts</code>, <code>ThemeURL</code>, <code>Menus</code>.</li><li><code>.node</code> \u2014 current node: <code>ID</code>, <code>Status</code>, <code>Title</code>, <code>Slug</code>, <code>FullURL</code>, <code>FeaturedImage</code>, <code>Excerpt</code>, <code>Taxonomies</code>, <code>BlocksHTML</code>, <code>Fields</code>, <code>SEO</code>, <code>NodeType</code>, <code>LanguageCode</code>, <code>Translations</code>.</li><li><code>.user</code> \u2014 viewer info: <code>LoggedIn</code>, <code>ID</code>, <code>Email</code>, <code>Role</code>, <code>FullName</code>.</li><li><code>.theme_settings</code> \u2014 values for the active theme's settings pages.</li></ul>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Partial context</h2><p>A partial sees the full layout context plus <code>.partial.*</code> \u2014 its own field values resolved per-page from the node's <code>layout_data[partial_slug]</code> with a fallback chain: explicit value \u2192 <code>default_from</code> reference \u2192 blank. Use partials for chrome that varies subtly per page (e.g. a hero override on the homepage but not on blog posts).</p><h2>Block view context</h2><p>Inside a block <code>view.html</code> you see <strong>only the block's own field values at root</strong>. There is no <code>.app</code>, no <code>.node</code>, no <code>.user</code>. Theme settings are reachable via the <code>themeSetting</code> and <code>themeSettingsPage</code> template helpers, which the renderer injects into the per-block FuncMap. This isolation is intentional: blocks are atomic, cacheable, and have to render correctly in <code>core.render.block</code> previews where no node exists.</p>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "HEADS UP",
+            "variant": "heads-up",
+            "body": "Need node data inside a block? Lift it through <code>fields_data</code> from the seed or the editor \u2014 copy the URL, the title, the image, whatever you need. Or render the block at the layout level via <code>renderLayoutBlock</code> and treat it as a partial."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Settings access</h2><p>Site settings are stored with dotted keys (e.g. <code>squilla.brand.name</code>). Go templates can't dot-traverse arbitrary keys, so use the <code>setting</code> helper or <code>index</code>:</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "layouts/default.html",
+            "show_dots": true,
+            "language": "html",
+            "body": "<pre><code>{{- $s := .app.settings -}}\n&lt;title&gt;{{ index $s \"squilla.brand.name\" }}&lt;/title&gt;\n\n{{/* OR the dedicated helper */}}\n&lt;meta name=\"description\" content=\"{{ setting \"squilla.brand.tagline\" }}\"&gt;</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Template function reference</h2><p>The renderer registers a FuncMap before parsing every template. The catalogue:</p><ul><li><code>setting</code>, <code>mustSetting</code> \u2014 read site settings (<code>mustSetting</code> errors if missing).</li><li><code>themeSetting</code>, <code>themeSettingsPage</code> \u2014 read theme-scoped settings (in block context).</li><li><code>renderLayoutBlock</code> \u2014 inject a partial. Recursion-bounded at depth 5.</li><li><code>filter</code> \u2014 apply a Tengo filter chain: <code>{{ filter \"node.title\" .node.Title }}</code>.</li><li><code>event</code> \u2014 fire an event-with-result and inline the returned HTML. Used for forms: <code>{{ event \"forms:render\" (dict \"form_id\" \"contact\") }}</code>.</li><li><code>image_url</code>, <code>image_srcset</code> \u2014 resolve a media object to an URL or a responsive srcset.</li><li><code>safeHTML</code>, <code>raw</code>, <code>safeURL</code> \u2014 bypass auto-escaping (sanitiser still runs upstream for richtext fields).</li><li><code>json</code>, <code>dict</code>, <code>list</code>, <code>seq</code> \u2014 small data utilities.</li><li><code>split</code>, <code>lastWord</code>, <code>beforeLastWord</code> \u2014 string helpers used by typography flourishes.</li><li><code>add</code>, <code>sub</code>, <code>mod</code> \u2014 arithmetic.</li><li><code>deref</code> \u2014 dereference a pointer to its underlying value (rare; mostly for <code>FeaturedImage</code>).</li></ul>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Menus inside templates</h2><p>Menus are exposed as <code>.app.menus[\"slug\"]</code> with an <code>items</code> array. Each item carries <code>title</code>, <code>url</code>, <code>target</code>, and optional <code>children</code>.</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "partials/site-header.html",
+            "show_dots": true,
+            "language": "html",
+            "body": "<pre><code>{{- $nav := index .app.menus \"main-nav\" -}}\n&lt;nav&gt;\n{{- range $nav.items -}}\n  &lt;a href=\"{{ .url }}\" {{ if .target }}target=\"{{ .target }}\"{{ end }}&gt;{{ .title }}&lt;/a&gt;\n{{- end -}}\n&lt;/nav&gt;</code></pre>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "HEADS UP",
+            "variant": "heads-up",
+            "body": "Menu items render via <code>.title</code>, NOT <code>.label</code>. The Tengo input to <code>menus.upsert</code> uses <code>label:</code>, but the rendered shape uses <code>title</code>. Templates that read <code>{{.label}}</code> will silently render an empty string."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Layout <code>&lt;head&gt;</code> checklist</h2><p>Every layout's <code>&lt;head&gt;</code> should include the four kernel-managed fragments so SEO, fonts, and block-scoped CSS land correctly:</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "layouts/default.html",
+            "show_dots": true,
+            "language": "html",
+            "body": "<pre><code>&lt;head&gt;\n  {{ safeHTML .app.head_meta }}    {{/* meta + canonical + og + twitter */}}\n  {{ safeHTML .app.head_styles }}  {{/* theme CSS bundles */}}\n  {{ safeHTML .app.block_styles }} {{/* per-block scoped CSS */}}\n  {{ safeHTML .app.head_scripts }} {{/* head-injected JS, e.g. analytics */}}\n&lt;/head&gt;</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>404</h2><p>If your theme ships a <code>layouts/404.html</code>, the kernel uses it for unmatched routes. It receives the layout context with <code>.node</code> set to a synthetic 404 node. Without one, the kernel renders a built-in fallback.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "theme-blocks",
+      "title": "Authoring Blocks",
+      "section_slug": "themes",
+      "section_name": "Themes",
+      "summary": "block.json, view.html, scoped CSS/JS, and the test_data invariant.",
+      "order": 30,
+      "blocks": [
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Anatomy of a block</h2><p>A block lives under <code>themes/&lt;t&gt;/blocks/&lt;slug&gt;/</code> and consists of two required files plus two optional ones.</p><ul><li><code>block.json</code> \u2014 slug, label, icon, <code>field_schema</code>, <code>test_data</code>, optional <code>cache_output</code>.</li><li><code>view.html</code> \u2014 Go template that consumes the field values at root.</li><li><code>style.css</code> \u2014 block-scoped CSS, injected via <code>.app.block_styles</code> (optional).</li><li><code>script.js</code> \u2014 block-scoped JS, injected via <code>.app.block_scripts</code> (optional).</li></ul><h2>The field schema</h2><p>Every field has a <code>type</code>, a <code>key</code>, and per-type configuration. Common shapes:</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "blocks/hero/block.json",
+            "show_dots": true,
+            "language": "json",
+            "body": "<pre><code>{\n  \"slug\": \"hero\",\n  \"label\": \"Hero\",\n  \"icon\": \"Stars\",\n  \"field_schema\": [\n    { \"key\": \"heading\",   \"type\": \"text\",     \"required\": true, \"width\": \"full\" },\n    { \"key\": \"subhead\",   \"type\": \"textarea\", \"width\": \"full\" },\n    { \"key\": \"image\",     \"type\": \"image\",    \"width\": \"half\"  },\n    { \"key\": \"cta\",       \"type\": \"link\",     \"width\": \"half\"  },\n    { \"key\": \"items\",     \"type\": \"repeater\",\n      \"sub_fields\": [\n        { \"key\": \"label\",  \"type\": \"text\" },\n        { \"key\": \"icon\",   \"type\": \"text\" }\n      ]\n    }\n  ],\n  \"test_data\": {\n    \"heading\": \"The CMS where AI does the work\",\n    \"subhead\": \"Activate a theme. The CMS reorganises itself around it.\",\n    \"image\":   { \"src\": \"theme-asset:hero\", \"alt\": \"Squilla\" },\n    \"cta\":     { \"label\": \"Get started\", \"url\": \"/docs\", \"target\": \"_self\" },\n    \"items\":   [\n      { \"label\": \"50ms TTFB\", \"icon\": \"Zap\" },\n      { \"label\": \"AI-native\", \"icon\": \"Sparkles\" }\n    ]\n  }\n}</code></pre>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "HEADS UP",
+            "variant": "heads-up",
+            "body": "block.json field_schema entries use <code>\"key\":</code>. The same fields registered via Tengo <code>core/nodetypes.register</code> use <code>\"name\":</code>. Mismatching the two produces empty admin inputs."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>The test_data invariant</h2><p>Every key in <code>field_schema</code> must have a corresponding entry in <code>test_data</code>. The admin renders <code>test_data</code> as the live preview when an editor opens a block they haven't touched yet, and <code>core.render.block</code> uses it as the default when no <code>fields</code> are passed. A missing entry shows as a broken empty area; <code>core.theme.checklist</code> flags this.</p><h2>No fallback values</h2>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<blockquote>If you write <code>{{ or .heading \"default\" }}</code>, you're hiding a data bug.</blockquote><p>Fallback values mask the case where seed data was supposed to populate the field but didn't. Pass real defaults via <code>fields_data</code> in the seed and let templates fail visibly when something is wrong. The block renderer catches per-block errors and renders a red badge in place of the failed block \u2014 your page still loads, the bug is obvious.</p><h2>Field types</h2><p>The admin understands these field types out of the box: <code>text</code>, <code>textarea</code>, <code>richtext</code>, <code>number</code>, <code>email</code>, <code>url</code>, <code>color</code>, <code>range</code>, <code>date</code>, <code>select</code>, <code>radio</code>, <code>checkbox</code>, <code>toggle</code>, <code>link</code>, <code>group</code>, <code>repeater</code>, <code>term</code>, <code>node</code>, <code>node_type_select</code>. Extensions can register additional types via the manifest's <code>admin_ui.field_types[]</code> \u2014 <code>image</code>, <code>media</code>, <code>file</code>, <code>gallery</code> all come from <code>media-manager</code>; <code>vibe-form</code> comes from <code>forms</code>. Get the canonical list with <code>core.field_types.list</code>.</p>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Per-field configuration</h2><p>Every field accepts: <code>required</code>, <code>default</code>, <code>placeholder</code>, <code>help</code>, and <code>width</code> (<code>full</code> | <code>half</code> | <code>third</code>). The <code>help</code> string is surfaced through MCP so an AI agent understands what the field is for \u2014 write helpful copy.</p><h2>Caching</h2><p>Set <code>\"cache_output\": true</code> on a block to opt into render-result caching. The kernel keys the cache by block type slug + a hash of the field values. Use this for blocks whose output is pure-functional in their fields (e.g. a marketing card with no node-derived data).</p>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>view.html</h2><p>Block templates are Go templates with the per-block FuncMap. Field values are at the root.</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "blocks/hero/view.html",
+            "show_dots": true,
+            "language": "html",
+            "body": "<pre><code>&lt;section class=\"hero\"&gt;\n  &lt;h1&gt;{{ .heading }}&lt;/h1&gt;\n  {{ if .subhead }}&lt;p&gt;{{ .subhead }}&lt;/p&gt;{{ end }}\n  {{ if .image }}\n    &lt;img src=\"{{ image_url .image \"hero\" }}\" alt=\"{{ .image.alt }}\"&gt;\n  {{ end }}\n  {{ if .cta }}\n    &lt;a href=\"{{ .cta.url }}\" target=\"{{ .cta.target }}\"&gt;{{ .cta.label }}&lt;/a&gt;\n  {{ end }}\n  &lt;ul&gt;\n  {{ range .items }}\n    &lt;li data-icon=\"{{ .icon }}\"&gt;{{ .label }}&lt;/li&gt;\n  {{ end }}\n  &lt;/ul&gt;\n&lt;/section&gt;</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Scoped CSS/JS</h2><p><code>style.css</code> and <code>script.js</code> next to <code>view.html</code> are auto-injected when the block is used on a page. The kernel deduplicates: a block used five times on a page injects its CSS once. Do not write global selectors \u2014 scope to the block's root element. The <code>doc-codeblock</code> block's <code>style.css</code> is a good reference.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "theme-settings",
+      "title": "Theme Settings",
+      "section_slug": "themes",
+      "section_name": "Themes",
+      "summary": "Editor-driven, per-page theme configuration with full custom-field support.",
+      "order": 40,
+      "blocks": [
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>What this is</h2><p>Theme settings are an editor-friendly way to expose theme configuration without inventing site settings keys. You declare <em>settings pages</em> in <code>theme.json</code>; each page gets a JSON schema file describing its fields; the admin renders one editor screen per page under <code>/admin/theme-settings/&lt;page&gt;</code>; templates and Tengo read values at runtime.</p><p>Use site settings (<code>core.settings.set</code>) for cross-cutting config (brand name, default language). Use theme settings for theme-shaped UI knobs (header style, footer columns, hero variant).</p><h2>Declaring pages</h2>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "themes/squilla/theme.json",
+            "show_dots": true,
+            "language": "json",
+            "body": "<pre><code>\"settings_pages\": [\n  { \"slug\": \"brand\",  \"name\": \"Brand\",  \"file\": \"settings/brand.json\",  \"icon\": \"Sparkles\" },\n  { \"slug\": \"footer\", \"name\": \"Footer\", \"file\": \"settings/footer.json\", \"icon\": \"AlignBottom\" }\n]</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Per-page schema</h2><p>Each page schema is an object with <code>fields</code>: an array of field definitions using the same field-type vocabulary as blocks (<code>key</code>, <code>type</code>, <code>label</code>, <code>required</code>, <code>default</code>, <code>help</code>, <code>width</code>).</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "themes/squilla/settings/brand.json",
+            "show_dots": true,
+            "language": "json",
+            "body": "<pre><code>{\n  \"fields\": [\n    { \"key\": \"primary_color\", \"type\": \"color\",  \"label\": \"Primary\",   \"default\": \"#1d4ed8\" },\n    { \"key\": \"logo\",          \"type\": \"image\",  \"label\": \"Logo\"       },\n    { \"key\": \"tagline\",       \"type\": \"text\",   \"label\": \"Tagline\"    }\n  ]\n}</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Reading from layouts and partials</h2><p>The render context exposes <code>.theme_settings.&lt;page&gt;.&lt;key&gt;</code>:</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "layouts/default.html",
+            "show_dots": true,
+            "language": "html",
+            "body": "<pre><code>{{- $brand := .theme_settings.brand -}}\n&lt;img src=\"{{ image_url $brand.logo \"thumb\" }}\" alt=\"\"&gt;\n&lt;p&gt;{{ $brand.tagline }}&lt;/p&gt;</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Reading from blocks</h2><p>Block view context excludes <code>.theme_settings</code>. Use the <code>themeSetting</code> helper instead:</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "blocks/cta/view.html",
+            "show_dots": true,
+            "language": "html",
+            "body": "<pre><code>&lt;section style=\"--brand: {{ themeSetting \"brand\" \"primary_color\" }}\"&gt;\n  &lt;a href=\"{{ .cta.url }}\"&gt;{{ .cta.label }}&lt;/a&gt;\n&lt;/section&gt;</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Reading from Tengo</h2><p>The <code>core/theme_settings</code> module exposes <code>active_theme()</code>, <code>pages()</code>, <code>get(page, key)</code>, and <code>all(page)</code>. Reads require the <code>theme_settings:read</code> capability \u2014 which the default theme capability set already includes.</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "scripts/setup/menu_brand.tengo",
+            "show_dots": true,
+            "language": "javascript",
+            "body": "<pre><code>ts := import(\"core/theme_settings\")\nlogo := ts.get(\"brand\", \"logo\")\n// logo is the same media-object shape used elsewhere</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Storage and lifecycle</h2><p>Theme settings are stored in <code>site_settings</code> with keys of the form <code>theme:&lt;slug&gt;:&lt;page&gt;:&lt;field_key&gt;</code>. Activation snapshots the schema in-memory; updating <code>theme.json</code> requires a re-activation (or <code>core.theme.rescan</code>) to pick up new fields. Field-type changes do <strong>not</strong> migrate values \u2014 if you change a field from <code>text</code> to <code>select</code>, old text values stay in the database and the admin renders an empty select. Plan field changes carefully.</p><h2>Image fields</h2><p>Image fields store the same media-object shape as blocks (<code>{src, alt, width, height, ...}</code>). Use <code>image_url</code> in templates to derive size-specific URLs.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "scripting-intro",
+      "title": "Scripting with Tengo",
+      "section_slug": "scripting",
+      "section_name": "Scripting",
+      "summary": "The embedded Tengo scripting engine \u2014 when, why, and how.",
+      "order": 10,
+      "blocks": [
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Why Tengo</h2><p>Tengo is a small, sandboxed scripting language. Squilla embeds a Tengo VM so themes and Tengo-only extensions can run logic without a Go compile step. Memory and execution time are bounded; the sandbox blocks filesystem and network access except through whitelisted modules. Per-invocation limits: 50,000 allocations, 10 seconds wall-clock.</p><h2>Where Tengo runs</h2><ul><li><strong>Theme entry script</strong> \u2014 <code>scripts/theme.tengo</code>, executed once on theme activation. Top-level statements run; there is no exported <code>main</code>. Used for seeding nodes, registering node types, taxonomies, settings, menus, and wiring filters.</li><li><strong>Extension entry script</strong> \u2014 <code>scripts/extension.tengo</code>, executed once on extension activation. Same pattern as the theme entry script. Used for subscribing to events, registering filters and routes.</li><li><strong>Handler scripts</strong> \u2014 referenced by event/filter/route registrations, executed on every dispatch. Receive the input via implicit globals (<code>event</code>, <code>value</code>, <code>request</code>), set <code>response</code> to return a value.</li></ul><h2>Imports</h2><p>Tengo supports two import styles. <code>core/*</code> imports load built-in modules. Relative imports (<code>./setup/nodetypes</code>) load source modules from the theme's or extension's <code>scripts/</code> directory.</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "scripts/theme.tengo",
+            "show_dots": true,
+            "language": "javascript",
+            "body": "<pre><code>// Built-in modules (always available)\nlog      := import(\"core/log\")\nnodes    := import(\"core/nodes\")\nevents   := import(\"core/events\")\n\n// Local modules (relative to scripts/)\nsetup_nt := import(\"./setup/nodetypes\")\nseeds    := import(\"./seeds/pages\")\n\nlog.info(\"squilla theme starting\")\nsetup_nt.run()\nseeds.run()</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Idempotency</h2><p>The theme entry script runs on every activation, including after a server restart. Seeds must be idempotent \u2014 query by slug before creating, no duplicate inserts. The pattern across the in-tree themes is a <code>seeds/*.tengo</code> file with helper functions that check existence first.</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "scripts/seeds/pages.tengo",
+            "show_dots": true,
+            "language": "javascript",
+            "body": "<pre><code>nodes := import(\"core/nodes\")\n\nensure_page := func(slug, title, layout, blocks) {\n    res := nodes.query({ node_type: \"page\", slug: slug, limit: 1 })\n    if !is_error(res) &amp;&amp; res.total &gt; 0 { return }\n    nodes.create({\n        title:       title,\n        slug:        slug,\n        node_type:   \"page\",\n        status:      \"published\",\n        layout:      layout,\n        blocks_data: blocks\n    })\n}</code></pre>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "HEADS UP",
+            "variant": "heads-up",
+            "body": "Don't try <code>log.error</code> \u2014 <code>error</code> is reserved in Tengo. Use <code>log.err</code> instead. The other levels (<code>info</code>, <code>warn</code>, <code>debug</code>) work as expected."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Capabilities</h2><p>Theme scripts run with a default capability set that covers reads and writes for nodes, node types, taxonomies, terms, settings, menus, filters, routes, log, http, files, and theme settings \u2014 but <strong>not</strong> raw data store, media, or email. Extension scripts inherit whatever the manifest's <code>capabilities</code> array declares.</p><p>Capability checks happen at the CoreAPI boundary. A Tengo call to <code>core/data.exec</code> from a theme script returns an error rather than executing the SQL.</p><h2>What you can't do</h2><ul><li>Open arbitrary network connections \u2014 use <code>core/http</code>.</li><li>Read arbitrary files \u2014 use <code>core/assets</code>, scoped to the theme/extension root.</li><li>Spawn subprocesses or shell out.</li><li>Write files outside the storage path conventions of <code>core/files</code>.</li></ul>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "scripting-modules",
+      "title": "core/* Module Reference",
+      "section_slug": "scripting",
+      "section_name": "Scripting",
+      "summary": "Every Tengo module the engine exposes, with signatures and gotchas.",
+      "order": 20,
+      "blocks": [
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Loading order</h2><p>The Tengo adapter registers built-in modules at engine boot. They are always available with <code>import(\"core/&lt;name&gt;\")</code>; capability checks fire at call time, not import time, so importing a module you don't have permissions for is harmless.</p><h2>core/log</h2><p>Structured leveled logging. Caller info (theme/extension slug) is auto-prefixed.</p><ul><li><code>log.info(message, fields?)</code></li><li><code>log.warn(message, fields?)</code></li><li><code>log.debug(message, fields?)</code></li><li><code>log.err(message, fields?)</code> \u2014 alias because <code>error</code> is reserved.</li></ul>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>core/nodes</h2><ul><li><code>nodes.get(id)</code> \u2192 Node object, or error.</li><li><code>nodes.query({node_type?, status?, language_code?, slug?, search?, limit?, offset?, order_by?, parent_id?})</code> \u2192 <code>{nodes: [...], total: N}</code>.</li><li><code>nodes.create({title, node_type, status, slug?, layout?, language_code?, fields_data?, blocks_data?, seo_settings?, featured_image?, taxonomies?, excerpt?})</code> \u2192 Node.</li><li><code>nodes.update(id, partial_input)</code> \u2192 Node.</li><li><code>nodes.delete(id)</code> \u2192 undefined.</li></ul><h2>core/nodetypes</h2><ul><li><code>nodetypes.register({slug, label, label_plural, icon?, description?, taxonomies?, field_schema?, url_prefixes?})</code> \u2192 NodeType.</li><li><code>nodetypes.get(slug)</code> \u2192 NodeType.</li><li><code>nodetypes.list()</code> \u2192 [NodeType].</li></ul>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "HEADS UP",
+            "variant": "heads-up",
+            "body": "<code>nodetypes.register</code> field_schema entries use <code>\"name\":</code>. <code>block.json</code> field_schema entries use <code>\"key\":</code>. Mixing them produces empty admin inputs."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>core/taxonomies</h2><ul><li><code>taxonomies.register({slug, label, label_plural, hierarchical?, show_ui?, node_types?, field_schema?})</code></li><li><code>taxonomies.get(slug)</code> / <code>taxonomies.list()</code></li><li><code>taxonomies.update(slug, partial)</code> / <code>taxonomies.delete(slug)</code></li></ul><h2>core/terms</h2><ul><li><code>terms.list(node_type, taxonomy)</code> \u2192 [Term].</li><li><code>terms.get(id)</code> \u2192 Term.</li><li><code>terms.create({node_type, taxonomy, slug, name, description?, parent_id?})</code> \u2192 Term.</li><li><code>terms.update(id, updates_map)</code> \u2192 Term.</li><li><code>terms.delete(id)</code> \u2192 undefined.</li></ul><h2>core/menus</h2><ul><li><code>menus.upsert({slug, name, items: [{label, url|page, target?, children?}]})</code> \u2192 Menu. Idempotent on slug. <code>page: \"&lt;node-slug&gt;\"</code> resolves to the node's id at upsert time, so renaming the page later doesn't break the menu.</li><li><code>menus.get(slug)</code> / <code>menus.list()</code> / <code>menus.delete(slug)</code></li></ul>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>core/settings</h2><ul><li><code>settings.get(key)</code> \u2192 string.</li><li><code>settings.set(key, value)</code> \u2014 emits <code>setting.updated</code> event with <code>{key, language_code}</code>.</li><li><code>settings.all(prefix?)</code> \u2192 <code>{key: value, ...}</code>.</li></ul><h2>core/theme_settings</h2><ul><li><code>theme_settings.active_theme()</code> \u2192 slug.</li><li><code>theme_settings.pages()</code> \u2192 [{slug, name, icon}].</li><li><code>theme_settings.get(page_slug, field_key)</code> \u2014 requires <code>theme_settings:read</code>.</li><li><code>theme_settings.all(page_slug)</code> \u2192 field map.</li></ul><h2>core/events</h2><ul><li><code>events.emit(action, payload?)</code> \u2014 fire-and-forget, non-blocking.</li><li><code>events.on(action, script_path, priority=50)</code> \u2014 subscribe.</li><li><code>events.subscribe(action, script_path, priority=10)</code> \u2014 same as <code>on</code>, just a lower default priority.</li></ul>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>core/filters</h2><ul><li><code>filters.add(name, script_path, priority=10)</code> \u2014 register a filter handler. Lower priorities run first.</li></ul><h2>core/routes</h2><ul><li><code>routes.register(method, path, script_path)</code> \u2014 mount an HTTP handler. Paths containing a dot mount at the top level (e.g. <code>/sitemap.xml</code>); other paths mount under <code>/api/theme/</code>.</li></ul><h2>core/wellknown</h2><ul><li><code>wellknown.register(path, script_path)</code> \u2014 handler under <code>/.well-known/&lt;path&gt;</code>. Trailing <code>*</code> is a prefix wildcard.</li></ul><h2>core/http</h2><ul><li><code>http.get(url, options?)</code> / <code>http.post(...)</code> / <code>http.put(...)</code> / <code>http.delete(...)</code></li><li><code>http.fetch(method, url, options?)</code> \u2014 generic.</li></ul><p>Options: <code>{headers: {...}, body: \"...\", timeout: 30}</code> (timeout in seconds, capped by the 10-second script timeout).</p><p>Returns <code>{status_code, body, headers, error?}</code>.</p>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>core/assets</h2><ul><li><code>assets.read(rel_path)</code> \u2192 string. Path is resolved against the theme/extension root; absolute paths and traversal escapes are rejected.</li><li><code>assets.exists(rel_path)</code> \u2192 bool.</li></ul><h2>core/helpers</h2><ul><li><code>helpers.json_encode(value)</code> \u2192 string (returns <code>\"null\"</code> on error).</li><li><code>helpers.json_decode(string)</code> \u2192 any (returns undefined on parse failure).</li></ul><h2>core/routing</h2><p>Available only inside render-scope scripts (filter/event handlers running during a render).</p><ul><li><code>routing.is_404()</code> \u2192 bool.</li><li><code>routing.is_homepage()</code> \u2192 bool.</li><li><code>routing.site_setting(key)</code> \u2192 string.</li></ul><h2>Standard library</h2><p>The Tengo stdlib is enabled: <code>fmt</code>, <code>json</code>, <code>math</code>, <code>times</code>, <code>rand</code>, <code>enum</code>, <code>text</code>, <code>os</code> (limited subset). See the upstream Tengo docs for signatures.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "scripting-events",
+      "title": "Events and Filters",
+      "section_slug": "scripting",
+      "section_name": "Scripting",
+      "summary": "Hook into the event bus, transform values via the filter chain, mount HTTP routes.",
+      "order": 30,
+      "blocks": [
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Events vs filters: pick the right tool</h2><ul><li><strong>Events</strong> are fire-and-forget. Use them for cache invalidation, analytics, sending email, recomputing derived state. Subscribers run <em>after</em> the originating call returns; the caller never sees the result.</li><li><strong>Filters</strong> are synchronous and ordered. Each handler receives a value, returns a value, and the next handler in the chain receives the previous handler's output. Use them for transforming HTML, post-processing search results, mutating settings before they're written.</li></ul><h2>Subscribing to events</h2>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "scripts/theme.tengo",
+            "show_dots": true,
+            "language": "javascript",
+            "body": "<pre><code>events := import(\"core/events\")\n\n// Default priority 50; lower runs first.\nevents.on(\"node.created\",       \"./handlers/on_node_created\")\nevents.on(\"page.served\",        \"./handlers/on_page_served\", 90)\nevents.subscribe(\"setting.updated\", \"./handlers/on_setting\")</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h3>Inside the handler</h3><p>The handler script receives a global <code>event</code> object with <code>action</code> and <code>payload</code> fields. Set <code>response</code> to return a value (used by event-with-result patterns like <code>forms:render</code>); for fire-and-forget events the response is ignored.</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "scripts/handlers/on_node_created.tengo",
+            "show_dots": true,
+            "language": "javascript",
+            "body": "<pre><code>log := import(\"core/log\")\nlog.info(\"node.created\", { id: event.payload.id, type: event.payload.node_type })\nresponse = { ok: true }</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Standard kernel events</h2><ul><li><code>node.created</code> / <code>node.updated</code> / <code>node.deleted</code> \u2014 fired after writes. Payload contains the node's id, slug, node_type, language_code.</li><li><code>setting.updated</code> \u2014 payload <code>{key, language_code}</code>. Fired after <code>core/settings.set</code>.</li><li><code>theme.activated</code> / <code>theme.deactivated</code> \u2014 payload includes <code>{name, path, version, assets, image_sizes}</code>.</li><li><code>extension.activated</code> / <code>extension.deactivated</code> \u2014 payload contains the manifest.</li><li><code>email.send</code> \u2014 synchronous (uses <code>PublishSync</code>). Provider extensions (<code>smtp-provider</code>, <code>resend-provider</code>) subscribe to deliver the email.</li><li><code>media.uploaded</code> \u2014 fired when a new media file is registered.</li><li><code>page.served</code> \u2014 fired after every public page render.</li></ul><p>Extensions emit additional events. Inspect <code>extensions/forms</code>, <code>extensions/media-manager</code> to see custom events in use.</p>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Filter chain</h2><p>Filters are registered with <code>filters.add(name, script_path, priority=10)</code>. Lower priorities run first. Each handler reads <code>value</code> and sets <code>response</code>; <code>response</code> becomes <code>value</code> for the next handler. The kernel does not ship any built-in filters \u2014 every filter is theme- or extension-defined.</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "scripts/theme.tengo",
+            "show_dots": true,
+            "language": "javascript",
+            "body": "<pre><code>filters := import(\"core/filters\")\nfilters.add(\"list_posts\",       \"./filters/list_posts\")\nfilters.add(\"node.title\",       \"./filters/site_title_suffix\", 90)</code></pre>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "scripts/filters/site_title_suffix.tengo",
+            "show_dots": true,
+            "language": "javascript",
+            "body": "<pre><code>// value is whatever the caller passed.\nresponse = string(value) + \" \u2014 Squilla\"</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Applying filters from templates</h2><p>The <code>filter</code> template helper invokes a filter chain by name:</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "layouts/default.html",
+            "show_dots": true,
+            "language": "html",
+            "body": "<pre><code>&lt;title&gt;{{ filter \"node.title\" .node.Title }}&lt;/title&gt;</code></pre>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>HTTP routes</h2><p><code>routes.register(method, path, script_path)</code> mounts a handler. Paths containing a dot (<code>/sitemap.xml</code>) mount at the top level; other paths mount under <code>/api/theme/</code> for theme scripts. Extension scripts share the same rule but should prefer declared <code>public_routes</code> in the manifest.</p><p>Inside a route handler, <code>request</code> is the input (<code>{method, path, query, params, headers, body, ip}</code>) and <code>response</code> is the output (<code>{status?, headers?, body?, html?, text?, content_type?}</code>).</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "scripts/handlers/healthz.tengo",
+            "show_dots": true,
+            "language": "javascript",
+            "body": "<pre><code>response = { status: 200, body: \"ok\", content_type: \"text/plain\" }</code></pre>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "NOTE",
+            "variant": "note",
+            "body": "Filter handlers and event handlers are loaded once when the entry script registers them; the script body runs on every dispatch. Don't put expensive setup in handler bodies \u2014 keep them small."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Lifetime &amp; ownership</h2><p>Handlers registered by an entry script are tagged with that script's owner (theme slug or extension slug). Re-activating an extension unloads its handlers and re-registers them. Two extensions can subscribe to the same event with no conflict; the priority decides ordering.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "api-coreapi",
+      "title": "CoreAPI Reference",
+      "section_slug": "api",
+      "section_name": "API Reference",
+      "summary": "The 46 methods on the Go CoreAPI surface, grouped by domain.",
+      "order": 10,
+      "blocks": [
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>The CoreAPI surface</h2><p>The CoreAPI is the single Go interface that exposes all kernel capabilities to plugins, scripts, and the MCP server. <strong>46 methods across 14 domains</strong>. Three adapters wrap it: Tengo modules, the gRPC <code>SquillaHost</code> service, and the internal Go interface used by core handlers.</p><h2>Capability guard</h2><p>Every method is wrapped by <code>NewCapabilityGuard</code>. Calls from extensions or scripts are checked against the manifest's declared capabilities. Internal kernel callers (and the MCP dispatcher, which uses an internal-typed caller) bypass the guard. There is no override.</p>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "HEADS UP",
+            "variant": "heads-up",
+            "body": "MCP runs every tool invocation as an internal caller, so the CoreAPI guard does not enforce token-level permissions for MCP. Token-level enforcement happens via the <strong>scope gate</strong> in MCP dispatch (<code>read</code> | <code>content</code> | <code>full</code>)."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Domains and methods</h2><h3>Nodes (5)</h3><ul><li><code>GetNode(ctx, id)</code> \u2192 Node \u2014 <code>nodes:read</code></li><li><code>QueryNodes(ctx, query)</code> \u2192 NodeList \u2014 <code>nodes:read</code></li><li><code>CreateNode(ctx, input)</code> \u2192 Node \u2014 <code>nodes:write</code></li><li><code>UpdateNode(ctx, id, input)</code> \u2192 Node \u2014 <code>nodes:write</code></li><li><code>DeleteNode(ctx, id)</code> \u2192 error \u2014 <code>nodes:delete</code></li></ul><h3>Node Types (5)</h3><ul><li><code>RegisterNodeType</code>, <code>UpdateNodeType</code>, <code>DeleteNodeType</code> \u2014 <code>nodetypes:write</code></li><li><code>GetNodeType</code>, <code>ListNodeTypes</code> \u2014 <code>nodetypes:read</code></li></ul><h3>Taxonomies (5) + Terms (5)</h3><ul><li>Taxonomies \u2014 <code>RegisterTaxonomy</code>, <code>UpdateTaxonomy</code>, <code>DeleteTaxonomy</code> (write); <code>GetTaxonomy</code>, <code>ListTaxonomies</code> (read).</li><li>Terms \u2014 <code>ListTerms</code>, <code>GetTerm</code> (read); <code>CreateTerm</code>, <code>UpdateTerm</code> (nodes:write); <code>DeleteTerm</code> (nodes:delete).</li><li><code>ListTaxonomyTerms(ctx, nodeType, taxonomy)</code> \u2192 []string \u2014 convenience read.</li></ul>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h3>Settings (6)</h3><ul><li><code>GetSetting</code>, <code>GetSettings(prefix)</code>, <code>GetSettingLoc</code>, <code>GetSettingsLoc</code> \u2014 <code>settings:read</code></li><li><code>SetSetting</code>, <code>SetSettingLoc</code> \u2014 <code>settings:write</code> (emits <code>setting.updated</code>)</li></ul><h3>Events (2)</h3><ul><li><code>Emit(ctx, action, payload)</code> \u2192 error \u2014 <code>events:emit</code></li><li><code>Subscribe(ctx, action, handler)</code> \u2192 UnsubscribeFunc \u2014 <code>events:subscribe</code></li></ul><h3>Email (1)</h3><ul><li><code>SendEmail(ctx, req)</code> \u2192 error \u2014 <code>email:send</code>. Internally fans out via <code>email.send</code> sync event; provider extensions subscribe.</li></ul><h3>Menus (6)</h3><ul><li><code>GetMenu</code>, <code>GetMenus</code> \u2014 <code>menus:read</code></li><li><code>CreateMenu</code>, <code>UpdateMenu</code>, <code>UpsertMenu</code> \u2014 <code>menus:write</code></li><li><code>DeleteMenu</code> \u2014 <code>menus:delete</code></li></ul><h3>Routes (2)</h3><ul><li><code>RegisterRoute(ctx, method, path, meta)</code>, <code>RemoveRoute</code> \u2014 <code>routes:register</code></li></ul><h3>Filters (2)</h3><ul><li><code>RegisterFilter(ctx, name, priority, handler)</code> \u2014 <code>filters:register</code></li><li><code>ApplyFilters(ctx, name, value)</code> \u2192 any \u2014 <code>filters:apply</code></li></ul>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h3>Media (4)</h3><ul><li><code>UploadMedia</code> \u2014 <code>media:write</code></li><li><code>GetMedia</code>, <code>QueryMedia</code> \u2014 <code>media:read</code></li><li><code>DeleteMedia</code> \u2014 <code>media:delete</code></li></ul><h3>Users (2, read-only)</h3><ul><li><code>GetUser</code>, <code>QueryUsers</code> \u2014 <code>users:read</code></li></ul><h3>HTTP (1)</h3><ul><li><code>Fetch(ctx, req)</code> \u2192 FetchResponse \u2014 <code>http:fetch</code>. Outbound HTTP from extensions; default 30-second timeout.</li></ul><h3>Log (1)</h3><ul><li><code>Log(ctx, level, message, fields)</code> \u2192 error \u2014 <code>log:write</code>. Levels: info, warn, debug, err.</li></ul><h3>Data Store (6)</h3><ul><li><code>DataGet</code>, <code>DataQuery</code> \u2014 <code>data:read</code></li><li><code>DataCreate</code>, <code>DataUpdate</code>, <code>DataExec</code> \u2014 <code>data:write</code></li><li><code>DataDelete</code> \u2014 <code>data:delete</code> (falls back to <code>data:write</code>)</li></ul><h3>File Storage (2)</h3><ul><li><code>StoreFile</code> \u2014 <code>files:write</code></li><li><code>DeleteFile</code> \u2014 <code>files:delete</code></li></ul>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Capability matrix</h2><p>The 28 distinct capability strings span 13 domains. Internal callers bypass the guard; everyone else must declare what they intend to use. The full matrix:</p><ul><li><strong>nodes</strong> \u2014 read, write, delete</li><li><strong>nodetypes</strong> \u2014 read, write</li><li><strong>settings</strong> \u2014 read, write</li><li><strong>events</strong> \u2014 emit, subscribe</li><li><strong>email</strong> \u2014 send</li><li><strong>menus</strong> \u2014 read, write, delete</li><li><strong>routes</strong> \u2014 register</li><li><strong>filters</strong> \u2014 register, apply</li><li><strong>media</strong> \u2014 read, write, delete</li><li><strong>users</strong> \u2014 read</li><li><strong>http</strong> \u2014 fetch</li><li><strong>log</strong> \u2014 write</li><li><strong>data</strong> \u2014 read, write, delete</li><li><strong>files</strong> \u2014 write, delete</li><li><strong>admin_access</strong> \u2014 gates the admin proxy route (extension-level).</li></ul>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Data store table scoping</h2><p>Two layers of access control on the data store CoreAPI:</p><ol><li><strong>Hard-coded kernel-private deny list</strong> \u2014 <code>users</code>, <code>sessions</code>, <code>password_reset_tokens</code>, <code>roles</code>, <code>role_capabilities</code>, <code>audit_log</code>, <code>schema_migrations</code>, <code>site_settings</code>, <code>mcp_tokens</code>, <code>mcp_audit_log</code>, <code>mcp_token_audit</code>, <code>languages</code>. Denied unconditionally for non-internal callers.</li><li><strong>Per-extension allowlist</strong> \u2014 the manifest's <code>data_owned_tables</code> array. Calls outside both lists are denied.</li></ol><p>MCP runs as internal, so MCP tools see all tables. Direct extension calls are gated.</p><h2>Raw SQL</h2><p><code>DataExec(ctx, sql, args...)</code> runs arbitrary SQL. It's protected by both the capability guard and a kernel env flag \u2014 set <code>SQUILLA_MCP_ALLOW_RAW_SQL=1</code> to make <code>core.data.exec</code> visible from MCP. The CoreAPI method itself remains callable from internal callers without the env flag.</p>"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "api-mcp",
+      "title": "MCP Server",
+      "section_slug": "api",
+      "section_name": "API Reference",
+      "summary": "AI-native control plane: transports, auth, scoping, audit log.",
+      "order": 20,
+      "blocks": [
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>What MCP gives you</h2><p>The Model Context Protocol server exposes the CoreAPI as a structured tool surface. An AI agent can drive the entire CMS through ~86 typed tools across 18 domains \u2014 without filesystem or shell access. Every operation is a typed call with a typed response.</p><blockquote>Activate a theme. The CMS reorganises itself around it. No restart.<cite>\u2014 core.theme.activate</cite></blockquote><h2>Transports</h2><p>Two transports are supported: <strong>stdio</strong> for local agents (Claude Desktop, Cursor, the Anthropic <code>mcp</code> CLI) and <strong>HTTP</strong> for remote agents. Configure under <code>mcp.transport</code> in <code>config.yaml</code>.</p><h2>Authentication</h2><p>Bearer tokens issued at <code>/admin/settings/tokens</code>. Tokens carry one of three scopes:</p><ul><li><strong>read</strong> \u2014 read-only tools (e.g. <code>core.node.query</code>, <code>core.theme.list</code>, <code>core.render.*</code>).</li><li><strong>content</strong> \u2014 read tools plus content writes (nodes, terms, menus, media uploads).</li><li><strong>full</strong> \u2014 everything, including theme/extension activation, data store writes, raw SQL (when enabled).</li></ul>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "HEADS UP",
+            "variant": "heads-up",
+            "body": "Scope gates are enforced in MCP dispatch, NOT against the per-method capability guard. CoreAPI capability strings are an architectural feature \u2014 for MCP, the scope decides everything. Pick scopes carefully when issuing tokens."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>The core.guide meta-tool</h2><p>Always start with <code>core.guide</code>. It returns a goal\u2192tool decision tree, the canonical data shapes, naming conventions, common gotchas, an editing playbook, and a snapshot of current CMS state (active theme, node types, recent nodes, sections per node type) \u2014 plus a tool index of all 86 tools with class and short description. One call replaces ~10 discovery calls.</p><p>Pass a <code>topic</code> to narrow the recipe section: <code>pages</code>, <code>editing</code>, <code>blocks</code>, <code>themes</code>, <code>taxonomies</code>, <code>media</code>, <code>extensions</code>.</p><h2>Resource URIs</h2><p>The MCP server exposes structured resource URIs alongside tools. Useful for fetching context that would be awkward to express as a tool call.</p><ul><li><code>squilla://nodes/&lt;id&gt;</code> \u2014 full node JSON.</li><li><code>squilla://themes/&lt;slug&gt;</code> \u2014 theme manifest + DB row.</li><li><code>squilla://extensions/&lt;slug&gt;</code> \u2014 extension manifest + DB row.</li><li><code>squilla://guidelines/themes</code> \u2014 onboarding guidelines for theme authors (machine-readable JSON + Markdown).</li><li><code>squilla://guidelines/extensions</code> \u2014 same shape for extension authors.</li><li><code>squilla://guidelines/onboarding</code> \u2014 generic onboarding markdown.</li></ul><h2>Audit log</h2><p>Every MCP call is recorded in <code>mcp_audit_log</code> with token id, tool name, args hash (SHA-256), status (<code>ok | error | denied</code>), error code, and duration. Writes are buffered (channel size 256) and flushed asynchronously; overflow drops with a warning. Retention is configurable via the <code>mcp_audit_retention_days</code> setting (default 90).</p><p>There is no admin UI for browsing the audit log \u2014 query <code>mcp_audit_log</code> directly via the data store tools or psql.</p>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Hot-deploy tools</h2><p><code>core.theme.deploy</code> and <code>core.extension.deploy</code> accept a base64-encoded zip and unpack it into <code>themes/</code> / <code>extensions/</code> via an atomic directory swap. 50 MB cap per call. With <code>activate=true</code> the new package is registered AND activated in the same call \u2014 no server restart, no human in the loop.</p>"
+          }
+        },
+        {
+          "type": "doc-codeblock",
+          "fields": {
+            "file": "MCP call",
+            "show_dots": true,
+            "language": "javascript",
+            "body": "<pre><code>core.theme.deploy({\n  body_base64: \"...&lt;base64 zip&gt;...\",\n  activate:    true\n})</code></pre>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "NOTE",
+            "variant": "note",
+            "body": "Plugin binaries inside an extension zip must already be compiled for the host's OS/arch. The deploy step does not cross-compile. Build on the same platform as your kernel runtime, or use Docker buildx."
+          }
+        }
+      ]
+    },
+    {
+      "slug": "api-mcp-tools",
+      "title": "MCP Tool Catalog",
+      "section_slug": "api",
+      "section_name": "API Reference",
+      "summary": "Every MCP tool, grouped by domain, with parameters and class.",
+      "order": 30,
+      "blocks": [
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>How tools are classified</h2><p>Each MCP tool is assigned a class \u2014 <code>read</code>, <code>content</code>, or <code>full</code> \u2014 that the dispatch layer uses to gate by token scope. Read-only tools surface to all tokens; content tools require <code>content</code> or <code>full</code>; full-class tools require <code>full</code> (theme/extension activation, data store writes, raw SQL).</p><h2>Nodes \u2014 8 tools</h2><ul><li><code>core.node.get</code> (read) \u2014 <code>{id}</code></li><li><code>core.node.query</code> (read) \u2014 <code>{node_type, status, language_code, slug, search, limit, offset, order_by, parent_id, tax_query}</code></li><li><code>core.node.create</code> (content) \u2014 full input shape with <code>blocks_data</code>, <code>fields_data</code>, <code>seo_settings</code>, <code>taxonomies</code>, <code>featured_image</code></li><li><code>core.node.update</code> (content) \u2014 partial input by id</li><li><code>core.node.delete</code> (content)</li><li><code>core.node.revisions</code> (read) \u2014 list snapshots</li><li><code>core.node.revision_restore</code> (content)</li><li><code>core.node.update_many</code> (content) \u2014 bulk update with filters; supports <code>only_when_null_layout_slug</code> for migrations.</li></ul><h2>Node types \u2014 5 tools</h2><ul><li><code>core.nodetype.list</code>, <code>core.nodetype.get</code> (read)</li><li><code>core.nodetype.create</code>, <code>core.nodetype.update</code>, <code>core.nodetype.delete</code> (full)</li></ul><h2>Taxonomies \u2014 5 tools, Terms \u2014 5 tools</h2><ul><li>Taxonomies: <code>list</code>, <code>get</code> (read); <code>create</code>, <code>update</code>, <code>delete</code> (full).</li><li>Terms: <code>list</code>, <code>get</code> (read); <code>create</code>, <code>update</code>, <code>delete</code> (content).</li></ul>"
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Menus \u2014 6 tools</h2><ul><li><code>core.menu.get</code>, <code>core.menu.list</code> (read)</li><li><code>core.menu.create</code>, <code>core.menu.update</code>, <code>core.menu.upsert</code>, <code>core.menu.delete</code> (content)</li></ul><h2>Settings \u2014 3 tools</h2><ul><li><code>core.settings.get</code>, <code>core.settings.list</code> (read)</li><li><code>core.settings.set</code> (full)</li></ul><h2>Media \u2014 5 tools</h2><ul><li><code>core.media.upload</code> (content) \u2014 <code>{filename, mime_type, body_base64}</code></li><li><code>core.media.import_url</code> (content) \u2014 fetches a remote URL into the library</li><li><code>core.media.get</code>, <code>core.media.query</code> (read)</li><li><code>core.media.delete</code> (content)</li></ul><h2>Files \u2014 2 tools</h2><ul><li><code>core.files.store</code> (content) \u2014 <code>{path, body_base64}</code>; storage relative to <code>storage/</code></li><li><code>core.files.delete</code> (content)</li></ul><h2>Data \u2014 6 tools</h2><ul><li><code>core.data.get</code>, <code>core.data.query</code> (read)</li><li><code>core.data.create</code>, <code>core.data.update</code>, <code>core.data.delete</code> (content)</li><li><code>core.data.exec</code> (full, env-gated by <code>SQUILLA_MCP_ALLOW_RAW_SQL=1</code>) \u2014 raw SQL with parameters</li></ul>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "HEADS UP",
+            "variant": "heads-up",
+            "body": "<code>core.data.query</code> supports <code>where</code>, <code>search</code>, <code>order_by</code>, <code>limit</code>, <code>offset</code>, <code>raw</code>, <code>args</code>. Kernel-private tables (<code>users</code>, <code>sessions</code>, etc.) are unconditionally denied unless scope=full."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Themes \u2014 9 tools</h2><ul><li><code>core.theme.list</code>, <code>core.theme.get</code>, <code>core.theme.active</code>, <code>core.theme.standards</code>, <code>core.theme.checklist</code> (read)</li><li><code>core.theme.activate</code>, <code>core.theme.deactivate</code>, <code>core.theme.deploy</code>, <code>core.theme.rescan</code> (full)</li></ul><h2>Block types \u2014 7 tools</h2><ul><li><code>core.block_types.list</code>, <code>core.block_types.get</code> (read)</li><li><code>core.block_types.create</code>, <code>core.block_types.update</code>, <code>core.block_types.delete</code>, <code>core.block_types.detach</code>, <code>core.block_types.reattach</code> (full)</li></ul><h2>Layouts \u2014 7 tools</h2><ul><li><code>core.layout.list</code>, <code>core.layout.get</code> (read)</li><li><code>core.layout.create</code>, <code>core.layout.update</code>, <code>core.layout.delete</code>, <code>core.layout.detach</code>, <code>core.layout.reattach</code> (full)</li></ul><h2>Extensions \u2014 7 tools</h2><ul><li><code>core.extension.list</code>, <code>core.extension.get</code>, <code>core.extension.standards</code> (read)</li><li><code>core.extension.activate</code>, <code>core.extension.deactivate</code>, <code>core.extension.deploy</code>, <code>core.extension.rescan</code> (full)</li></ul>"
+          }
+        },
+        {
+          "type": "doc-callout",
+          "fields": {
+            "label": "NOTE",
+            "variant": "note",
+            "body": "There is no <code>core.extension.delete</code> MCP tool, even though the HTTP admin handler supports deletion. Inactive extensions stay registered until removed via the admin UI or by directly editing the <code>extensions</code> table."
+          }
+        },
+        {
+          "type": "doc-content",
+          "fields": {
+            "body": "<h2>Render \u2014 3 tools (read-only previews)</h2><ul><li><code>core.render.block</code> \u2014 <code>{block_type, fields}</code> \u2192 <code>{html}</code>. Single-block smoke test.</li><li><code>core.render.layout</code> \u2014 <code>{layout_slug, language_code?, blocks: [{type, fields}]}</code> \u2192 <code>{html}</code>. Full layout with block sequence.</li><li><code>core.render.node_preview</code> \u2014 <code>{id}</code> \u2192 <code>{html}</code>. Render a node as if it were served publicly. No state change, no event fired, no view counted.</li></ul><h2>Misc \u2014 9 tools</h2><ul><li><code>core.user.get</code>, <code>core.user.query</code> (read)</li><li><code>core.event.emit</code> (content)</li><li><code>core.filter.apply</code> (read)</li><li><code>core.email.send</code> (full) \u2014 <code>{to: [...], subject, html}</code></li><li><code>core.http.fetch</code> (full) \u2014 outbound HTTP</li><li><code>core.field_types.list</code> (read) \u2014 every field type understood by the admin, with per-type how-to guides for AI agents</li><li><code>core.guide</code> (read) \u2014 meta-tool that returns recipes, conventions, snapshot, and full tool index</li></ul>"
+          }
+        }
+      ]
+    }
+  ]
+}

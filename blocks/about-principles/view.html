@@ -1,5 +1,5 @@
-<section class="about-principles">
-  <div class="container container-narrow">
+<section class="about-principles{{ if not .narrow }} about-principles--wide{{ end }}">
+  <div class="container{{ if .narrow }} container-narrow{{ end }}">
     <div class="h-eyebrow">{{.eyebrow}}</div>
     <ol class="about-principles__list">
       {{ range $i, $p := .items }}

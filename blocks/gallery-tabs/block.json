@@ -1,0 +1,65 @@
+{
+  "slug": "gallery-tabs",
+  "name": "Gallery — tabbed",
+  "description": "Tabbed image galleries. Each tab has a slug + label + image list. JS toggles visibility based on the URL hash (e.g. #life, #builds).",
+  "category": "squilla",
+  "field_schema": [
+    { "key": "eyebrow", "label": "Eyebrow", "type": "text" },
+    { "key": "title",   "label": "Title",   "type": "text" },
+    {
+      "key": "tabs",
+      "label": "Tabs",
+      "type": "repeater",
+      "sub_fields": [
+        { "key": "slug",  "label": "Tab slug (URL hash)", "type": "text" },
+        { "key": "label", "label": "Tab label",          "type": "text" },
+        { "key": "caption", "label": "Caption (optional, HTML allowed)", "type": "richtext" },
+        {
+          "key": "images",
+          "label": "Images",
+          "type": "repeater",
+          "sub_fields": [
+            { "key": "image", "label": "Image", "type": "image" },
+            { "key": "alt",   "label": "Alt text", "type": "text" }
+          ]
+        }
+      ]
+    }
+  ],
+  "test_data": {
+    "eyebrow": "§ gallery",
+    "title": "Behind the curtain.",
+    "tabs": [
+      {
+        "slug": "studio",
+        "label": "Studio",
+        "caption": "<p>Photos coming soon — placeholders for now.</p>",
+        "images": [
+          { "image": {}, "alt": "placeholder" },
+          { "image": {}, "alt": "placeholder" },
+          { "image": {}, "alt": "placeholder" }
+        ]
+      },
+      {
+        "slug": "builds",
+        "label": "Builds",
+        "caption": "<p>Photos coming soon — placeholders for now.</p>",
+        "images": [
+          { "image": {}, "alt": "placeholder" },
+          { "image": {}, "alt": "placeholder" }
+        ]
+      },
+      {
+        "slug": "life",
+        "label": "Life",
+        "caption": "<p>Photos coming soon — placeholders for now.</p>",
+        "images": [
+          { "image": {}, "alt": "placeholder" },
+          { "image": {}, "alt": "placeholder" },
+          { "image": {}, "alt": "placeholder" },
+          { "image": {}, "alt": "placeholder" }
+        ]
+      }
+    ]
+  }
+}

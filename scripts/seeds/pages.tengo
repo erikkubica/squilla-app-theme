@@ -23,7 +23,7 @@ PAGE_META := {
     "blog":         { excerpt: "Updates, deep dives, and field notes from the Squilla project — kernel design, extension authoring, performance budgets, and migration guides.",                              meta_title: "Blog — Squilla",                                                            meta_description: "Engineering posts and product notes from the Squilla project. New extensions, kernel internals, MCP workflows, performance, and migrations." },
     "showcase":     { excerpt: "Real sites running on Squilla — squilla.app itself, plus the reference Hello-Vietnam landing and the CV theme.",                                                              meta_title: "Showcase — Squilla",                                                        meta_description: "Live sites running on Squilla, including the marketing site you're reading and the reference themes shipped with the project." },
     "pricing":      { excerpt: "Squilla is GPL-3.0 and free to self-host. Optional commercial licensing and managed hosting for teams that want a vendor on the hook.",                                       meta_title: "Pricing — Squilla",                                                         meta_description: "Free and open-source under GPL-3.0. Optional commercial licensing and managed hosting if you'd rather have someone on the hook." },
-    "legal":        { excerpt: "Terms of use, privacy policy, and license information for squilla.app and the Squilla open-source project.",                                                                  meta_title: "Legal — Squilla",                                                           meta_description: "Terms of use, privacy policy, and licensing for squilla.app and the open-source Squilla project." },
+    "legal":        { excerpt: "License, privacy, terms, security, and brand for squilla.app and the Squilla project. Plain text, no surprises.",                                                              meta_title: "Legal — Squilla",                                                           meta_description: "License, privacy, terms, security, and brand for squilla.app and the Squilla project. Plain text, no surprises." },
     "changelog":    { excerpt: "Versioned release notes for the Squilla kernel, reference extensions, and the Squilla theme.",                                                                                meta_title: "Changelog — Squilla",                                                       meta_description: "Versioned release notes for the Squilla kernel, the reference extensions, and the marketing theme." },
     "contact":      { excerpt: "How to reach the Squilla maintainers — GitHub issues for bugs and features, GitHub Discussions for everything else.",                                                          meta_title: "Contact — Squilla",                                                         meta_description: "Open an issue for bugs and features, or start a thread on GitHub Discussions for ideas, questions, and showcases." }
 }
@@ -305,19 +305,28 @@ export {
             } },
             { type: "about-principles",  fields: {
                 eyebrow: "§ principles",
+                narrow:  false,
                 items: [
-                    { heading: "AI agents are first-class users.", body: "Not as a \"ChatGPT integration.\" As primary operators with the same API surface humans use." },
-                    { heading: "Performance is non-negotiable.",   body: "Sub-50ms TTFB on every public page. Always." },
-                    { heading: "The kernel stays small.",          body: "If disabling a feature would leave dead code in core, that feature belongs in an extension." },
-                    { heading: "Extensions are sovereign.",        body: "Their tables, their UI, their scripts, their migrations. The kernel doesn't reach inside." },
-                    { heading: "One-shot setup.",                  body: "docker compose up and you're publishing. No package managers, no cron jobs, no PHP-FPM tuning." }
+                    { heading: "AI agents are first-class users.", body: "Not as a \"ChatGPT integration\". As primary operators with the same API surface humans use — the MCP server and the CoreAPI." },
+                    { heading: "Performance is non-negotiable.",   body: "Pre-resolved layouts, JSONB + GIN indexes, atomic config swaps, no N+1 reads. The CMS gets out of the way." },
+                    { heading: "The kernel stays small.",          body: "If disabling a feature would leave dead code in core, that feature belongs in an extension. Always." },
+                    { heading: "Extensions are sovereign.",        body: "Their tables, their UI, their scripts, their migrations. The kernel never reaches inside." },
+                    { heading: "One-shot setup.",                  body: "docker compose up and you're publishing. No package managers, no cron jobs, no PHP-FPM tuning, no \"first-time setup wizard\"." }
                 ]
             } },
-            { type: "about-name",        fields: {
-                os_eyebrow:   "§ open source",
-                os_body:      "GPL-3.0. No telemetry. No CLA. No \"open core\" bait-and-switch. What's in the repo is the whole thing.",
-                name_eyebrow: "§ name",
-                name_body:    "<em>Squilla</em> is the Latin genus of mantis shrimps — the fastest punchers in the animal kingdom (sub-millisecond strike) and possessing the most complex visual system on Earth (16 photoreceptor types vs. our 3). Extreme speed; multi-spectrum perception (for AI agents); a segmented body with specialized appendages (kernel + extensions). The metaphor wrote itself."
+            { type: "about-team",        fields: {
+                eyebrow: "§ team",
+                title:   "Six humans. One of them real.",
+                sub:     "<p>Squilla is built by Erik and a tireless team of \"Claude\" personas — different names, different roles, same model. The joke writes itself; the work is real. Standups are quiet.</p>",
+                members: [
+                    { name: "Erik Kubica", alias: "Master", role: "Founder & engineer", photo: { url: "/theme/assets/images/team-erik.jpg", alt: "Erik Kubica" }, is_ai: false },
+                    { name: "Claudia",     alias: "Claude", role: "Human resources",    photo: {}, is_ai: true },
+                    { name: "Fred",        alias: "Claude", role: "Software architect", photo: {}, is_ai: true },
+                    { name: "Tom",         alias: "Claude", role: "Design",             photo: {}, is_ai: true },
+                    { name: "Léa",         alias: "Claude", role: "QA & testing",       photo: {}, is_ai: true },
+                    { name: "Max",         alias: "Claude", role: "DevOps & infra",     photo: {}, is_ai: true }
+                ],
+                footnote: "<p>Yes, every \"Claude\" above is the same underlying model. We give them different names because it's funnier than \"Claude (1 of 5)\" in standups, and because giving the QA persona a slightly different prompt than the architect persona genuinely changes what each one notices.</p>"
             } }
         ])
 
@@ -343,6 +352,21 @@ export {
                     { name: "squilla.app",       type: "marketing + docs (the page you're on)",         built: "this site",  color: "teal",   url: "https://squilla.app",                         screenshot: { url: "theme-asset:showcase-squilla",          alt: "squilla.app marketing site screenshot" } },
                     { name: "Hello Vietnam",     type: "travel-agency demo theme bundled in the repo",  built: "demo theme", color: "violet", url: "https://hello-vietnam-demo.erik-kubica.dev/", screenshot: { url: "theme-asset:showcase-hello-vietnam",    alt: "Hello Vietnam demo theme screenshot" } },
                     { name: "Curriculum Vitae",  type: "single-page CV/portfolio demo theme",           built: "demo theme", color: "coral",  url: "https://erik-kubica.dev/",                    screenshot: { url: "theme-asset:showcase-curriculum-vitae", alt: "Curriculum Vitae demo theme screenshot" } }
+                ]
+            } },
+            { type: "gallery-tabs", fields: {
+                eyebrow: "§ behind the curtain",
+                title:   "The making-of.",
+                tabs: [
+                    { slug: "studio", label: "Studio", caption: "<p>Photos coming soon — placeholders for now.</p>", images: [
+                        { image: {}, alt: "placeholder" }, { image: {}, alt: "placeholder" }, { image: {}, alt: "placeholder" }
+                    ] },
+                    { slug: "builds", label: "Builds", caption: "<p>Photos coming soon — placeholders for now.</p>", images: [
+                        { image: {}, alt: "placeholder" }, { image: {}, alt: "placeholder" }, { image: {}, alt: "placeholder" }
+                    ] },
+                    { slug: "life",   label: "Life",   caption: "<p>Photos coming soon — placeholders for now.</p>", images: [
+                        { image: {}, alt: "placeholder" }, { image: {}, alt: "placeholder" }, { image: {}, alt: "placeholder" }, { image: {}, alt: "placeholder" }
+                    ] }
                 ]
             } }
         ])
@@ -381,37 +405,51 @@ export {
         // ─── LEGAL ────────────────────────────────────────────
         ensure_page("legal", "Legal", [
             { type: "page-header", fields: {
-                eyebrow: "§ legal · text",
-                title:   "The fine print, in plain text.",
-                sub:     "Boring legal documents written without a legal team. If anything is unclear, open an issue."
+                eyebrow: "§ legal · effective 2026-04-30",
+                title:   "The fine print, without the fine print.",
+                sub:     "Five short pages — license, privacy, terms, security, brand — written by the people who maintain the code, not a legal team."
             }},
             { type: "legal-tabs", fields: {
                 tabs: [
                     { slug: "license", label: "License", sections: [
-                        { heading: "License — GPL-3.0",        body: "Squilla is licensed under the <span style=\"color: var(--accent)\">GNU General Public License v3.0</span>. You can use, modify, and distribute it. If you distribute a modified version, you must release the source under the same license. The full text is in the LICENSE file at the root of the repository. The summary above is not a substitute." },
-                        { heading: "What \"free\" means here", body: "Free as in freedom, and free as in price. There is no commercial license tier, no SaaS escape hatch, no enterprise add-on. The repository is the product." },
-                        { heading: "No CLA",                   body: "Contributors do not sign a Contributor License Agreement. You retain copyright in your contributions; you license them under GPL-3.0 by submitting a PR." }
+                        { heading: "GPL-3.0, no second tier",   body: "Squilla is licensed under the <span style=\"color: var(--accent)\">GNU General Public License v3.0</span>. You may run it, study it, modify it, and redistribute it. Distribute a modified version and you must release the source under the same license. The full, legally binding text is in the <code>LICENSE</code> file at the root of the repository — the prose on this page is a summary, not a substitute." },
+                        { heading: "No commercial tier, ever",   body: "There is no enterprise edition, no SaaS gateway, no \"open-core\" pattern. Every line of code that runs the kernel, the extensions, the admin UI, and this marketing site is in the public repository under GPL-3.0. If a feature ships, it ships for everyone." },
+                        { heading: "No CLA",                     body: "Contributors do not sign a Contributor License Agreement. You retain copyright in your contributions and license them under GPL-3.0 by submitting a pull request. The project cannot be relicensed out from under contributors — a future maintainer cannot take this code closed-source." },
+                        { heading: "Bundled third-party code",   body: "Direct dependencies are listed in <code>go.mod</code>, <code>package.json</code>, and each extension's manifest. Each is used under its own OSI-approved license (MIT, BSD, Apache 2.0, MPL 2.0). The aggregate is GPL-3.0 compatible; we do not bundle code that is not." }
                     ] },
                     { slug: "privacy", label: "Privacy", sections: [
-                        { heading: "What we collect (in core)", body: "The Squilla CMS itself collects nothing. No telemetry. No phone-home. No anonymous metrics. The binary makes no outbound network calls unless you install and configure an extension that does (e.g. <code>resend-provider</code>, <code>smtp-provider</code>)." },
-                        { heading: "This website",              body: "This marketing site (squilla.app) uses no cookies, no analytics, no third-party trackers. Server access logs (IP, user-agent, path, timestamp) are kept for abuse detection and rotated regularly. We don't sell, share, or aggregate them." },
-                        { heading: "Third parties",             body: "Web fonts are served from Google Fonts. If that bothers you, build the site locally — the source is in the GitHub repo and uses the same theme." }
+                        { heading: "What the CMS collects",      body: "Nothing. The Squilla binary makes no outbound network calls of its own — no telemetry, no anonymous metrics, no \"phone-home\" update check, no crash reporting. It only talks to the network when an extension you install and configure asks it to (e.g. <code>resend-provider</code> calls Resend; <code>smtp-provider</code> talks to your SMTP server). Each extension's network behaviour is described in its own README." },
+                        { heading: "What this website collects", body: "squilla.app uses no cookies, no JavaScript analytics, no third-party trackers, no fingerprinting. The reverse proxy keeps standard HTTP access logs (timestamp, source IP, request path, user-agent, response code, byte count) for 30 days for abuse detection and capacity planning. Logs are not exported, sold, shared, or correlated with any other dataset." },
+                        { heading: "Forms and email",            body: "If you submit the contact form or sign up for release notifications, the email address you provide is stored in our self-hosted database and used only to reply to you or send the release note you asked for. We do not import it into a CRM or marketing automation tool. Ask for deletion at any time — see Contact below." },
+                        { heading: "Third parties served by this site", body: "Web fonts are loaded from Google Fonts (fonts.googleapis.com, fonts.gstatic.com). Code samples link to GitHub. There are no other third parties. If even that's too much, the source for this site is in the repository and you can build a self-hosted copy with the same theme." },
+                        { heading: "Your rights",                body: "If you're an EU/UK resident, GDPR/UK-GDPR rights apply: access, rectification, erasure, restriction, portability, objection. Email the address in the Contact section and we'll handle it within 30 days. We do not need a formal request — a one-line email is enough." }
                     ] },
                     { slug: "terms", label: "Terms", sections: [
-                        { heading: "Use of this site", body: "You can read it. You can link to it. You can scrape it (the robots.txt is permissive). You cannot pretend you wrote it." },
-                        { heading: "No warranty",      body: "Squilla is provided \"as is\", without warranty of any kind. See the GPL-3.0 license for the legally-binding version of that sentence." },
-                        { heading: "Trademarks",       body: "\"Squilla\" and the compound-eye mark are unregistered trademarks of the Squilla project. Use them to refer to the project. Don't use them to brand a fork as if it were endorsed." }
+                        { heading: "Use of this site",     body: "Read it, link to it, screenshot it, quote it, scrape it (<code>robots.txt</code> is permissive, please throttle to a sane rate). Do not republish it as your own work or imply it represents another project." },
+                        { heading: "Use of the software",  body: "Use of the Squilla CMS itself is governed by the GPL-3.0 license, not by this page. If the two ever appear to conflict, GPL-3.0 wins." },
+                        { heading: "No warranty",          body: "Squilla is provided <em>as is</em>, without warranty of any kind, express or implied, including merchantability, fitness for a particular purpose, and non-infringement. To the fullest extent allowed by law, the maintainers are not liable for any claim, damages, or other liability arising from use of the software. The GPL-3.0 license contains the legally binding version of this paragraph." },
+                        { heading: "Trademarks",           body: "\"Squilla\" and the compound-eye mark are unregistered trademarks of the Squilla project. You may use them to refer to the project, link to it, or attribute screenshots. You may not use them to brand a fork, a paid product, or a service in a way that suggests endorsement by the project." },
+                        { heading: "Governing terms",      body: "This website is operated from the European Union; EU consumer-protection rules apply where relevant. Disputes that cannot be resolved by direct conversation will be handled in the maintainer's home jurisdiction. We have never had one and do not anticipate any." }
                     ] },
                     { slug: "security", label: "Security", sections: [
-                        { heading: "Reporting a vulnerability", body: "Open a <em>private</em> security advisory on the GitHub repo — don't file a public issue for an exploitable bug. We aim to acknowledge within 72 hours and coordinate disclosure from there." },
-                        { heading: "Disclosure timeline",       body: "Standard 90 days from acknowledgement. We can negotiate longer for severe issues; we won't sit on something past 90 days for marketing reasons." },
-                        { heading: "Bug bounty",                body: "None. We're a small project on a zero-revenue license. We will publicly thank you in the release notes and acknowledgements." }
+                        { heading: "Reporting a vulnerability", body: "Use GitHub's private security advisory flow on the <code>erikkubica/squilla</code> repository (Security → Advisories → New draft). <strong>Do not file a public issue</strong> for an exploitable bug. If GitHub is unreachable for you, email the address in the Contact section with subject line <code>SECURITY</code>." },
+                        { heading: "What we acknowledge",       body: "We aim to acknowledge in writing within 72 hours and confirm whether the report is in scope within 7 days. \"In scope\" means: the latest released version of the kernel, the in-tree extensions, the admin UI, this marketing site, and any official Docker image. Out of scope: third-party themes, third-party extensions, your own deployment misconfiguration, and social engineering of project maintainers." },
+                        { heading: "Disclosure",                body: "Coordinated disclosure on a 90-day timeline from acknowledgement. We will negotiate a longer window for severe issues that require ecosystem coordination. We will not sit on a fix past the agreed window for marketing reasons." },
+                        { heading: "Bug bounty",                body: "There is no monetary bounty — the project has no commercial revenue. We will publicly credit you in the release notes and the project Acknowledgements page, with the wording you choose, including \"anonymous\"." },
+                        { heading: "Hardening guidance",        body: "Production-deployment guidance lives in <code>docs/security.md</code> in the repository. The short version: run the kernel as an unprivileged user, terminate TLS at a reverse proxy, set a strong <code>SQUILLA_SESSION_SECRET</code>, restrict <code>SQUILLA_MCP_ALLOW_RAW_SQL</code> to development, and rotate MCP tokens with care." }
                     ] },
                     { slug: "brand", label: "Brand", sections: [
-                        { heading: "The mark",     body: "The compound-eye dot cluster represents Squilla's segmented architecture and multi-spectrum perception. Don't recolour it; the iridescent palette is part of the identity." },
-                        { heading: "The wordmark", body: "Set in JetBrains Mono Medium. Lowercase always. Don't pad-cap it." },
-                        { heading: "Do",           body: "Use the kit in articles, talks, screenshots, blog posts, and tutorials. Link back to the project if you can." },
-                        { heading: "Don't",        body: "Don't combine the mark with another logo. Don't suggest we endorse your product. Don't ship a hostile fork called \"Squilla X\" while using the mark." }
+                        { heading: "The mark",          body: "The compound-eye dot cluster represents Squilla's segmented kernel-and-extension architecture and the mantis shrimp's multi-spectrum perception. Don't recolour the dots; the iridescent palette (teal, violet, magenta, coral, lime) is the identity. SVG sources are in <code>themes/squilla/assets/brand/</code>." },
+                        { heading: "The wordmark",      body: "Set in JetBrains Mono Medium, lowercase, with a trailing slash that distinguishes the project from generic uses of the word. Don't pad-cap it (\"SQUILLA\"), don't title-case it (\"Squilla\" inside the wordmark), don't replace the slash with another character." },
+                        { heading: "Colour and motion", body: "Accent colours and motion easing are documented in the design tokens at <code>themes/squilla/assets/styles/tokens.css</code>. If you're embedding screenshots in a slide deck, the dark theme reads better at projector contrast." },
+                        { heading: "Welcomed uses",     body: "Articles, conference talks, podcast notes, screenshots, tutorials, comparison posts, classroom material, t-shirts, stickers, your own slide decks. Link back to the project where it makes sense; we won't chase you if you forget." },
+                        { heading: "Not welcomed",      body: "Combining the mark with another logo to suggest a partnership we haven't agreed to. Selling the mark on merchandise as if licensed by the project. Branding a hostile fork \"Squilla X\" while using our mark. Implying endorsement of a paid service or training course." }
+                    ] },
+                    { slug: "contact", label: "Contact", sections: [
+                        { heading: "How to reach us",     body: "GitHub is the primary channel for everything: bug reports, feature requests, security advisories, license questions, brand questions, and \"does Squilla do X\" conversations. The repository is <code>erikkubica/squilla</code>; issues, discussions, and private security advisories are all enabled." },
+                        { heading: "Email",               body: "For things that genuinely don't fit on GitHub — GDPR requests, press inquiries, takedown notices that involve an actual person's data — email <code>hello@squilla.app</code>. We respond within five working days. Please prefer GitHub for everything else; it keeps the conversation searchable for the next person with the same question." },
+                        { heading: "Who maintains this",  body: "Squilla is maintained by Erik Kubica and a small group of contributors listed in the repository. The project has no parent company and no investors. There is no PR team to talk to." },
+                        { heading: "Effective date",      body: "This page was last updated on <strong>30 April 2026</strong>." }
                     ] }
                 ]
             } }
