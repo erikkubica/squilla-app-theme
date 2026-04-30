@@ -17,7 +17,7 @@
       <span class="squilla-wordmark__text">squilla<span class="squilla-wordmark__slash">/</span></span>
     </a>
 
-    <nav class="site-header__nav nav-links" aria-label="Primary">
+    <nav id="site-nav" class="site-header__nav nav-links" aria-label="Primary" data-site-nav>
       {{- $current := or .node.slug "" -}}
       {{- $expected := printf "/%s" $current -}}
       {{- $nav := index .app.menus "main-nav" -}}
@@ -29,15 +29,20 @@
       {{- end -}}
     </nav>
 
-    {{- $s := .app.settings -}}
+    <button class="site-header__burger" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="site-nav" data-site-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
+
     <div class="site-header__meta hide-sm">
+      {{- if index .theme_settings.header "show_meta_pill" -}}
       <div class="site-header__pill">
-        <span class="dim">{{ index $s "squilla.brand.version" }}</span>
+        <span class="dim">{{ index .theme_settings.header "version" }}</span>
         <span class="site-header__pill-divider"></span>
-        <span>★ {{ index $s "squilla.brand.stars" }}</span>
+        <span>★ {{ index .theme_settings.header "stars" }}</span>
       </div>
-      <a class="btn site-header__cta" href="/docs/installation">
-        <span>docker compose up</span>
+      {{- end -}}
+      <a class="btn site-header__cta" href="{{ index .theme_settings.header "cta_url" }}">
+        <span>{{ index .theme_settings.header "cta_label" }}</span>
       </a>
     </div>
   </div>

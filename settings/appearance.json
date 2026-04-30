@@ -1,0 +1,46 @@
+{
+  "name": "Appearance",
+  "description": "Visual variants applied to the <html> element. Take effect on the next page load — no rebuild needed. Same palette across every language.",
+  "fields": [
+    {
+      "key": "theme",
+      "label": "Theme",
+      "type": "select",
+      "translatable": false,
+      "default": "dark",
+      "options": ["dark", "light"]
+    },
+    {
+      "key": "accent",
+      "label": "Accent color",
+      "type": "select",
+      "translatable": false,
+      "default": "violet",
+      "options": ["teal", "coral", "lime", "magenta", "violet"]
+    },
+    {
+      "key": "density",
+      "label": "Spacing density",
+      "type": "select",
+      "translatable": false,
+      "default": "normal",
+      "options": ["compact", "normal", "spacious"]
+    },
+    {
+      "key": "motif",
+      "label": "Background motif",
+      "type": "select",
+      "translatable": false,
+      "default": "subtle",
+      "options": ["none", "subtle", "heavy"]
+    },
+    {
+      "key": "hero",
+      "label": "Default hero variant",
+      "type": "select",
+      "translatable": false,
+      "default": "ai",
+      "options": ["ai", "speed", "kernel"]
+    }
+  ]
+}

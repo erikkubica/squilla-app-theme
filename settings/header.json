@@ -1,0 +1,41 @@
+{
+  "name": "Header",
+  "description": "Content of the site header — version pill on the right and the primary CTA button.",
+  "fields": [
+    {
+      "key": "show_meta_pill",
+      "label": "Show version & stars pill",
+      "type": "toggle",
+      "translatable": false,
+      "default": true
+    },
+    {
+      "key": "version",
+      "label": "Version label",
+      "type": "text",
+      "translatable": false,
+      "default": "v0.4.2"
+    },
+    {
+      "key": "stars",
+      "label": "GitHub stars",
+      "type": "text",
+      "translatable": false,
+      "default": "2841"
+    },
+    {
+      "key": "cta_label",
+      "label": "CTA button text",
+      "type": "text",
+      "translatable": true,
+      "default": "docker compose up"
+    },
+    {
+      "key": "cta_url",
+      "label": "CTA destination",
+      "type": "url",
+      "translatable": false,
+      "default": "/docs/installation"
+    }
+  ]
+}

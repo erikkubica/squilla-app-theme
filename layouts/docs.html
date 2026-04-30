@@ -1,16 +1,16 @@
 {{- $s := .app.settings -}}
 <!doctype html>
 <html lang="{{.node.language_code}}"
-      data-theme="{{ index $s "squilla.tweaks.theme" }}"
-      data-accent="{{ index $s "squilla.tweaks.accent" }}"
-      data-density="{{ index $s "squilla.tweaks.density" }}"
-      data-motif="{{ index $s "squilla.tweaks.motif" }}">
+      data-theme="{{ index .theme_settings.appearance "theme" }}"
+      data-accent="{{ index .theme_settings.appearance "accent" }}"
+      data-density="{{ index .theme_settings.appearance "density" }}"
+      data-motif="{{ index .theme_settings.appearance "motif" }}">
 <head>
   <meta charset="utf-8">
   <link rel="icon" type="image/svg+xml" href="/theme/assets/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {{- $seo := .node.seo -}}
-  <title>{{ if and $seo $seo.meta_title }}{{$seo.meta_title}}{{ else }}{{.node.title}} — {{ index $s "squilla.brand.name" }} docs{{ end }}</title>
+  <title>{{ if and $seo $seo.meta_title }}{{$seo.meta_title}}{{ else }}{{.node.title}} — {{ index .theme_settings.branding "name" }} docs{{ end }}</title>
   <meta name="description" content="{{ if and $seo $seo.meta_description }}{{$seo.meta_description}}{{ else if .node.excerpt }}{{.node.excerpt}}{{ else }}{{.node.fields.summary}}{{ end }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,6 +18,8 @@
   {{.app.head_meta}}
   {{- range .app.head_styles -}}<link rel="stylesheet" href="{{.}}">{{- end -}}
   {{.app.block_styles}}
+  {{- with index $s "analytics_code"}}{{safeHTML .}}{{end -}}
+  {{- with index $s "custom_head_code"}}{{safeHTML .}}{{end -}}
 </head>
 <body>
   <div class="page">
@@ -79,5 +81,6 @@
   </div>
   {{- range .app.foot_scripts -}}<script src="{{.}}" defer></script>{{- end -}}
   {{.app.block_scripts}}
+  {{- with index $s "custom_footer_code"}}{{safeHTML .}}{{end -}}
 </body>
 </html>

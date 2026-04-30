@@ -437,14 +437,26 @@
     window.addEventListener('popstate', readURL);
     readURL();
 
-    // Sidebar group toggles (server-rendered open by default; user can collapse)
+    // Sidebar group toggles (open on desktop, collapsed on mobile by default)
+    const mobileMQ = window.matchMedia('(max-width: 760px)');
+    const setGroupOpen = (group, open) => {
+      const list = $('[data-docs-list]', group);
+      const icon = $('[data-docs-group-icon]', group);
+      if (list) list.hidden = !open;
+      if (icon) icon.textContent = open ? '−' : '+';
+    };
+    const applyResponsiveDefault = () => {
+      const open = !mobileMQ.matches;
+      groups.forEach(g => setGroupOpen(g, open));
+    };
+    applyResponsiveDefault();
+    mobileMQ.addEventListener('change', applyResponsiveDefault);
+
     $$('[data-docs-group-toggle]', host).forEach(btn => {
       btn.addEventListener('click', () => {
         const group = btn.closest('[data-docs-group]');
         const list = $('[data-docs-list]', group);
-        const open = !list.hidden;
-        list.hidden = open;
-        btn.querySelector('[data-docs-group-icon]').textContent = open ? '+' : '−';
+        setGroupOpen(group, list.hidden);
       });
     });
 
@@ -507,10 +519,48 @@
     document.head.appendChild(s);
   };
 
+  const initSiteNav = () => {
+    const btn = $('[data-site-nav-toggle]');
+    const nav = $('[data-site-nav]');
+    if (!btn || !nav) return;
+    const originalParent = nav.parentNode;
+    const placeholder = document.createComment('site-nav-portal');
+    const mobileMQ = window.matchMedia('(max-width: 760px)');
+
+    const setOpen = (open) => {
+      nav.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      document.documentElement.classList.toggle('is-nav-open', open);
+    };
+
+    // Portal the nav to <body> on mobile so position:fixed resolves
+    // against the viewport (any ancestor with transform/filter/
+    // backdrop-filter/perspective creates a containing block, which
+    // would clip the fullscreen overlay).
+    const sync = () => {
+      if (mobileMQ.matches && nav.parentNode !== document.body) {
+        originalParent.insertBefore(placeholder, nav);
+        document.body.appendChild(nav);
+      } else if (!mobileMQ.matches && nav.parentNode === document.body) {
+        if (placeholder.parentNode) placeholder.parentNode.replaceChild(nav, placeholder);
+      }
+    };
+    sync();
+    mobileMQ.addEventListener('change', () => { setOpen(false); sync(); });
+    btn.addEventListener('click', () => setOpen(!nav.classList.contains('is-open')));
+    nav.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+  };
+
   // ─────────────────────────────────────────────
   // Boot
   // ─────────────────────────────────────────────
   ready(() => {
+    initSiteNav();
     initEyes();
     initMcp();
     initPerfPanels();

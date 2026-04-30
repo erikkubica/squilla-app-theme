@@ -1,4 +1,3 @@
-{{- $s := .app.settings -}}
 <footer class="site-footer">
   <div class="container container-wide">
     <div class="site-footer__cols" data-grid="footer">
@@ -19,14 +18,19 @@
           </svg>
           <span class="squilla-wordmark__text" style="font-size:16px;">squilla<span class="squilla-wordmark__slash">/</span></span>
         </a>
-        <p class="site-footer__blurb">An open-source, AI-native, Go-based CMS. Kernel-class core. Sovereign extensions. ~50 MCP tools, sub-50ms TTFB.</p>
+        <p class="site-footer__blurb">{{ index .theme_settings.footer "blurb" }}</p>
+        {{- if index .theme_settings.footer "show_carapace" -}}
         <div class="site-footer__carapace">
           {{ range $i := seq 16 }}<span class="site-footer__cara-seg site-footer__cara-seg--{{ mod $i 6 }}"></span>{{ end }}
         </div>
+        {{- end -}}
         <div class="site-footer__tags">
-          <span class="tag">GPL-3.0</span>
-          <span class="tag">No telemetry</span>
-          <span class="tag">No CLA</span>
+          {{- $tags := index .theme_settings.footer "tags" -}}
+          {{- if $tags -}}
+            {{- range $tag := split "\n" (printf "%v" $tags) -}}
+              {{- if $tag -}}<span class="tag">{{ $tag }}</span>{{- end -}}
+            {{- end -}}
+          {{- end -}}
         </div>
       </div>
 
@@ -50,13 +54,15 @@
     </div>
 
     <div class="site-footer__bottom">
-      <div>{{ index $s "squilla.brand.copyright" }}</div>
+      <div>{{ index .theme_settings.branding "copyright" }}</div>
+      {{- if index .theme_settings.footer "show_build" -}}
       <div class="site-footer__build">
-        <span>git: {{ index $s "squilla.brand.git_sha" }}</span>
-        <span>built: {{ index $s "squilla.brand.built" }}</span>
+        <span>git: {{ index .theme_settings.footer "git_sha" }}</span>
+        <span>built: {{ index .theme_settings.footer "built" }}</span>
         <span>go 1.24.2</span>
         <span>postgres 16.2</span>
       </div>
+      {{- end -}}
     </div>
   </div>
 </footer>

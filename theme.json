@@ -59,6 +59,14 @@
     { "slug": "notfound-section",    "dir": "notfound-section" }
   ],
 
+  "settings_pages": [
+    { "slug": "branding",   "name": "Branding",   "icon": "Sparkles",    "file": "settings/branding.json" },
+    { "slug": "appearance", "name": "Appearance", "icon": "Palette",     "file": "settings/appearance.json" },
+    { "slug": "header",     "name": "Header",     "icon": "PanelTop",    "file": "settings/header.json" },
+    { "slug": "footer",     "name": "Footer",     "icon": "PanelBottom", "file": "settings/footer.json" },
+    { "slug": "features",   "name": "Features",   "icon": "ToggleRight", "file": "settings/features.json" }
+  ],
+
   "templates": [
     { "slug": "home",         "file": "home.json" },
     { "slug": "features",     "file": "features.json" },

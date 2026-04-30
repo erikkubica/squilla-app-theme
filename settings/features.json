@@ -1,0 +1,31 @@
+{
+  "name": "Features",
+  "description": "Feature flags consumed by blocks (search, pagination, etc.).",
+  "fields": [
+    {
+      "key": "docs_search",
+      "label": "Docs search box",
+      "type": "toggle",
+      "translatable": false,
+      "default": true
+    },
+    {
+      "key": "blog_posts_per_page",
+      "label": "Blog posts per page",
+      "type": "number",
+      "translatable": false,
+      "default": 6,
+      "min": 1,
+      "max": 50
+    },
+    {
+      "key": "marketplace_cards_per_page",
+      "label": "Marketplace cards per page",
+      "type": "number",
+      "translatable": false,
+      "default": 12,
+      "min": 1,
+      "max": 100
+    }
+  ]
+}

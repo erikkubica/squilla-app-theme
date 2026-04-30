@@ -1,50 +1,16 @@
-// setup/settings.tengo — Site-wide settings the theme reads.
+// setup/settings.tengo — Deprecated. Theme settings are now managed via the
+// admin Theme Settings UI, declared in theme.json's settings_pages and
+// stored under theme:squilla:<page>:<field>. See settings/*.json for the
+// full schema. Defaults flow through ThemeSettingsField.Default in those
+// JSON files; this script no longer seeds anything.
 //
-// Settings are namespaced under `squilla.*`. Layouts read these via
-// {{.app.settings.squilla_*}} (dots are flattened to underscores by the
-// template context builder).
-//
-// Tweak keys mirror the design's `data-*` attributes on <html>:
-//   data-theme   ← squilla.tweaks.theme    (dark | light)
-//   data-accent  ← squilla.tweaks.accent   (teal | coral | lime | magenta | violet)
-//   data-density ← squilla.tweaks.density  (compact | normal | spacious)
-//   data-motif   ← squilla.tweaks.motif    (none | subtle | heavy)   (theme-only, used by JS)
-// Hero variant is per-block but defaulted from a setting:
-//   squilla.tweaks.hero (ai | speed | kernel)
+// Kept as an empty entry point so any cached references to the slug stay
+// valid; safe to delete the file once no extension still references it.
 
-settings := import("core/settings")
-log      := import("core/log")
-
-set_default := func(key, value) {
-    existing := settings.get(key)
-    if existing == "" || is_error(existing) {
-        settings.set(key, value)
-    }
-}
+log := import("core/log")
 
 export {
     run: func() {
-        log.info("[squilla:setup] seeding settings")
-
-        // ─── Brand ────────────────────────────────────────────
-        set_default("squilla.brand.name",      "Squilla")
-        set_default("squilla.brand.tagline",   "The CMS where AI does the work.")
-        set_default("squilla.brand.copyright", "© 2026 squilla project · made for kernels and crustaceans")
-        set_default("squilla.brand.version",   "v0.4.2")
-        set_default("squilla.brand.stars",     "2841")
-        set_default("squilla.brand.git_sha",   "9f3a1c2")
-        set_default("squilla.brand.built",     "2026.04.14")
-
-        // ─── Tweaks (defaults from the user's brief) ──────────
-        set_default("squilla.tweaks.theme",   "dark")     // dark | light
-        set_default("squilla.tweaks.accent",  "violet")   // teal | coral | lime | magenta | violet
-        set_default("squilla.tweaks.density", "normal")   // compact | normal | spacious
-        set_default("squilla.tweaks.motif",   "subtle")   // none | subtle | heavy
-        set_default("squilla.tweaks.hero",    "ai")       // ai | speed | kernel
-
-        // ─── Feature flags ────────────────────────────────────
-        set_default("squilla.docs.search_enabled",         "true")
-        set_default("squilla.blog.posts_per_page",         "6")
-        set_default("squilla.marketplace.cards_per_page",  "12")
+        log.info("[squilla:setup] settings now sourced from settings/*.json")
     }
 }

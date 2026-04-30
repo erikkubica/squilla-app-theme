@@ -1,0 +1,50 @@
+{
+  "name": "Footer",
+  "description": "Content of the site footer — blurb, badges, and the build-info row.",
+  "fields": [
+    {
+      "key": "blurb",
+      "label": "Footer blurb",
+      "type": "textarea",
+      "translatable": true,
+      "default": "An open-source, AI-native, Go-based CMS. Kernel-class core. Sovereign extensions. ~50 MCP tools, sub-50ms TTFB."
+    },
+    {
+      "key": "tags",
+      "label": "Footer tags",
+      "type": "textarea",
+      "translatable": true,
+      "default": "GPL-3.0\nNo telemetry\nNo CLA",
+      "help": "One tag per line. Rendered as small pills under the blurb."
+    },
+    {
+      "key": "show_carapace",
+      "label": "Show decorative carapace strip",
+      "type": "toggle",
+      "translatable": false,
+      "default": true
+    },
+    {
+      "key": "show_build",
+      "label": "Show build-info row",
+      "type": "toggle",
+      "translatable": false,
+      "default": true,
+      "help": "The git/built/go/postgres line at the very bottom of the footer."
+    },
+    {
+      "key": "git_sha",
+      "label": "Git SHA",
+      "type": "text",
+      "translatable": false,
+      "default": "9f3a1c2"
+    },
+    {
+      "key": "built",
+      "label": "Build date",
+      "type": "text",
+      "translatable": false,
+      "default": "2026.04.14"
+    }
+  ]
+}

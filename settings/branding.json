@@ -1,0 +1,27 @@
+{
+  "name": "Branding",
+  "description": "Site name, tagline, and copyright text shown in the header, browser tab, and footer.",
+  "fields": [
+    {
+      "key": "name",
+      "label": "Brand name",
+      "type": "text",
+      "translatable": true,
+      "default": "Squilla"
+    },
+    {
+      "key": "tagline",
+      "label": "Tagline",
+      "type": "text",
+      "translatable": true,
+      "default": "The CMS where AI does the work."
+    },
+    {
+      "key": "copyright",
+      "label": "Copyright line",
+      "type": "text",
+      "translatable": true,
+      "default": "© 2026 squilla project · made for kernels and crustaceans"
+    }
+  ]
+}
