@@ -1,46 +1,67 @@
 {
-  "name": "Appearance",
-  "description": "Visual variants applied to the <html> element. Take effect on the next page load — no rebuild needed. Same palette across every language.",
+  "description": "Visual variants applied to the \u003chtml\u003e element. Take effect on the next page load — no rebuild needed. Same palette across every language.",
   "fields": [
     {
-      "key": "theme",
-      "label": "Theme",
-      "type": "select",
+      "initialValue": "dark",
+      "name": "theme",
+      "options": [
+        "dark",
+        "light"
+      ],
+      "title": "Theme",
       "translatable": false,
-      "default": "dark",
-      "options": ["dark", "light"]
+      "type": "select"
     },
     {
-      "key": "accent",
-      "label": "Accent color",
-      "type": "select",
+      "initialValue": "violet",
+      "name": "accent",
+      "options": [
+        "teal",
+        "coral",
+        "lime",
+        "magenta",
+        "violet"
+      ],
+      "title": "Accent color",
       "translatable": false,
-      "default": "violet",
-      "options": ["teal", "coral", "lime", "magenta", "violet"]
+      "type": "select"
     },
     {
-      "key": "density",
-      "label": "Spacing density",
-      "type": "select",
+      "initialValue": "normal",
+      "name": "density",
+      "options": [
+        "compact",
+        "normal",
+        "spacious"
+      ],
+      "title": "Spacing density",
       "translatable": false,
-      "default": "normal",
-      "options": ["compact", "normal", "spacious"]
+      "type": "select"
     },
     {
-      "key": "motif",
-      "label": "Background motif",
-      "type": "select",
+      "initialValue": "subtle",
+      "name": "motif",
+      "options": [
+        "none",
+        "subtle",
+        "heavy"
+      ],
+      "title": "Background motif",
       "translatable": false,
-      "default": "subtle",
-      "options": ["none", "subtle", "heavy"]
+      "type": "select"
     },
     {
-      "key": "hero",
-      "label": "Default hero variant",
-      "type": "select",
+      "initialValue": "ai",
+      "name": "hero",
+      "options": [
+        "ai",
+        "speed",
+        "kernel"
+      ],
+      "title": "Default hero variant",
       "translatable": false,
-      "default": "ai",
-      "options": ["ai", "speed", "kernel"]
+      "type": "select"
     }
-  ]
+  ],
+  "name": "Appearance"
 }

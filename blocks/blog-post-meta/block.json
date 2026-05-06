@@ -1,20 +1,40 @@
 {
-  "slug":        "blog-post-meta",
-  "name":        "Blog post — back link + meta strip",
+  "category": "squilla",
   "description": "Top of a blog post: 'back to blog' link + date / tag / read time / byline strip. Use before the prose body.",
-  "category":    "squilla",
-  "field_schema": [
-    { "key": "date",   "label": "Publish date",   "type": "text" },
-    { "key": "tag",    "label": "Category tag",   "type": "text" },
-    { "key": "color",  "label": "Tag color token (teal | violet | magenta | coral | lime | amber)", "type": "text" },
-    { "key": "read",   "label": "Read time",      "type": "text" },
-    { "key": "author", "label": "Author byline",  "type": "text" }
+  "fields": [
+    {
+      "name": "date",
+      "title": "Publish date",
+      "type": "string"
+    },
+    {
+      "name": "tag",
+      "title": "Category tag",
+      "type": "string"
+    },
+    {
+      "name": "color",
+      "title": "Tag color token (teal | violet | magenta | coral | lime | amber)",
+      "type": "string"
+    },
+    {
+      "name": "read",
+      "title": "Read time",
+      "type": "string"
+    },
+    {
+      "name": "author",
+      "title": "Author byline",
+      "type": "string"
+    }
   ],
+  "name": "Blog post — back link + meta strip",
+  "slug": "blog-post-meta",
   "test_data": {
-    "date":   "2026-04-12",
-    "tag":    "engineering",
-    "color":  "coral",
-    "read":   "13 min read",
-    "author": "by Mara Quint"
+    "author": "by Mara Quint",
+    "color": "coral",
+    "date": "2026-04-12",
+    "read": "13 min read",
+    "tag": "engineering"
   }
 }

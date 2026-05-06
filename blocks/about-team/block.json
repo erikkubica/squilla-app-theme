@@ -1,38 +1,117 @@
 {
-  "slug": "about-team",
-  "name": "About — team",
-  "description": "Team grid. Each member has a name, alias, role, optional photo, and an is_ai flag. AI members render with an identical 'C' monogram (the joke is that they're all the same model wearing different hats).",
   "category": "squilla",
-  "field_schema": [
-    { "key": "eyebrow", "label": "Eyebrow", "type": "text" },
-    { "key": "title",   "label": "Title",   "type": "text" },
-    { "key": "sub",     "label": "Sub-copy (HTML allowed)", "type": "richtext" },
+  "description": "Team grid. Each member has a name, alias, role, optional photo, and an is_ai flag. AI members render with an identical 'C' monogram (the joke is that they're all the same model wearing different hats).",
+  "fields": [
     {
-      "key": "members",
-      "label": "Members",
-      "type": "repeater",
-      "sub_fields": [
-        { "key": "name",  "label": "Name",            "type": "text" },
-        { "key": "alias", "label": "Alias / handle",  "type": "text", "help": "e.g. Master, Claude" },
-        { "key": "role",  "label": "Role",            "type": "text" },
-        { "key": "photo", "label": "Photo (leave blank for AI personas)", "type": "image", "help": "Real headshot for human members. AI personas auto-render the C-monogram." },
-        { "key": "is_ai", "label": "AI persona?",     "type": "toggle", "default": false, "help": "When on, the avatar renders as a 'C' monogram and the card gets a dashed border + // LLM tag." }
-      ]
+      "name": "eyebrow",
+      "title": "Eyebrow",
+      "type": "string"
     },
-    { "key": "footnote", "label": "Footnote (HTML allowed)", "type": "richtext" }
+    {
+      "name": "title",
+      "title": "Title",
+      "type": "string"
+    },
+    {
+      "name": "sub",
+      "title": "Sub-copy (HTML allowed)",
+      "type": "richtext"
+    },
+    {
+      "fields": [
+        {
+          "name": "name",
+          "title": "Name",
+          "type": "string"
+        },
+        {
+          "description": "e.g. Master, Claude",
+          "name": "alias",
+          "title": "Alias / handle",
+          "type": "string"
+        },
+        {
+          "name": "role",
+          "title": "Role",
+          "type": "string"
+        },
+        {
+          "description": "Real headshot for human members. AI personas auto-render the C-monogram.",
+          "name": "photo",
+          "title": "Photo (leave blank for AI personas)",
+          "type": "image"
+        },
+        {
+          "description": "When on, the avatar renders as a 'C' monogram and the card gets a dashed border + // LLM tag.",
+          "initialValue": false,
+          "name": "is_ai",
+          "title": "AI persona?",
+          "type": "toggle"
+        }
+      ],
+      "name": "members",
+      "title": "Members",
+      "type": "array"
+    },
+    {
+      "name": "footnote",
+      "title": "Footnote (HTML allowed)",
+      "type": "richtext"
+    }
   ],
+  "name": "About — team",
+  "slug": "about-team",
   "test_data": {
     "eyebrow": "§ team",
-    "title": "Six humans. One of them real.",
-    "sub": "<p>Squilla is built by Erik and a tireless team of \"Claude\" personas — different names, different roles, same model. The joke writes itself; the work is real.</p>",
+    "footnote": "\u003cp\u003eYes, every \"Claude\" above is the same underlying model. We give them different names because it's funnier than \"Claude (1 of 5)\" in standups.\u003c/p\u003e",
     "members": [
-      { "name": "Erik Kubica",   "alias": "Master",  "role": "Founder & engineer", "photo": { "url": "/theme/assets/images/team-erik.jpg", "alt": "Erik Kubica" }, "is_ai": false },
-      { "name": "Claudia",       "alias": "Claude",  "role": "Human resources",    "photo": {}, "is_ai": true },
-      { "name": "Fred",          "alias": "Claude",  "role": "Software architect", "photo": {}, "is_ai": true },
-      { "name": "Tom",           "alias": "Claude",  "role": "Design",             "photo": {}, "is_ai": true },
-      { "name": "Léa",           "alias": "Claude",  "role": "QA & testing",       "photo": {}, "is_ai": true },
-      { "name": "Max",           "alias": "Claude",  "role": "DevOps & infra",     "photo": {}, "is_ai": true }
+      {
+        "alias": "Master",
+        "is_ai": false,
+        "name": "Erik Kubica",
+        "photo": {
+          "alt": "Erik Kubica",
+          "url": "/theme/assets/images/team-erik.jpg"
+        },
+        "role": "Founder \u0026 engineer"
+      },
+      {
+        "alias": "Claude",
+        "is_ai": true,
+        "name": "Claudia",
+        "photo": {},
+        "role": "Human resources"
+      },
+      {
+        "alias": "Claude",
+        "is_ai": true,
+        "name": "Fred",
+        "photo": {},
+        "role": "Software architect"
+      },
+      {
+        "alias": "Claude",
+        "is_ai": true,
+        "name": "Tom",
+        "photo": {},
+        "role": "Design"
+      },
+      {
+        "alias": "Claude",
+        "is_ai": true,
+        "name": "Léa",
+        "photo": {},
+        "role": "QA \u0026 testing"
+      },
+      {
+        "alias": "Claude",
+        "is_ai": true,
+        "name": "Max",
+        "photo": {},
+        "role": "DevOps \u0026 infra"
+      }
     ],
-    "footnote": "<p>Yes, every \"Claude\" above is the same underlying model. We give them different names because it's funnier than \"Claude (1 of 5)\" in standups.</p>"
+    "sub": "\u003cp\u003eSquilla is built by Erik and a tireless team of \"Claude\" personas — different names, different roles, same model. The joke writes itself; the work is real.\u003c/p\u003e",
+    "title": "Six humans. One of them real."
   }
 }

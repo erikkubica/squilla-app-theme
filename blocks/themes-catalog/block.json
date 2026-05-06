@@ -1,15 +1,15 @@
 {
-  "slug": "themes-catalog",
-  "name": "Themes catalog",
-  "description": "Six theme preview cards.",
   "category": "squilla",
-  "field_schema": [
+  "description": "Six theme preview cards.",
+  "fields": [
     {
-      "key": "_notes",
-      "label": "Notes",
-      "type": "textarea",
-      "help": "Phase 1: 6 themes baked in. Phase 2 will pull live from 'theme' nodes."
+      "description": "Phase 1: 6 themes baked in. Phase 2 will pull live from 'theme' nodes.",
+      "name": "_notes",
+      "title": "Notes",
+      "type": "textarea"
     }
   ],
+  "name": "Themes catalog",
+  "slug": "themes-catalog",
   "test_data": {}
 }

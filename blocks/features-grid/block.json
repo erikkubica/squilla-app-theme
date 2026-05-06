@@ -1,47 +1,48 @@
 {
-  "slug": "features-grid",
-  "name": "Features grid",
-  "description": "N category groups, each with M feature cells. Single nested repeater. Used on the Features page.",
   "category": "squilla",
-  "field_schema": [
+  "description": "N category groups, each with M feature cells. Single nested repeater. Used on the Features page.",
+  "fields": [
     {
-      "key": "groups",
-      "label": "Feature groups",
-      "type": "repeater",
-      "sub_fields": [
+      "fields": [
         {
-          "label": "Category",
-          "type": "text",
-          "key": "category"
+          "name": "category",
+          "title": "Category",
+          "type": "string"
         },
         {
-          "label": "Features",
-          "type": "repeater",
-          "sub_fields": [
+          "fields": [
             {
-              "label": "Name",
-              "type": "text",
-              "key": "name"
+              "name": "name",
+              "title": "Name",
+              "type": "string"
             },
             {
-              "label": "Description",
-              "type": "textarea",
-              "key": "desc"
+              "name": "desc",
+              "title": "Description",
+              "type": "textarea"
             },
             {
-              "label": "Stat tag",
-              "type": "text",
-              "key": "stat"
+              "name": "stat",
+              "title": "Stat tag",
+              "type": "string"
             }
           ],
-          "key": "items"
+          "name": "items",
+          "title": "Features",
+          "type": "array"
         }
-      ]
+      ],
+      "name": "groups",
+      "title": "Feature groups",
+      "type": "array"
     }
   ],
+  "name": "Features grid",
+  "slug": "features-grid",
   "test_data": {
     "groups": [
       {
+        "category": "Content",
         "items": [
           {
             "desc": "Custom post types via MCP or Tengo. JSONB storage, GIN-indexed.",
@@ -63,10 +64,10 @@
             "name": "Menus",
             "stat": "route-aware"
           }
-        ],
-        "category": "Content"
+        ]
       },
       {
+        "category": "Editor",
         "items": [
           {
             "desc": "Server-driven UI. Boot manifest, layout trees, SSE updates.",
@@ -88,10 +89,10 @@
             "name": "Block authoring",
             "stat": "JSON-defined"
           }
-        ],
-        "category": "Editor"
+        ]
       },
       {
+        "category": "AI",
         "items": [
           {
             "desc": "stdio + http. ~50 tools across 15 domains. core.guide meta-tool.",
@@ -113,10 +114,10 @@
             "name": "Capability scopes",
             "stat": "fine-grained"
           }
-        ],
-        "category": "AI"
+        ]
       },
       {
+        "category": "Performance",
         "items": [
           {
             "desc": "Hot-swapped maps. Reads never block. No lock contention.",
@@ -136,10 +137,9 @@
           {
             "desc": "Sub-50ms TTFB measured in CI. Regressions block merge.",
             "name": "TTFB budgeted",
-            "stat": "<50ms"
+            "stat": "\u003c50ms"
           }
-        ],
-        "category": "Performance"
+        ]
       }
     ]
   }

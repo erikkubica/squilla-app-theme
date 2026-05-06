@@ -1,72 +1,72 @@
 {
-  "slug": "footer-cta",
-  "name": "Footer CTA",
-  "description": "Closing section with a giant compound-eye motif, a multi-line console snippet, lead text, and primary/secondary CTAs.",
   "category": "squilla",
-  "field_schema": [
+  "description": "Closing section with a giant compound-eye motif, a multi-line console snippet, lead text, and primary/secondary CTAs.",
+  "fields": [
     {
-      "key": "eyebrow",
-      "label": "Eyebrow",
-      "type": "text"
+      "name": "eyebrow",
+      "title": "Eyebrow",
+      "type": "string"
     },
     {
-      "key": "heading",
-      "label": "Heading",
-      "type": "text"
+      "name": "heading",
+      "title": "Heading",
+      "type": "string"
     },
     {
-      "key": "console_lines",
-      "label": "Console snippet lines",
-      "type": "repeater",
-      "sub_fields": [
+      "fields": [
         {
-          "label": "Line (HTML allowed)",
-          "type": "text",
-          "help": "May include <span style=\"color: var(--ink-3)\">$</span>, <span style=\"color: var(--accent)\">cmd</span>, etc.",
-          "key": "html"
+          "description": "May include \u003cspan style=\"color: var(--ink-3)\"\u003e$\u003c/span\u003e, \u003cspan style=\"color: var(--accent)\"\u003ecmd\u003c/span\u003e, etc.",
+          "name": "html",
+          "title": "Line (HTML allowed)",
+          "type": "string"
         }
-      ]
+      ],
+      "name": "console_lines",
+      "title": "Console snippet lines",
+      "type": "array"
     },
     {
-      "key": "lead",
-      "label": "Lead paragraph",
-      "type": "text"
+      "name": "lead",
+      "title": "Lead paragraph",
+      "type": "string"
     },
     {
-      "key": "primary",
-      "label": "Primary CTA",
+      "name": "primary",
+      "title": "Primary CTA",
       "type": "link"
     },
     {
-      "key": "secondary",
-      "label": "Secondary CTA",
+      "name": "secondary",
+      "title": "Secondary CTA",
       "type": "link"
     }
   ],
+  "name": "Footer CTA",
+  "slug": "footer-cta",
   "test_data": {
-    "lead": "Five extensions active, one theme seeded. You're three minutes from publishing.",
-    "eyebrow": "§ try it",
-    "heading": "Three minutes from publishing.",
-    "primary": {
-      "url": "/docs/installation",
-      "text": "docker compose up",
-      "target": "_self"
-    },
-    "secondary": {
-      "url": "https://github.com/squilla-cms/squilla",
-      "text": "View on GitHub ↗",
-      "target": "_blank"
-    },
     "console_lines": [
       {
-        "html": "<span style=\"color: var(--ink-3)\">$</span> <span style=\"color: var(--accent)\">git clone</span> github.com/squilla/squilla"
+        "html": "\u003cspan style=\"color: var(--ink-3)\"\u003e$\u003c/span\u003e \u003cspan style=\"color: var(--accent)\"\u003egit clone\u003c/span\u003e github.com/squilla/squilla"
       },
       {
-        "html": "<span style=\"color: var(--ink-3)\">$</span> <span style=\"color: var(--accent)\">docker compose up</span> --build"
+        "html": "\u003cspan style=\"color: var(--ink-3)\"\u003e$\u003c/span\u003e \u003cspan style=\"color: var(--accent)\"\u003edocker compose up\u003c/span\u003e --build"
       },
       {
-        "html": "<span style=\"color: var(--ink-3)\">→ app at localhost:3000 · admin login printed to logs</span>"
+        "html": "\u003cspan style=\"color: var(--ink-3)\"\u003e→ app at localhost:3000 · admin login printed to logs\u003c/span\u003e"
       }
-    ]
+    ],
+    "eyebrow": "§ try it",
+    "heading": "Three minutes from publishing.",
+    "lead": "Five extensions active, one theme seeded. You're three minutes from publishing.",
+    "primary": {
+      "target": "_self",
+      "text": "docker compose up",
+      "url": "/docs/installation"
+    },
+    "secondary": {
+      "target": "_blank",
+      "text": "View on GitHub ↗",
+      "url": "https://github.com/squilla-cms/squilla"
+    }
   }
 }

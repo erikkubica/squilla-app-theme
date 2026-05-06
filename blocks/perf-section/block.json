@@ -1,85 +1,72 @@
 {
-  "slug": "perf-section",
-  "name": "Performance / TTFB section",
-  "description": "Two-column section: bullet list of perf wins on the left, a 'live' TTFB widget with sweep animation, mini bar chart, and p50/p95/p99 stats on the right. JS animates the TTFB number and randomises bars.",
   "category": "squilla",
-  "field_schema": [
+  "description": "Two-column section: bullet list of perf wins on the left, a 'live' TTFB widget with sweep animation, mini bar chart, and p50/p95/p99 stats on the right. JS animates the TTFB number and randomises bars.",
+  "fields": [
     {
-      "key": "eyebrow",
-      "label": "Eyebrow",
-      "type": "text"
+      "name": "eyebrow",
+      "title": "Eyebrow",
+      "type": "string"
     },
     {
-      "key": "heading",
-      "label": "Heading (HTML)",
+      "name": "heading",
+      "title": "Heading (HTML)",
       "type": "richtext"
     },
     {
-      "key": "bullets",
-      "label": "Bullet points",
-      "type": "repeater",
-      "sub_fields": [
+      "fields": [
         {
-          "label": "Text",
-          "type": "text",
-          "key": "text"
+          "name": "text",
+          "title": "Text",
+          "type": "string"
         }
-      ]
+      ],
+      "name": "bullets",
+      "title": "Bullet points",
+      "type": "array"
     },
     {
-      "key": "ttfb_label",
-      "label": "TTFB widget label",
-      "type": "text"
+      "name": "ttfb_label",
+      "title": "TTFB widget label",
+      "type": "string"
     },
     {
-      "key": "ttfb_initial",
-      "label": "TTFB starting value (ms)",
+      "name": "ttfb_initial",
+      "title": "TTFB starting value (ms)",
       "type": "number"
     },
     {
-      "key": "budget_text",
-      "label": "Budget marker label",
-      "type": "text"
+      "name": "budget_text",
+      "title": "Budget marker label",
+      "type": "string"
     },
     {
-      "key": "tag_text",
-      "label": "Status tag",
-      "type": "text",
-      "help": "Top-right pill — design uses 'under budget'."
+      "description": "Top-right pill — design uses 'under budget'.",
+      "name": "tag_text",
+      "title": "Status tag",
+      "type": "string"
     },
     {
-      "key": "stats",
-      "label": "Latency stat cells",
-      "type": "repeater",
-      "sub_fields": [
+      "fields": [
         {
-          "label": "Label",
-          "type": "text",
-          "key": "label"
+          "name": "label",
+          "title": "Label",
+          "type": "string"
         },
         {
-          "label": "Value",
-          "type": "text",
-          "key": "value"
+          "name": "value",
+          "title": "Value",
+          "type": "string"
         }
-      ]
+      ],
+      "name": "stats",
+      "title": "Latency stat cells",
+      "type": "array"
     }
   ],
+  "name": "Performance / TTFB section",
+  "slug": "perf-section",
   "test_data": {
-    "stats": [
-      {
-        "label": "p50",
-        "value": "21ms"
-      },
-      {
-        "label": "p95",
-        "value": "38ms"
-      },
-      {
-        "label": "p99",
-        "value": "46ms"
-      }
-    ],
+    "budget_text": "50ms budget",
     "bullets": [
       {
         "text": "Atomic configuration maps — hot-swapped without locks"
@@ -101,10 +88,23 @@
       }
     ],
     "eyebrow": "§ performance",
-    "heading": "Built for the metric<br/>that matters: TTFB.",
+    "heading": "Built for the metric\u003cbr/\u003ethat matters: TTFB.",
+    "stats": [
+      {
+        "label": "p50",
+        "value": "21ms"
+      },
+      {
+        "label": "p95",
+        "value": "38ms"
+      },
+      {
+        "label": "p99",
+        "value": "46ms"
+      }
+    ],
     "tag_text": "under budget",
-    "ttfb_label": "LIVE TTFB · /recipes/scallops",
-    "budget_text": "50ms budget",
-    "ttfb_initial": 23
+    "ttfb_initial": 23,
+    "ttfb_label": "LIVE TTFB · /recipes/scallops"
   }
 }

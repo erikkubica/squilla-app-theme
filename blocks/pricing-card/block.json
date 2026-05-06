@@ -1,71 +1,72 @@
 {
-  "slug": "pricing-card",
-  "name": "Pricing card",
-  "description": "Single zero-price pricing card with badge, feature checklist, two CTAs, and a small FAQ list.",
   "category": "squilla",
-  "field_schema": [
+  "description": "Single zero-price pricing card with badge, feature checklist, two CTAs, and a small FAQ list.",
+  "fields": [
     {
-      "key": "badge",
-      "label": "Top badge",
-      "type": "text"
+      "name": "badge",
+      "title": "Top badge",
+      "type": "string"
     },
     {
-      "key": "price",
-      "label": "Price",
-      "type": "text",
-      "help": "Big mono number — '$0', 'free', etc."
+      "description": "Big mono number — '$0', 'free', etc.",
+      "name": "price",
+      "title": "Price",
+      "type": "string"
     },
     {
-      "key": "subtitle",
-      "label": "Subtitle",
-      "type": "text"
+      "name": "subtitle",
+      "title": "Subtitle",
+      "type": "string"
     },
     {
-      "key": "features",
-      "label": "Feature bullets",
-      "type": "repeater",
-      "sub_fields": [
+      "fields": [
         {
-          "label": "Text",
-          "type": "text",
-          "key": "text"
+          "name": "text",
+          "title": "Text",
+          "type": "string"
         }
-      ]
+      ],
+      "name": "features",
+      "title": "Feature bullets",
+      "type": "array"
     },
     {
-      "key": "primary",
-      "label": "Primary CTA",
+      "name": "primary",
+      "title": "Primary CTA",
       "type": "link"
     },
     {
-      "key": "secondary",
-      "label": "Secondary CTA",
+      "name": "secondary",
+      "title": "Secondary CTA",
       "type": "link"
     },
     {
-      "key": "faq_label",
-      "label": "FAQ section label",
-      "type": "text"
+      "name": "faq_label",
+      "title": "FAQ section label",
+      "type": "string"
     },
     {
-      "key": "faq",
-      "label": "FAQ entries",
-      "type": "repeater",
-      "sub_fields": [
+      "fields": [
         {
-          "label": "Question",
-          "type": "text",
-          "key": "q"
+          "name": "q",
+          "title": "Question",
+          "type": "string"
         },
         {
-          "label": "Answer (continues inline)",
-          "type": "textarea",
-          "key": "a"
+          "name": "a",
+          "title": "Answer (continues inline)",
+          "type": "textarea"
         }
-      ]
+      ],
+      "name": "faq",
+      "title": "FAQ entries",
+      "type": "array"
     }
   ],
+  "name": "Pricing card",
+  "slug": "pricing-card",
   "test_data": {
+    "badge": "FREE · GPL-3.0 · FOREVER",
     "faq": [
       {
         "a": "No, and there are no plans for one. Run it yourself or run nothing.",
@@ -80,13 +81,7 @@
         "q": "Will pricing change later?"
       }
     ],
-    "badge": "FREE · GPL-3.0 · FOREVER",
-    "price": "$0",
-    "primary": {
-      "url": "/docs/installation",
-      "text": "docker compose up",
-      "target": "_self"
-    },
+    "faq_label": "// FAQ",
     "features": [
       {
         "text": "Full kernel + all built-in extensions"
@@ -107,12 +102,17 @@
         "text": "Community support (Discord, GitHub)"
       }
     ],
-    "subtitle": "no usage limits · no seat caps · no feature gates",
-    "faq_label": "// FAQ",
+    "price": "$0",
+    "primary": {
+      "target": "_self",
+      "text": "docker compose up",
+      "url": "/docs/installation"
+    },
     "secondary": {
-      "url": "https://github.com/squilla-cms/squilla",
+      "target": "_blank",
       "text": "View on GitHub ↗",
-      "target": "_blank"
-    }
+      "url": "https://github.com/squilla-cms/squilla"
+    },
+    "subtitle": "no usage limits · no seat caps · no feature gates"
   }
 }

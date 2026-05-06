@@ -1,35 +1,35 @@
 {
-  "slug": "about-name",
-  "name": "About — open source + name explanation",
-  "description": "Two cards finishing the About page: a 'GPL/no telemetry' callout and the Squilla / mantis-shrimp name explanation.",
   "category": "squilla",
-  "field_schema": [
+  "description": "Two cards finishing the About page: a 'GPL/no telemetry' callout and the Squilla / mantis-shrimp name explanation.",
+  "fields": [
     {
-      "key": "os_eyebrow",
-      "label": "Open-source eyebrow",
-      "type": "text"
+      "name": "os_eyebrow",
+      "title": "Open-source eyebrow",
+      "type": "string"
     },
     {
-      "key": "os_body",
-      "label": "Open-source body",
+      "name": "os_body",
+      "title": "Open-source body",
       "type": "textarea"
     },
     {
-      "key": "name_eyebrow",
-      "label": "Name eyebrow",
-      "type": "text"
+      "name": "name_eyebrow",
+      "title": "Name eyebrow",
+      "type": "string"
     },
     {
-      "key": "name_body",
-      "label": "Name explanation",
-      "type": "richtext",
-      "help": "May include <em> for italicising 'Squilla'."
+      "description": "May include \u003cem\u003e for italicising 'Squilla'.",
+      "name": "name_body",
+      "title": "Name explanation",
+      "type": "richtext"
     }
   ],
+  "name": "About — open source + name explanation",
+  "slug": "about-name",
   "test_data": {
+    "name_body": "\u003cem\u003eSquilla\u003c/em\u003e is the Latin genus of mantis shrimps — the fastest punchers in the animal kingdom (sub-millisecond strike) and possessing the most complex visual system on Earth (16 photoreceptor types vs. our 3). Extreme speed; multi-spectrum perception (for AI agents); a segmented body with specialized appendages (kernel + extensions). The metaphor wrote itself.",
+    "name_eyebrow": "§ name",
     "os_body": "GPL-3.0. No telemetry. No CLA. No \"open core\" bait-and-switch. What's in the repo is the whole thing.",
-    "name_body": "<em>Squilla</em> is the Latin genus of mantis shrimps — the fastest punchers in the animal kingdom (sub-millisecond strike) and possessing the most complex visual system on Earth (16 photoreceptor types vs. our 3). Extreme speed; multi-spectrum perception (for AI agents); a segmented body with specialized appendages (kernel + extensions). The metaphor wrote itself.",
-    "os_eyebrow": "§ open source",
-    "name_eyebrow": "§ name"
+    "os_eyebrow": "§ open source"
   }
 }

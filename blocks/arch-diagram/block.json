@@ -1,55 +1,50 @@
 {
-  "slug": "arch-diagram",
-  "name": "Architecture diagram",
-  "description": "Two-column section: copy + 'hard rule' callout on the left, six-layer architecture diagram on the right (with hover effects). Layers and legend cells are repeaters so editors can rename / re-order / add new ones.",
   "category": "squilla",
-  "field_schema": [
+  "description": "Two-column section: copy + 'hard rule' callout on the left, six-layer architecture diagram on the right (with hover effects). Layers and legend cells are repeaters so editors can rename / re-order / add new ones.",
+  "fields": [
     {
-      "key": "eyebrow",
-      "label": "Eyebrow",
-      "type": "text"
+      "name": "eyebrow",
+      "title": "Eyebrow",
+      "type": "string"
     },
     {
-      "key": "heading",
-      "label": "Heading (HTML)",
-      "type": "richtext",
-      "help": "Multi-line section heading. <br/> for line breaks."
+      "description": "Multi-line section heading. \u003cbr/\u003e for line breaks.",
+      "name": "heading",
+      "title": "Heading (HTML)",
+      "type": "richtext"
     },
     {
-      "key": "lead",
-      "label": "Lead paragraph",
+      "name": "lead",
+      "title": "Lead paragraph",
       "type": "textarea"
     },
     {
-      "key": "rule_label",
-      "label": "Hard-rule label",
-      "type": "text",
-      "help": "Tiny accent label inside the callout (the design uses 'HARD RULE')."
+      "description": "Tiny accent label inside the callout (the design uses 'HARD RULE').",
+      "name": "rule_label",
+      "title": "Hard-rule label",
+      "type": "string"
     },
     {
-      "key": "rule",
-      "label": "Hard-rule body",
+      "name": "rule",
+      "title": "Hard-rule body",
       "type": "textarea"
     },
     {
-      "key": "layers",
-      "label": "Architecture layers",
-      "type": "repeater",
-      "help": "Six recommended; render top-to-bottom in declared order. Color: ink-3 | coral | teal | violet | magenta | lime.",
-      "sub_fields": [
+      "description": "Six recommended; render top-to-bottom in declared order. Color: ink-3 | coral | teal | violet | magenta | lime.",
+      "fields": [
         {
-          "label": "Label",
-          "type": "text",
-          "key": "label"
+          "name": "label",
+          "title": "Label",
+          "type": "string"
         },
         {
-          "label": "Description",
-          "type": "text",
-          "key": "desc"
+          "name": "desc",
+          "title": "Description",
+          "type": "string"
         },
         {
-          "label": "Color token",
-          "type": "select",
+          "initialValue": "teal",
+          "name": "color",
           "options": [
             "ink-3",
             "coral",
@@ -59,64 +54,70 @@
             "lime",
             "amber"
           ],
-          "default": "teal",
-          "key": "color"
+          "title": "Color token",
+          "type": "select"
         }
-      ]
+      ],
+      "name": "layers",
+      "title": "Architecture layers",
+      "type": "array"
     },
     {
-      "key": "legend",
-      "label": "Legend cells (footer)",
-      "type": "repeater",
-      "sub_fields": [
+      "fields": [
         {
-          "label": "Top label",
-          "type": "text",
-          "key": "key"
+          "name": "key",
+          "title": "Top label",
+          "type": "string"
         },
         {
-          "label": "Bottom label",
-          "type": "text",
-          "key": "val"
+          "name": "val",
+          "title": "Bottom label",
+          "type": "string"
         }
-      ]
+      ],
+      "name": "legend",
+      "title": "Legend cells (footer)",
+      "type": "array"
     }
   ],
+  "name": "Architecture diagram",
+  "slug": "arch-diagram",
   "test_data": {
-    "lead": "Squilla's architecture is borrowed from operating systems: the kernel does the minimum required to be a CMS, and everything else is a sovereign extension. Disable an extension and there is no dead code in core. Add a new extension and it brings its own database tables, HTTP routes, admin UI pages, scripts, and migrations.",
-    "rule": "If disabling an extension would leave dead code in core, that code belongs in the extension, not the core.",
+    "eyebrow": "§ architecture",
+    "heading": "A kernel\u003cbr/\u003efor kernels.",
     "layers": [
       {
-        "desc": "Fiber HTTP · pre-resolved layouts · cached",
         "color": "ink-3",
+        "desc": "Fiber HTTP · pre-resolved layouts · cached",
         "label": "PUBLIC WEB"
       },
       {
-        "desc": "Model Context Protocol · ~50 tools · stdio + http",
         "color": "coral",
+        "desc": "Model Context Protocol · ~50 tools · stdio + http",
         "label": "MCP SERVER"
       },
       {
-        "desc": "nodes · rendering · auth · event bus · capability gates",
         "color": "teal",
+        "desc": "nodes · rendering · auth · event bus · capability gates",
         "label": "KERNEL (CoreAPI)"
       },
       {
-        "desc": "HashiCorp go-plugin · bidirectional · GRPCBroker",
         "color": "violet",
+        "desc": "HashiCorp go-plugin · bidirectional · GRPCBroker",
         "label": "gRPC PLUGIN BUS"
       },
       {
-        "desc": "media · forms · email · sitemap · blocks · providers",
         "color": "magenta",
+        "desc": "media · forms · email · sitemap · blocks · providers",
         "label": "EXTENSIONS"
       },
       {
-        "desc": "JSONB · GIN indexes · per-extension migrations · pooling",
         "color": "lime",
+        "desc": "JSONB · GIN indexes · per-extension migrations · pooling",
         "label": "POSTGRESQL 16"
       }
     ],
+    "lead": "Squilla's architecture is borrowed from operating systems: the kernel does the minimum required to be a CMS, and everything else is a sovereign extension. Disable an extension and there is no dead code in core. Add a new extension and it brings its own database tables, HTTP routes, admin UI pages, scripts, and migrations.",
     "legend": [
       {
         "key": "kernel",
@@ -131,8 +132,7 @@
         "val": "themes/*/theme.tengo"
       }
     ],
-    "eyebrow": "§ architecture",
-    "heading": "A kernel<br/>for kernels.",
+    "rule": "If disabling an extension would leave dead code in core, that code belongs in the extension, not the core.",
     "rule_label": "HARD RULE"
   }
 }

@@ -1,52 +1,51 @@
 {
-  "slug": "legal-tabs",
-  "name": "Legal — tabbed text",
-  "description": "Tabbed legal content. Each tab has a slug + label + a list of (heading, body) sections. JS toggles visibility based on URL hash (#license, #privacy, …) — refresh keeps the active tab.",
   "category": "squilla",
-  "field_schema": [
+  "description": "Tabbed legal content. Each tab has a slug + label + a list of (heading, body) sections. JS toggles visibility based on URL hash (#license, #privacy, …) — refresh keeps the active tab.",
+  "fields": [
     {
-      "key": "tabs",
-      "label": "Tabs",
-      "type": "repeater",
-      "sub_fields": [
+      "fields": [
         {
-          "label": "Tab slug (URL hash)",
-          "type": "text",
-          "key": "slug"
+          "name": "slug",
+          "title": "Tab slug (URL hash)",
+          "type": "string"
         },
         {
-          "label": "Tab label",
-          "type": "text",
-          "key": "label"
+          "name": "label",
+          "title": "Tab label",
+          "type": "string"
         },
         {
-          "label": "Sections",
-          "type": "repeater",
-          "sub_fields": [
+          "fields": [
             {
-              "label": "Heading",
-              "type": "text",
-              "key": "heading"
+              "name": "heading",
+              "title": "Heading",
+              "type": "string"
             },
             {
-              "label": "Body (HTML allowed)",
-              "type": "richtext",
-              "key": "body"
+              "name": "body",
+              "title": "Body (HTML allowed)",
+              "type": "richtext"
             }
           ],
-          "key": "sections"
+          "name": "sections",
+          "title": "Sections",
+          "type": "array"
         }
-      ]
+      ],
+      "name": "tabs",
+      "title": "Tabs",
+      "type": "array"
     }
   ],
+  "name": "Legal — tabbed text",
+  "slug": "legal-tabs",
   "test_data": {
     "tabs": [
       {
-        "slug": "license",
         "label": "License",
         "sections": [
           {
-            "body": "Squilla is licensed under the <span style=\"color: var(--accent)\">GNU General Public License v3.0</span>. You can use, modify, and distribute it. If you distribute a modified version, you must release the source under the same license. The full text is in the LICENSE file at the root of the repository. The summary above is not a substitute.",
+            "body": "Squilla is licensed under the \u003cspan style=\"color: var(--accent)\"\u003eGNU General Public License v3.0\u003c/span\u003e. You can use, modify, and distribute it. If you distribute a modified version, you must release the source under the same license. The full text is in the LICENSE file at the root of the repository. The summary above is not a substitute.",
             "heading": "License — GPL-3.0"
           },
           {
@@ -57,10 +56,10 @@
             "body": "Contributors do not sign a Contributor License Agreement. You retain copyright in your contributions; you license them under GPL-3.0 by submitting a PR.",
             "heading": "No CLA"
           }
-        ]
+        ],
+        "slug": "license"
       },
       {
-        "slug": "privacy",
         "label": "Privacy",
         "sections": [
           {
@@ -75,10 +74,10 @@
             "body": "Fonts are loaded from Google Fonts. If that bothers you, build the site locally — the source is in the repo.",
             "heading": "Third parties"
           }
-        ]
+        ],
+        "slug": "privacy"
       },
       {
-        "slug": "terms",
         "label": "Terms",
         "sections": [
           {
@@ -93,14 +92,14 @@
             "body": "\"Squilla\" and the compound-eye mark are unregistered trademarks of the Squilla project. Use them to refer to the project. Don't use them to brand a fork.",
             "heading": "Trademarks"
           }
-        ]
+        ],
+        "slug": "terms"
       },
       {
-        "slug": "security",
         "label": "Security",
         "sections": [
           {
-            "body": "Email <span style=\"color: var(--accent)\">security@squilla.dev</span> with reproduction steps. PGP key is on the keyserver. We respond within 72 hours.",
+            "body": "Email \u003cspan style=\"color: var(--accent)\"\u003esecurity@squilla.dev\u003c/span\u003e with reproduction steps. PGP key is on the keyserver. We respond within 72 hours.",
             "heading": "Reporting a vulnerability"
           },
           {
@@ -111,10 +110,10 @@
             "body": "None. We're a small project on a zero-revenue license. We will publicly thank you and add you to the acknowledgements page.",
             "heading": "Bug bounty"
           }
-        ]
+        ],
+        "slug": "security"
       },
       {
-        "slug": "brand",
         "label": "Brand",
         "sections": [
           {
@@ -133,7 +132,8 @@
             "body": "Don't combine the mark with another logo. Don't suggest we endorse your product. Don't ship a fork called \"Squilla X\".",
             "heading": "Don't"
           }
-        ]
+        ],
+        "slug": "brand"
       }
     ]
   }

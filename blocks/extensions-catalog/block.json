@@ -1,15 +1,15 @@
 {
-  "slug": "extensions-catalog",
-  "name": "Extensions catalog",
-  "description": "Full extensions catalog with filter chips. URL state persisted via ?source=core|community|partner|all.",
   "category": "squilla",
-  "field_schema": [
+  "description": "Full extensions catalog with filter chips. URL state persisted via ?source=core|community|partner|all.",
+  "fields": [
     {
-      "key": "_notes",
-      "label": "Notes",
-      "type": "textarea",
-      "help": "Phase 1: 12 extensions baked in. Phase 2 will pull live from extension nodes (custom 'extension' node type already exists)."
+      "description": "Phase 1: 12 extensions baked in. Phase 2 will pull live from extension nodes (custom 'extension' node type already exists).",
+      "name": "_notes",
+      "title": "Notes",
+      "type": "textarea"
     }
   ],
+  "name": "Extensions catalog",
+  "slug": "extensions-catalog",
   "test_data": {}
 }

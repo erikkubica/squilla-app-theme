@@ -1,36 +1,36 @@
 {
-  "slug": "doc-callout",
-  "name": "Doc Callout",
-  "description": "A coloured heads-up / note / success box with a tiny accent label and a body line. The design uses these for 'HEADS UP' warnings (coral border) and similar emphasis.",
   "category": "squilla",
-  "field_schema": [
+  "description": "A coloured heads-up / note / success box with a tiny accent label and a body line. The design uses these for 'HEADS UP' warnings (coral border) and similar emphasis.",
+  "fields": [
     {
-      "key": "label",
-      "label": "Tiny accent label",
-      "type": "text",
-      "help": "All-caps short label, e.g. 'HEADS UP', 'NOTE', 'TIP'."
+      "description": "All-caps short label, e.g. 'HEADS UP', 'NOTE', 'TIP'.",
+      "name": "label",
+      "title": "Tiny accent label",
+      "type": "string"
     },
     {
-      "key": "variant",
-      "label": "Variant",
-      "type": "select",
+      "description": "heads-up = coral, note = teal, tip = lime, danger = magenta.",
+      "initialValue": "heads-up",
+      "name": "variant",
       "options": [
         "heads-up",
         "note",
         "tip",
         "danger"
       ],
-      "default": "heads-up",
-      "help": "heads-up = coral, note = teal, tip = lime, danger = magenta."
+      "title": "Variant",
+      "type": "select"
     },
     {
-      "key": "body",
-      "label": "Body (HTML allowed)",
+      "name": "body",
+      "title": "Body (HTML allowed)",
       "type": "richtext"
     }
   ],
+  "name": "Doc Callout",
+  "slug": "doc-callout",
   "test_data": {
-    "body": "In <code>block.json</code> field_schema entries use <code>\"key\":</code>. In Tengo nodetypes.register field_schema entries use <code>\"name\":</code>. Don't mix them — the admin reads sub-field VALUES against the schema's key/name field, and a mismatch produces empty inputs even when fields_data is correct.",
+    "body": "Field schemas use a single homogeneous shape across \u003ccode\u003eblock.json\u003c/code\u003e, \u003ccode\u003enodetypes.register\u003c/code\u003e, and \u003ccode\u003etaxonomies.register\u003c/code\u003e: \u003ccode\u003e{name, title, type, fields?, description?, initialValue?}\u003c/code\u003e. Nest as deep as you want — the shape never changes. Legacy aliases (\u003ccode\u003ekey\u003c/code\u003e, \u003ccode\u003elabel\u003c/code\u003e, \u003ccode\u003ehelp\u003c/code\u003e, \u003ccode\u003edefault\u003c/code\u003e, \u003ccode\u003esub_fields\u003c/code\u003e, \u003ccode\u003efield_schema\u003c/code\u003e) still load but emit the canonical names in any new schema.",
     "label": "HEADS UP",
     "variant": "heads-up"
   }

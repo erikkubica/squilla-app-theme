@@ -1,53 +1,81 @@
 {
-  "slug": "arch-lifecycle",
-  "name": "Request lifecycle table",
-  "description": "Time-stamped request-lifecycle table from the architecture page. Each row is { time, label, detail }.",
   "category": "squilla",
-  "field_schema": [
+  "description": "Time-stamped request-lifecycle table from the architecture page. Each row is { time, label, detail }.",
+  "fields": [
     {
-      "key": "eyebrow",
-      "label": "Eyebrow",
-      "type": "text"
+      "name": "eyebrow",
+      "title": "Eyebrow",
+      "type": "string"
     },
     {
-      "key": "heading",
-      "label": "Heading",
-      "type": "text"
+      "name": "heading",
+      "title": "Heading",
+      "type": "string"
     },
     {
-      "key": "rows",
-      "label": "Lifecycle rows",
-      "type": "repeater",
-      "sub_fields": [
+      "fields": [
         {
-          "label": "Time stamp",
-          "type": "text",
-          "key": "time"
+          "name": "time",
+          "title": "Time stamp",
+          "type": "string"
         },
         {
-          "label": "Label",
-          "type": "text",
-          "key": "label"
+          "name": "label",
+          "title": "Label",
+          "type": "string"
         },
         {
-          "label": "Detail (HTML allowed)",
-          "type": "text",
-          "key": "detail"
+          "name": "detail",
+          "title": "Detail (HTML allowed)",
+          "type": "string"
         }
-      ]
+      ],
+      "name": "rows",
+      "title": "Lifecycle rows",
+      "type": "array"
     }
   ],
+  "name": "Request lifecycle table",
+  "slug": "arch-lifecycle",
   "test_data": {
-    "rows": [
-      { "time": "01", "label": "Fiber receives request", "detail": "router resolves to node handler" },
-      { "time": "02", "label": "Layout tree lookup",     "detail": "pre-resolved at activation; no DB query" },
-      { "time": "03", "label": "Node fetch",             "detail": "JSONB query · GIN index hit · single round-trip" },
-      { "time": "04", "label": "Filter chain",           "detail": "extensions hook into filter.apply" },
-      { "time": "05", "label": "Template render",        "detail": "html/template with custom funcs" },
-      { "time": "06", "label": "Response flush",         "detail": "compressed at the response writer (gzip / brotli)" },
-      { "time": "07", "label": "Done",                   "detail": "event.emit(\"page.served\") · async" }
-    ],
     "eyebrow": "§ request lifecycle",
-    "heading": "From URL to bytes, in seven steps."
+    "heading": "From URL to bytes, in seven steps.",
+    "rows": [
+      {
+        "detail": "router resolves to node handler",
+        "label": "Fiber receives request",
+        "time": "01"
+      },
+      {
+        "detail": "pre-resolved at activation; no DB query",
+        "label": "Layout tree lookup",
+        "time": "02"
+      },
+      {
+        "detail": "JSONB query · GIN index hit · single round-trip",
+        "label": "Node fetch",
+        "time": "03"
+      },
+      {
+        "detail": "extensions hook into filter.apply",
+        "label": "Filter chain",
+        "time": "04"
+      },
+      {
+        "detail": "html/template with custom funcs",
+        "label": "Template render",
+        "time": "05"
+      },
+      {
+        "detail": "compressed at the response writer (gzip / brotli)",
+        "label": "Response flush",
+        "time": "06"
+      },
+      {
+        "detail": "event.emit(\"page.served\") · async",
+        "label": "Done",
+        "time": "07"
+      }
+    ]
   }
 }

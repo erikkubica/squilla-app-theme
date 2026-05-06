@@ -1,64 +1,64 @@
 {
-  "slug": "sq-hero",
-  "name": "Squilla Hero",
-  "description": "Top-of-page hero. Last word of the headline gets an iridescent gradient (teal → violet → magenta → coral). Mantis-shrimp compound-eye motif on the right is rendered by JS based on the page-level data-motif attribute. Three CTAs: primary (filled), secondary (outline), tertiary (ghost).",
   "category": "squilla",
-  "field_schema": [
+  "description": "Top-of-page hero. Last word of the headline gets an iridescent gradient (teal → violet → magenta → coral). Mantis-shrimp compound-eye motif on the right is rendered by JS based on the page-level data-motif attribute. Three CTAs: primary (filled), secondary (outline), tertiary (ghost).",
+  "fields": [
     {
-      "key": "eyebrow",
-      "label": "Eyebrow",
-      "type": "text",
-      "help": "Small all-caps label above the headline. The design uses a colon-space-separated triple, e.g. 'AI-native · kernel-class · mantis-shrimp-fast'."
+      "description": "Small all-caps label above the headline. The design uses a colon-space-separated triple, e.g. 'AI-native · kernel-class · mantis-shrimp-fast'.",
+      "name": "eyebrow",
+      "title": "Eyebrow",
+      "type": "string"
     },
     {
-      "key": "headline",
-      "label": "Headline",
-      "type": "text",
-      "help": "Big H1. The LAST WORD gets the gradient — write the headline so the most punchy word ends the sentence. The trailing punctuation (e.g. '.') stays glued to the gradient word."
+      "description": "Big H1. The LAST WORD gets the gradient — write the headline so the most punchy word ends the sentence. The trailing punctuation (e.g. '.') stays glued to the gradient word.",
+      "name": "headline",
+      "title": "Headline",
+      "type": "string"
     },
     {
-      "key": "lead",
-      "label": "Lead paragraph",
-      "type": "richtext",
-      "help": "1–2 sentences under the headline. Wrap accent words in <span style=\"color: var(--accent)\"> for the inline highlight."
+      "description": "1–2 sentences under the headline. Wrap accent words in \u003cspan style=\"color: var(--accent)\"\u003e for the inline highlight.",
+      "name": "lead",
+      "title": "Lead paragraph",
+      "type": "richtext"
     },
     {
-      "key": "primary",
-      "label": "Primary CTA",
-      "type": "link",
-      "help": "Filled button. The view prepends '$ ' and appends ' →' to the text."
+      "description": "Filled button. The view prepends '$ ' and appends ' →' to the text.",
+      "name": "primary",
+      "title": "Primary CTA",
+      "type": "link"
     },
     {
-      "key": "secondary",
-      "label": "Secondary CTA",
-      "type": "link",
-      "help": "Outline button. The view appends ' ↗' to the text."
+      "description": "Outline button. The view appends ' ↗' to the text.",
+      "name": "secondary",
+      "title": "Secondary CTA",
+      "type": "link"
     },
     {
-      "key": "tertiary",
-      "label": "Tertiary CTA",
-      "type": "link",
-      "help": "Ghost (borderless) link. Use copy like 'read the brief →'."
+      "description": "Ghost (borderless) link. Use copy like 'read the brief →'.",
+      "name": "tertiary",
+      "title": "Tertiary CTA",
+      "type": "link"
     }
   ],
+  "name": "Squilla Hero",
+  "slug": "sq-hero",
   "test_data": {
-    "lead": "Squilla is an open-source, Go-based content management system built around one idea: an AI agent should be able to build, populate, and operate an entire website with zero human intervention. Every operation is exposed as an <span style=\"color: var(--accent)\">MCP tool</span>. Every feature lives in a sovereign gRPC extension. The kernel stays small, the system stays fast.",
     "eyebrow": "AI-native · kernel-class · mantis-shrimp-fast",
-    "primary": {
-      "url": "/docs/installation",
-      "text": "docker compose up",
-      "target": "_self"
-    },
     "headline": "The CMS where AI does the work.",
-    "tertiary": {
-      "url": "/about",
-      "text": "read the brief →",
-      "target": "_self"
+    "lead": "Squilla is an open-source, Go-based content management system built around one idea: an AI agent should be able to build, populate, and operate an entire website with zero human intervention. Every operation is exposed as an \u003cspan style=\"color: var(--accent)\"\u003eMCP tool\u003c/span\u003e. Every feature lives in a sovereign gRPC extension. The kernel stays small, the system stays fast.",
+    "primary": {
+      "target": "_self",
+      "text": "docker compose up",
+      "url": "/docs/installation"
     },
     "secondary": {
-      "url": "https://github.com/squilla-cms/squilla",
+      "target": "_blank",
       "text": "View on GitHub",
-      "target": "_blank"
+      "url": "https://github.com/squilla-cms/squilla"
+    },
+    "tertiary": {
+      "target": "_self",
+      "text": "read the brief →",
+      "url": "/about"
     }
   }
 }

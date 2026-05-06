@@ -1,74 +1,135 @@
 {
-  "slug": "gallery-tabs",
-  "name": "Gallery — tabbed",
-  "description": "Tabbed image galleries. Each tab has a slug + label + image list. JS toggles visibility based on the URL hash (e.g. #life, #builds).",
   "category": "squilla",
-  "field_schema": [
-    { "key": "eyebrow", "label": "Eyebrow", "type": "text" },
-    { "key": "title",   "label": "Title",   "type": "text" },
+  "description": "Tabbed image galleries. Each tab has a slug + label + image list. JS toggles visibility based on the URL hash (e.g. #life, #builds).",
+  "fields": [
     {
-      "key": "tabs",
-      "label": "Tabs",
-      "type": "repeater",
-      "sub_fields": [
-        { "key": "slug",  "label": "Tab slug (URL hash)", "type": "text" },
-        { "key": "label", "label": "Tab label",          "type": "text" },
-        { "key": "caption", "label": "Caption (optional, HTML allowed)", "type": "richtext" },
+      "name": "eyebrow",
+      "title": "Eyebrow",
+      "type": "string"
+    },
+    {
+      "name": "title",
+      "title": "Title",
+      "type": "string"
+    },
+    {
+      "fields": [
         {
-          "key": "images",
-          "label": "Images",
-          "type": "repeater",
-          "sub_fields": [
-            { "key": "image", "label": "Image", "type": "image" },
-            { "key": "alt",   "label": "Alt text", "type": "text" }
-          ]
+          "name": "slug",
+          "title": "Tab slug (URL hash)",
+          "type": "string"
+        },
+        {
+          "name": "label",
+          "title": "Tab label",
+          "type": "string"
+        },
+        {
+          "name": "caption",
+          "title": "Caption (optional, HTML allowed)",
+          "type": "richtext"
+        },
+        {
+          "fields": [
+            {
+              "name": "image",
+              "title": "Image",
+              "type": "image"
+            },
+            {
+              "name": "alt",
+              "title": "Alt text",
+              "type": "string"
+            }
+          ],
+          "name": "images",
+          "title": "Images",
+          "type": "array"
         }
-      ]
+      ],
+      "name": "tabs",
+      "title": "Tabs",
+      "type": "array"
     }
   ],
+  "name": "Gallery — tabbed",
+  "slug": "gallery-tabs",
   "test_data": {
     "eyebrow": "§ admin",
-    "title": "The admin, end-to-end.",
     "tabs": [
       {
-        "slug": "content",
+        "caption": "\u003cp\u003eDashboard, content nodes, content types, taxonomies, terms, menus, and languages — every authoring surface in one shell.\u003c/p\u003e",
+        "images": [
+          {
+            "alt": "dashboard",
+            "image": {}
+          },
+          {
+            "alt": "node listing",
+            "image": {}
+          },
+          {
+            "alt": "node edit",
+            "image": {}
+          }
+        ],
         "label": "Content",
-        "caption": "<p>Dashboard, content nodes, content types, taxonomies, terms, menus, and languages — every authoring surface in one shell.</p>",
-        "images": [
-          { "image": {}, "alt": "dashboard" },
-          { "image": {}, "alt": "node listing" },
-          { "image": {}, "alt": "node edit" }
-        ]
+        "slug": "content"
       },
       {
-        "slug": "media",
+        "caption": "\u003cp\u003eLibrary grid, picker popup, and image optimisation.\u003c/p\u003e",
+        "images": [
+          {
+            "alt": "media grid",
+            "image": {}
+          },
+          {
+            "alt": "media popup",
+            "image": {}
+          },
+          {
+            "alt": "image optimiser",
+            "image": {}
+          }
+        ],
         "label": "Media",
-        "caption": "<p>Library grid, picker popup, and image optimisation.</p>",
-        "images": [
-          { "image": {}, "alt": "media grid" },
-          { "image": {}, "alt": "media popup" },
-          { "image": {}, "alt": "image optimiser" }
-        ]
+        "slug": "media"
       },
       {
-        "slug": "theme",
+        "caption": "\u003cp\u003eThemes, layouts, templates, and block types.\u003c/p\u003e",
+        "images": [
+          {
+            "alt": "theme listing",
+            "image": {}
+          },
+          {
+            "alt": "layout edit",
+            "image": {}
+          },
+          {
+            "alt": "template edit",
+            "image": {}
+          }
+        ],
         "label": "Theme",
-        "caption": "<p>Themes, layouts, templates, and block types.</p>",
-        "images": [
-          { "image": {}, "alt": "theme listing" },
-          { "image": {}, "alt": "layout edit" },
-          { "image": {}, "alt": "template edit" }
-        ]
+        "slug": "theme"
       },
       {
-        "slug": "system",
-        "label": "System",
-        "caption": "<p>Extensions and email — the operational surface.</p>",
+        "caption": "\u003cp\u003eExtensions and email — the operational surface.\u003c/p\u003e",
         "images": [
-          { "image": {}, "alt": "extensions" },
-          { "image": {}, "alt": "email templates" }
-        ]
+          {
+            "alt": "extensions",
+            "image": {}
+          },
+          {
+            "alt": "email templates",
+            "image": {}
+          }
+        ],
+        "label": "System",
+        "slug": "system"
       }
-    ]
+    ],
+    "title": "The admin, end-to-end."
   }
 }

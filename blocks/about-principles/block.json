@@ -1,40 +1,41 @@
 {
-  "slug": "about-principles",
-  "name": "About — principles",
-  "description": "Numbered list of design principles. Each item: heading + body. Numbering is auto (01, 02, 03 …).",
   "category": "squilla",
-  "field_schema": [
+  "description": "Numbered list of design principles. Each item: heading + body. Numbering is auto (01, 02, 03 …).",
+  "fields": [
     {
-      "key": "eyebrow",
-      "label": "Eyebrow",
-      "type": "text"
+      "name": "eyebrow",
+      "title": "Eyebrow",
+      "type": "string"
     },
     {
-      "key": "narrow",
-      "label": "Narrow container",
-      "type": "toggle",
-      "default": true,
-      "help": "On = 64ch reading column. Off = full-width grid (use on landing-style sections)."
+      "description": "On = 64ch reading column. Off = full-width grid (use on landing-style sections).",
+      "initialValue": true,
+      "name": "narrow",
+      "title": "Narrow container",
+      "type": "toggle"
     },
     {
-      "key": "items",
-      "label": "Principles",
-      "type": "repeater",
-      "sub_fields": [
+      "fields": [
         {
-          "label": "Heading",
-          "type": "text",
-          "key": "heading"
+          "name": "heading",
+          "title": "Heading",
+          "type": "string"
         },
         {
-          "label": "Body",
-          "type": "textarea",
-          "key": "body"
+          "name": "body",
+          "title": "Body",
+          "type": "textarea"
         }
-      ]
+      ],
+      "name": "items",
+      "title": "Principles",
+      "type": "array"
     }
   ],
+  "name": "About — principles",
+  "slug": "about-principles",
   "test_data": {
+    "eyebrow": "§ principles",
     "items": [
       {
         "body": "Not as a \"ChatGPT integration.\" As primary operators with the same API surface humans use.",
@@ -56,7 +57,6 @@
         "body": "docker compose up and you're publishing. No package managers, no cron jobs, no PHP-FPM tuning.",
         "heading": "One-shot setup."
       }
-    ],
-    "eyebrow": "§ principles"
+    ]
   }
 }

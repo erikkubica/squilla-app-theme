@@ -1,31 +1,31 @@
 {
-  "name": "Features",
   "description": "Feature flags consumed by blocks (search, pagination, etc.).",
   "fields": [
     {
-      "key": "docs_search",
-      "label": "Docs search box",
-      "type": "toggle",
+      "initialValue": true,
+      "name": "docs_search",
+      "title": "Docs search box",
       "translatable": false,
-      "default": true
+      "type": "toggle"
     },
     {
-      "key": "blog_posts_per_page",
-      "label": "Blog posts per page",
-      "type": "number",
-      "translatable": false,
-      "default": 6,
+      "initialValue": 6,
+      "max": 50,
       "min": 1,
-      "max": 50
+      "name": "blog_posts_per_page",
+      "title": "Blog posts per page",
+      "translatable": false,
+      "type": "number"
     },
     {
-      "key": "marketplace_cards_per_page",
-      "label": "Marketplace cards per page",
-      "type": "number",
-      "translatable": false,
-      "default": 12,
+      "initialValue": 12,
+      "max": 100,
       "min": 1,
-      "max": 100
+      "name": "marketplace_cards_per_page",
+      "title": "Marketplace cards per page",
+      "translatable": false,
+      "type": "number"
     }
-  ]
+  ],
+  "name": "Features"
 }

@@ -1,17 +1,17 @@
 {
-  "slug": "doc-content",
-  "name": "Doc Content",
-  "description": "A trusted-HTML body block, used by docs and posts. Editors paste rich text. The on-this-page TOC in the docs layout reads h2/h3 from the rendered output.",
   "category": "squilla",
-  "field_schema": [
+  "description": "A trusted-HTML body block, used by docs and posts. Editors paste rich text. The on-this-page TOC in the docs layout reads h2/h3 from the rendered output.",
+  "fields": [
     {
-      "key": "body",
-      "label": "Body",
-      "type": "richtext",
-      "help": "Rich text. h2 and h3 headings get auto-IDs and feed the on-this-page list."
+      "description": "Rich text. h2 and h3 headings get auto-IDs and feed the on-this-page list.",
+      "name": "body",
+      "title": "Body",
+      "type": "richtext"
     }
   ],
+  "name": "Doc Content",
+  "slug": "doc-content",
   "test_data": {
-    "body": "<h2>The CoreAPI surface</h2><p>The CoreAPI is the single Go interface that exposes all CMS capabilities to plugins, scripts, and the MCP server. It has ~35 methods across 15 domains. Three adapters wrap it: the Tengo modules, the gRPC SquillaHost service, and the internal Go interface used by core handlers.</p><h2>Domains</h2><ul><li><strong>Nodes</strong> — CRUD + query</li><li><strong>NodeTypes</strong> — register / get / list / update / delete</li><li><strong>Taxonomies</strong> — register / list</li><li><strong>Terms</strong> — list / create / update / delete</li><li><strong>Settings</strong> — get / set / get-all</li><li><strong>Events</strong> — emit / subscribe</li><li><strong>Email</strong> — send (via event bus → provider plugin)</li><li><strong>Menus</strong> — CRUD</li><li><strong>Routes</strong> — register / remove</li><li><strong>Filters</strong> — register / apply</li><li><strong>Media</strong> — upload / get / query / delete</li><li><strong>Users</strong> — get / query (read-only)</li><li><strong>HTTP</strong> — outbound fetch</li><li><strong>Log</strong> — leveled logging with caller prefix</li><li><strong>DataStore</strong> — DataGet / DataQuery / DataCreate / DataUpdate / DataDelete / DataExec (raw SQL)</li><li><strong>FileStorage</strong> — StoreFile / DeleteFile</li></ul><h2>Capability guard</h2>"
+    "body": "\u003ch2\u003eThe CoreAPI surface\u003c/h2\u003e\u003cp\u003eThe CoreAPI is the single Go interface that exposes all CMS capabilities to plugins, scripts, and the MCP server. It has ~35 methods across 15 domains. Three adapters wrap it: the Tengo modules, the gRPC SquillaHost service, and the internal Go interface used by core handlers.\u003c/p\u003e\u003ch2\u003eDomains\u003c/h2\u003e\u003cul\u003e\u003cli\u003e\u003cstrong\u003eNodes\u003c/strong\u003e — CRUD + query\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eNodeTypes\u003c/strong\u003e — register / get / list / update / delete\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eTaxonomies\u003c/strong\u003e — register / list\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eTerms\u003c/strong\u003e — list / create / update / delete\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eSettings\u003c/strong\u003e — get / set / get-all\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eEvents\u003c/strong\u003e — emit / subscribe\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eEmail\u003c/strong\u003e — send (via event bus → provider plugin)\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eMenus\u003c/strong\u003e — CRUD\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eRoutes\u003c/strong\u003e — register / remove\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eFilters\u003c/strong\u003e — register / apply\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eMedia\u003c/strong\u003e — upload / get / query / delete\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eUsers\u003c/strong\u003e — get / query (read-only)\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eHTTP\u003c/strong\u003e — outbound fetch\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eLog\u003c/strong\u003e — leveled logging with caller prefix\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eDataStore\u003c/strong\u003e — DataGet / DataQuery / DataCreate / DataUpdate / DataDelete / DataExec (raw SQL)\u003c/li\u003e\u003cli\u003e\u003cstrong\u003eFileStorage\u003c/strong\u003e — StoreFile / DeleteFile\u003c/li\u003e\u003c/ul\u003e\u003ch2\u003eCapability guard\u003c/h2\u003e"
   }
 }

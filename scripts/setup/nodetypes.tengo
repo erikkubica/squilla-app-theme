@@ -22,22 +22,22 @@ export {
             icon:         "puzzle",
             description:  "A Squilla extension (gRPC plugin or Tengo).",
             url_prefixes: { en: "extensions" },
-            field_schema: [
-                { name: "tagline",     label: "Tagline",          type: "text",     help: "One-line summary shown in catalog cards." },
-                { name: "source",      label: "Source",           type: "term",     taxonomy: "source", term_node_type: "extension", help: "official | community | verified" },
-                { name: "kind",        label: "Kind",             type: "select",   options: ["gRPC plugin", "Tengo only", "Tengo + Go", "Manifest only"], default: "gRPC plugin", help: "Implementation type — affects the small label in the bottom-right of the catalog cell." },
-                { name: "version",     label: "Version",          type: "text",     help: "Semver, e.g. 1.0.0" },
-                { name: "author",      label: "Author",           type: "text" },
-                { name: "homepage",    label: "Homepage URL",     type: "text" },
-                { name: "repository",  label: "Repository URL",   type: "text" },
-                { name: "icon",        label: "Icon",             type: "image",    help: "Square icon shown in cards." },
-                { name: "screenshot",  label: "Screenshot",       type: "image",    help: "Hero screenshot for the detail page." },
-                { name: "routes",      label: "HTTP Routes",      type: "number",   help: "How many public/admin routes the extension registers (for catalog stats)." },
-                { name: "tables",      label: "Owned DB Tables",  type: "repeater", sub_fields: [ { name: "name", label: "Table name", type: "text" } ], help: "PostgreSQL tables this extension owns (rendered in the homepage 'OWNS' chip strip)." },
-                { name: "downloads",   label: "Download Count",   type: "number" },
-                { name: "rating",      label: "Rating (0-5)",     type: "number" },
-                { name: "price",       label: "Price (USD)",      type: "number",   help: "0 for free." },
-                { name: "featured",    label: "Featured",         type: "toggle",   help: "Show on the homepage / featured carousel." }
+            fields: [
+                { name: "tagline",     title: "Tagline",          type: "string",     description: "One-line summary shown in catalog cards." },
+                { name: "source",      title: "Source",           type: "term",     taxonomy: "source", term_node_type: "extension", description: "official | community | verified" },
+                { name: "kind",        title: "Kind",             type: "select",   options: ["gRPC plugin", "Tengo only", "Tengo + Go", "Manifest only"], initialValue: "gRPC plugin", description: "Implementation type — affects the small label in the bottom-right of the catalog cell." },
+                { name: "version",     title: "Version",          type: "string",     description: "Semver, e.g. 1.0.0" },
+                { name: "author",      title: "Author",           type: "string" },
+                { name: "homepage",    title: "Homepage URL",     type: "string" },
+                { name: "repository",  title: "Repository URL",   type: "string" },
+                { name: "icon",        title: "Icon",             type: "image",    description: "Square icon shown in cards." },
+                { name: "screenshot",  title: "Screenshot",       type: "image",    description: "Hero screenshot for the detail page." },
+                { name: "routes",      title: "HTTP Routes",      type: "number",   description: "How many public/admin routes the extension registers (for catalog stats)." },
+                { name: "tables",      title: "Owned DB Tables",  type: "array", fields: [ { name: "name", title: "Table name", type: "string" } ], description: "PostgreSQL tables this extension owns (rendered in the homepage 'OWNS' chip strip)." },
+                { name: "downloads",   title: "Download Count",   type: "number" },
+                { name: "rating",      title: "Rating (0-5)",     type: "number" },
+                { name: "price",       title: "Price (USD)",      type: "number",   description: "0 for free." },
+                { name: "featured",    title: "Featured",         type: "toggle",   description: "Show on the homepage / featured carousel." }
             ]
         })
 
@@ -49,19 +49,19 @@ export {
             icon:         "palette",
             description:  "A Squilla theme available in the marketplace.",
             url_prefixes: { en: "themes" },
-            field_schema: [
-                { name: "tagline",     label: "Tagline",          type: "text" },
-                { name: "source",      label: "Source",           type: "term",     taxonomy: "source", term_node_type: "theme" },
-                { name: "version",     label: "Version",          type: "text" },
-                { name: "author",      label: "Author",           type: "text" },
-                { name: "homepage",    label: "Homepage URL",     type: "text" },
-                { name: "repository",  label: "Repository URL",   type: "text" },
-                { name: "preview",     label: "Preview Image",    type: "image",    help: "Card thumbnail." },
-                { name: "screenshots", label: "Screenshots",      type: "gallery",  help: "Detail-page gallery." },
-                { name: "downloads",   label: "Download Count",   type: "number" },
-                { name: "rating",      label: "Rating (0-5)",     type: "number" },
-                { name: "price",       label: "Price (USD)",      type: "number" },
-                { name: "featured",    label: "Featured",         type: "toggle" }
+            fields: [
+                { name: "tagline",     title: "Tagline",          type: "string" },
+                { name: "source",      title: "Source",           type: "term",     taxonomy: "source", term_node_type: "theme" },
+                { name: "version",     title: "Version",          type: "string" },
+                { name: "author",      title: "Author",           type: "string" },
+                { name: "homepage",    title: "Homepage URL",     type: "string" },
+                { name: "repository",  title: "Repository URL",   type: "string" },
+                { name: "preview",     title: "Preview Image",    type: "image",    description: "Card thumbnail." },
+                { name: "screenshots", title: "Screenshots",      type: "gallery",  description: "Detail-page gallery." },
+                { name: "downloads",   title: "Download Count",   type: "number" },
+                { name: "rating",      title: "Rating (0-5)",     type: "number" },
+                { name: "price",       title: "Price (USD)",      type: "number" },
+                { name: "featured",    title: "Featured",         type: "toggle" }
             ]
         })
 
@@ -72,10 +72,10 @@ export {
             label_plural: "Posts",
             icon:         "file-text",
             description:  "A blog post.",
-            field_schema: [
-                { name: "excerpt",   label: "Excerpt",      type: "textarea", help: "1–2 sentence summary shown in lists and meta description." },
-                { name: "read_time", label: "Read time",    type: "text",     help: "e.g. \"5 min read\". Shown in the post-meta strip; hidden if blank." },
-                { name: "author",    label: "Author",       type: "text",     help: "Display name shown next to \"by …\" in the post-meta strip; hidden if blank." }
+            fields: [
+                { name: "excerpt",   title: "Excerpt",      type: "textarea", description: "1–2 sentence summary shown in lists and meta description." },
+                { name: "read_time", title: "Read time",    type: "string",     description: "e.g. \"5 min read\". Shown in the post-meta strip; hidden if blank." },
+                { name: "author",    title: "Author",       type: "string",     description: "Display name shown next to \"by …\" in the post-meta strip; hidden if blank." }
             ]
         })
 
@@ -87,11 +87,11 @@ export {
             icon:         "book-open",
             description:  "A documentation page.",
             url_prefixes: { en: "docs" },
-            field_schema: [
-                { name: "section",      label: "Section",         type: "term",    taxonomy: "doc_section", term_node_type: "documentation", help: "Top-level grouping in the sidebar." },
-                { name: "summary",      label: "Summary",         type: "textarea", help: "1–2 sentence summary used by search results." },
-                { name: "order",        label: "Sort Order",      type: "number",   help: "Lower numbers appear first within a section." },
-                { name: "search_terms", label: "Search Terms",    type: "text",     help: "Extra keywords for search; comma-separated." }
+            fields: [
+                { name: "section",      title: "Section",         type: "term",    taxonomy: "doc_section", term_node_type: "documentation", description: "Top-level grouping in the sidebar." },
+                { name: "summary",      title: "Summary",         type: "textarea", description: "1–2 sentence summary used by search results." },
+                { name: "order",        title: "Sort Order",      type: "number",   description: "Lower numbers appear first within a section." },
+                { name: "search_terms", title: "Search Terms",    type: "string",     description: "Extra keywords for search; comma-separated." }
             ]
         })
     }

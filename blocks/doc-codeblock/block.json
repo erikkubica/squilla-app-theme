@@ -1,26 +1,24 @@
 {
-  "slug": "doc-codeblock",
-  "name": "Doc Code Block",
-  "description": "An IDE-style code block with a file-path header. Optional traffic-light dots on the left of the header. Pick a language for auto syntax highlighting.",
   "category": "squilla",
-  "field_schema": [
+  "description": "An IDE-style code block with a file-path header. Optional traffic-light dots on the left of the header. Pick a language for auto syntax highlighting.",
+  "fields": [
     {
-      "key": "file",
-      "label": "File path / header",
-      "type": "text",
-      "help": "Shown in the header bar, e.g. 'config.yaml' or 'themes/foo/theme.tengo'."
+      "description": "Shown in the header bar, e.g. 'config.yaml' or 'themes/foo/theme.tengo'.",
+      "name": "file",
+      "title": "File path / header",
+      "type": "string"
     },
     {
-      "key": "show_dots",
-      "label": "Show window dots",
-      "type": "toggle",
-      "default": true,
-      "help": "Toggle the three coloured dots on the left of the header."
+      "description": "Toggle the three coloured dots on the left of the header.",
+      "initialValue": true,
+      "name": "show_dots",
+      "title": "Show window dots",
+      "type": "toggle"
     },
     {
-      "key": "language",
-      "label": "Language",
-      "type": "select",
+      "description": "Auto syntax highlighter applies on render. 'tengo' falls back to plaintext (no native lexer).",
+      "initialValue": "plaintext",
+      "name": "language",
       "options": [
         "plaintext",
         "bash",
@@ -51,18 +49,20 @@
         "ini",
         "tengo"
       ],
-      "default": "plaintext",
-      "help": "Auto syntax highlighter applies on render. 'tengo' falls back to plaintext (no native lexer)."
+      "title": "Language",
+      "type": "select"
     },
     {
-      "key": "body",
-      "label": "Code",
-      "type": "richtext",
-      "help": "Use the WYSIWYG code-block button (or paste raw code) — highlighter runs on render."
+      "description": "Use the WYSIWYG code-block button (or paste raw code) — highlighter runs on render.",
+      "name": "body",
+      "title": "Code",
+      "type": "richtext"
     }
   ],
+  "name": "Doc Code Block",
+  "slug": "doc-codeblock",
   "test_data": {
-    "body": "<pre><code>themes/&lt;slug&gt;/\n  theme.json               # manifest\n  layouts/*.html           # page-level templates\n  partials/*.html          # reusable fragments\n  blocks/&lt;slug&gt;/           # content blocks (block.json + view.html)\n  assets/                  # CSS, JS, images\n  scripts/theme.tengo      # seed entry point\n  templates/*.json         # page templates for editors\n  forms/*.html             # themed form layouts</code></pre>",
+    "body": "\u003cpre\u003e\u003ccode\u003ethemes/\u0026lt;slug\u0026gt;/\n  theme.json               # manifest\n  layouts/*.html           # page-level templates\n  partials/*.html          # reusable fragments\n  blocks/\u0026lt;slug\u0026gt;/           # content blocks (block.json + view.html)\n  assets/                  # CSS, JS, images\n  scripts/theme.tengo      # seed entry point\n  templates/*.json         # page templates for editors\n  forms/*.html             # themed form layouts\u003c/code\u003e\u003c/pre\u003e",
     "file": "filesystem",
     "language": "plaintext",
     "show_dots": true

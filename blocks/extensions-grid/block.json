@@ -1,42 +1,42 @@
 {
-  "slug": "extensions-grid",
-  "name": "Extensions grid (homepage 6)",
-  "description": "Homepage section showing the first 6 extension nodes (sorted by title). Pulls live data via the list_extensions filter — kind, version, routes, tables — so editors only manage the extension nodes themselves.",
   "category": "squilla",
-  "field_schema": [
+  "description": "Homepage section showing the first 6 extension nodes (sorted by title). Pulls live data via the list_extensions filter — kind, version, routes, tables — so editors only manage the extension nodes themselves.",
+  "fields": [
     {
-      "key": "eyebrow",
-      "label": "Eyebrow",
-      "type": "text",
-      "help": "Small all-caps label above the heading. The design uses a §-prefixed phrase, e.g. '§ built-in extensions'."
+      "description": "Small all-caps label above the heading. The design uses a §-prefixed phrase, e.g. '§ built-in extensions'.",
+      "name": "eyebrow",
+      "title": "Eyebrow",
+      "type": "string"
     },
     {
-      "key": "heading",
-      "label": "Heading (HTML)",
-      "type": "richtext",
-      "help": "Two-line section heading. <br/> for the line break."
+      "description": "Two-line section heading. \u003cbr/\u003e for the line break.",
+      "name": "heading",
+      "title": "Heading (HTML)",
+      "type": "richtext"
     },
     {
-      "key": "lead",
-      "label": "Lead paragraph",
-      "type": "textarea",
-      "help": "Right-aligned blurb under the heading. ~40 chars per line."
+      "description": "Right-aligned blurb under the heading. ~40 chars per line.",
+      "name": "lead",
+      "title": "Lead paragraph",
+      "type": "textarea"
     },
     {
-      "key": "cta",
-      "label": "Bottom CTA",
-      "type": "link",
-      "help": "Button below the grid. Stores text/url/target."
+      "description": "Button below the grid. Stores text/url/target.",
+      "name": "cta",
+      "title": "Bottom CTA",
+      "type": "link"
     }
   ],
+  "name": "Extensions grid (homepage 6)",
+  "slug": "extensions-grid",
   "test_data": {
     "cta": {
-      "url": "/docs/extension-grpc",
+      "target": "_self",
       "text": "build your own extension",
-      "target": "_self"
+      "url": "/docs/extension-grpc"
     },
-    "lead": "Squilla ships with reference extensions that exercise every part of the extension API. They are not core code in disguise — they're the same gRPC plugins you'd build yourself.",
     "eyebrow": "§ built-in extensions",
-    "heading": "Six extensions out of the box.<br/>Built like a third-party would build them."
+    "heading": "Six extensions out of the box.\u003cbr/\u003eBuilt like a third-party would build them.",
+    "lead": "Squilla ships with reference extensions that exercise every part of the extension API. They are not core code in disguise — they're the same gRPC plugins you'd build yourself."
   }
 }

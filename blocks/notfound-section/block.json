@@ -1,101 +1,101 @@
 {
-  "slug": "notfound-section",
-  "name": "404 — not found",
-  "description": "Full-bleed 404 section. The compound-eye motif behind the content is rendered by JS.",
   "category": "squilla",
-  "field_schema": [
+  "description": "Full-bleed 404 section. The compound-eye motif behind the content is rendered by JS.",
+  "fields": [
     {
-      "key": "label",
-      "label": "Top label (red)",
-      "type": "text"
+      "name": "label",
+      "title": "Top label (red)",
+      "type": "string"
     },
     {
-      "key": "code",
-      "label": "Big code",
-      "type": "text",
-      "help": "Renders with the iridescent gradient."
+      "description": "Renders with the iridescent gradient.",
+      "name": "code",
+      "title": "Big code",
+      "type": "string"
     },
     {
-      "key": "heading",
-      "label": "Heading",
-      "type": "text"
+      "name": "heading",
+      "title": "Heading",
+      "type": "string"
     },
     {
-      "key": "lead",
-      "label": "Lead paragraph",
-      "type": "text"
+      "name": "lead",
+      "title": "Lead paragraph",
+      "type": "string"
     },
     {
-      "key": "console_lines",
-      "label": "Fake-console lines",
-      "type": "repeater",
-      "sub_fields": [
+      "fields": [
         {
-          "label": "Line (HTML allowed)",
-          "type": "text",
-          "key": "html"
+          "name": "html",
+          "title": "Line (HTML allowed)",
+          "type": "string"
         }
-      ]
+      ],
+      "name": "console_lines",
+      "title": "Fake-console lines",
+      "type": "array"
     },
     {
-      "key": "buttons",
-      "label": "Buttons",
-      "type": "repeater",
-      "sub_fields": [
+      "fields": [
         {
-          "label": "Link",
-          "type": "link",
-          "key": "link"
+          "name": "link",
+          "title": "Link",
+          "type": "link"
         },
         {
-          "label": "Filled?",
-          "type": "toggle",
-          "key": "is_primary"
+          "name": "is_primary",
+          "title": "Filled?",
+          "type": "toggle"
         }
-      ]
+      ],
+      "name": "buttons",
+      "title": "Buttons",
+      "type": "array"
     }
   ],
+  "name": "404 — not found",
+  "slug": "notfound-section",
   "test_data": {
-    "label": "HTTP 404 · UNRENDERED",
-    "code": "404",
-    "heading": "This page is unrendered.",
-    "lead": "The route resolver couldn't match this URL to a node, a layout, or an extension's public route. The kernel is fine. The link is sus.",
-    "console_lines": [
-      {
-        "html": "<span style=\"color: var(--ink-3)\">$ core.render.node_preview --url=<span data-notfound-path>/missing</span></span>"
-      },
-      {
-        "html": "<span style=\"color: var(--coral)\">← err: NodeNotFound (no row in content_nodes matching slug)</span>"
-      },
-      {
-        "html": "<span style=\"color: var(--ink-3)\">→ try: core.node.list, or fix the link</span>"
-      }
-    ],
     "buttons": [
       {
+        "is_primary": true,
         "link": {
+          "target": "_self",
           "text": "← back to home",
-          "url": "/",
-          "target": "_self"
-        },
-        "is_primary": true
+          "url": "/"
+        }
       },
       {
+        "is_primary": false,
         "link": {
+          "target": "_self",
           "text": "read the docs",
-          "url": "/docs",
-          "target": "_self"
-        },
-        "is_primary": false
+          "url": "/docs"
+        }
       },
       {
+        "is_primary": false,
         "link": {
+          "target": "_self",
           "text": "browse showcase",
-          "url": "/showcase",
-          "target": "_self"
-        },
-        "is_primary": false
+          "url": "/showcase"
+        }
       }
-    ]
+    ],
+    "code": "404",
+    "console_lines": [
+      {
+        "html": "\u003cspan style=\"color: var(--ink-3)\"\u003e$ core.render.node_preview --url=\u003cspan data-notfound-path\u003e/missing\u003c/span\u003e\u003c/span\u003e"
+      },
+      {
+        "html": "\u003cspan style=\"color: var(--coral)\"\u003e← err: NodeNotFound (no row in content_nodes matching slug)\u003c/span\u003e"
+      },
+      {
+        "html": "\u003cspan style=\"color: var(--ink-3)\"\u003e→ try: core.node.list, or fix the link\u003c/span\u003e"
+      }
+    ],
+    "heading": "This page is unrendered.",
+    "label": "HTTP 404 · UNRENDERED",
+    "lead": "The route resolver couldn't match this URL to a node, a layout, or an extension's public route. The kernel is fine. The link is sus."
   }
 }

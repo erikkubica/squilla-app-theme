@@ -1,14 +1,24 @@
 {
-  "slug":        "intro-placeholder",
-  "name":        "Intro (placeholder)",
+  "category": "squilla",
   "description": "Temporary placeholder block until the design is ported. Renders a heading and body so seeded pages have something to display.",
-  "category":    "squilla",
-  "field_schema": [
-    { "key": "heading", "label": "Heading", "type": "text",     "help": "Big page title." },
-    { "key": "body",    "label": "Body",    "type": "textarea", "help": "1–2 sentence description." }
+  "fields": [
+    {
+      "description": "Big page title.",
+      "name": "heading",
+      "title": "Heading",
+      "type": "string"
+    },
+    {
+      "description": "1–2 sentence description.",
+      "name": "body",
+      "title": "Body",
+      "type": "textarea"
+    }
   ],
+  "name": "Intro (placeholder)",
+  "slug": "intro-placeholder",
   "test_data": {
-    "heading": "Squilla",
-    "body":    "AI-native CMS — placeholder until the design is wired up."
+    "body": "AI-native CMS — placeholder until the design is wired up.",
+    "heading": "Squilla"
   }
 }

@@ -1,20 +1,48 @@
 {
-  "slug":        "doc-gallery",
-  "name":        "Doc Gallery",
+  "category": "squilla",
   "description": "An N-image grid (2 or 3 columns). Each image keeps its own alt + optional caption. Useful for screenshot strips, before/after, etc.",
-  "category":    "squilla",
-  "field_schema": [
-    { "key": "images",  "label": "Images",  "type": "gallery", "help": "Add 2+ images. The grid auto-sizes to columns based on count." },
-    { "key": "columns", "label": "Columns", "type": "select", "options": ["2", "3", "4"], "default": "3" },
-    { "key": "caption", "label": "Caption (optional)", "type": "text" }
+  "fields": [
+    {
+      "description": "Add 2+ images. The grid auto-sizes to columns based on count.",
+      "name": "images",
+      "title": "Images",
+      "type": "gallery"
+    },
+    {
+      "initialValue": "3",
+      "name": "columns",
+      "options": [
+        "2",
+        "3",
+        "4"
+      ],
+      "title": "Columns",
+      "type": "select"
+    },
+    {
+      "name": "caption",
+      "title": "Caption (optional)",
+      "type": "string"
+    }
   ],
+  "name": "Doc Gallery",
+  "slug": "doc-gallery",
   "test_data": {
-    "images": [
-      { "url": "theme-asset:gal-1", "alt": "Sample one" },
-      { "url": "theme-asset:gal-2", "alt": "Sample two" },
-      { "url": "theme-asset:gal-3", "alt": "Sample three" }
-    ],
+    "caption": "Fig. 2 — Reference activations across the demo themes.",
     "columns": "3",
-    "caption": "Fig. 2 — Reference activations across the demo themes."
+    "images": [
+      {
+        "alt": "Sample one",
+        "url": "theme-asset:gal-1"
+      },
+      {
+        "alt": "Sample two",
+        "url": "theme-asset:gal-2"
+      },
+      {
+        "alt": "Sample three",
+        "url": "theme-asset:gal-3"
+      }
+    ]
   }
 }

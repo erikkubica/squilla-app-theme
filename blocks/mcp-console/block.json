@@ -1,82 +1,76 @@
 {
-  "slug": "mcp-console",
-  "name": "Live MCP console",
-  "description": "Two-column hero-of-the-second-fold: left side has MCP showcase copy + 4 stat tiles + replay/pause controls, right side is an animated 'live' MCP console that types out a transcript line-by-line. Stats and transcript are repeaters — editors can change the demo without touching code.",
   "category": "squilla",
-  "field_schema": [
+  "description": "Two-column hero-of-the-second-fold: left side has MCP showcase copy + 4 stat tiles + replay/pause controls, right side is an animated 'live' MCP console that types out a transcript line-by-line. Stats and transcript are repeaters — editors can change the demo without touching code.",
+  "fields": [
     {
-      "key": "eyebrow",
-      "label": "Eyebrow",
-      "type": "text"
+      "name": "eyebrow",
+      "title": "Eyebrow",
+      "type": "string"
     },
     {
-      "key": "heading",
-      "label": "Heading (HTML)",
+      "name": "heading",
+      "title": "Heading (HTML)",
       "type": "richtext"
     },
     {
-      "key": "lead",
-      "label": "Lead paragraph",
+      "name": "lead",
+      "title": "Lead paragraph",
       "type": "textarea"
     },
     {
-      "key": "stats",
-      "label": "Stat tiles",
-      "type": "repeater",
-      "help": "Four tiles render in a 2x2 grid. Show value first, label second.",
-      "sub_fields": [
+      "description": "Four tiles render in a 2x2 grid. Show value first, label second.",
+      "fields": [
         {
-          "label": "Value",
-          "type": "text",
-          "key": "value"
+          "name": "value",
+          "title": "Value",
+          "type": "string"
         },
         {
-          "label": "Label",
-          "type": "text",
-          "key": "label"
+          "name": "label",
+          "title": "Label",
+          "type": "string"
         }
-      ]
+      ],
+      "name": "stats",
+      "title": "Stat tiles",
+      "type": "array"
     },
     {
-      "key": "replay_label",
-      "label": "Replay button label",
-      "type": "text"
+      "name": "replay_label",
+      "title": "Replay button label",
+      "type": "string"
     },
     {
-      "key": "pause_label",
-      "label": "Pause button label",
-      "type": "text"
+      "name": "pause_label",
+      "title": "Pause button label",
+      "type": "string"
     },
     {
-      "key": "all_link",
-      "label": "View-all link",
+      "name": "all_link",
+      "title": "View-all link",
       "type": "link"
     },
     {
-      "key": "endpoint",
-      "label": "Endpoint label (header)",
-      "type": "text",
-      "help": "The MCP URL shown in the console title bar (e.g. mcp://squilla.local)."
+      "description": "The MCP URL shown in the console title bar (e.g. mcp://squilla.local).",
+      "name": "endpoint",
+      "title": "Endpoint label (header)",
+      "type": "string"
     },
     {
-      "key": "session_id",
-      "label": "Session ID (header)",
-      "type": "text"
+      "name": "session_id",
+      "title": "Session ID (header)",
+      "type": "string"
     },
     {
-      "key": "capabilities",
-      "label": "Capabilities label",
-      "type": "text"
+      "name": "capabilities",
+      "title": "Capabilities label",
+      "type": "string"
     },
     {
-      "key": "transcript",
-      "label": "Transcript",
-      "type": "repeater",
-      "help": "Each line has a type t (sys|user|plan|call|res|done) and content. For 'call', also fill tool/args_text/dur/color.",
-      "sub_fields": [
+      "description": "Each line has a type t (sys|user|plan|call|res|done) and content. For 'call', also fill tool/args_text/dur/color.",
+      "fields": [
         {
-          "label": "Type",
-          "type": "select",
+          "name": "t",
           "options": [
             "sys",
             "user",
@@ -85,32 +79,32 @@
             "res",
             "done"
           ],
-          "key": "t"
+          "title": "Type",
+          "type": "select"
         },
         {
-          "label": "Text (sys/user/plan/res/done)",
-          "type": "text",
-          "key": "text"
+          "name": "text",
+          "title": "Text (sys/user/plan/res/done)",
+          "type": "string"
         },
         {
-          "label": "Tool name (call)",
-          "type": "text",
-          "key": "tool"
+          "name": "tool",
+          "title": "Tool name (call)",
+          "type": "string"
         },
         {
-          "label": "Args text (call)",
-          "type": "text",
-          "help": "Pre-formatted arg string, e.g. 'tags: [\"recipe\",\"food\"]'.",
-          "key": "args_text"
+          "description": "Pre-formatted arg string, e.g. 'tags: [\"recipe\",\"food\"]'.",
+          "name": "args_text",
+          "title": "Args text (call)",
+          "type": "string"
         },
         {
-          "label": "Duration ms (call)",
-          "type": "number",
-          "key": "dur"
+          "name": "dur",
+          "title": "Duration ms (call)",
+          "type": "number"
         },
         {
-          "label": "Tool color (call)",
-          "type": "select",
+          "name": "color",
           "options": [
             "teal",
             "violet",
@@ -119,13 +113,31 @@
             "lime",
             "amber"
           ],
-          "key": "color"
+          "title": "Tool color (call)",
+          "type": "select"
         }
-      ]
+      ],
+      "name": "transcript",
+      "title": "Transcript",
+      "type": "array"
     }
   ],
+  "name": "Live MCP console",
+  "slug": "mcp-console",
   "test_data": {
+    "all_link": {
+      "target": "_self",
+      "text": "view all 50 tools →",
+      "url": "/docs/mcp-tools"
+    },
+    "capabilities": "capabilities 24/24",
+    "endpoint": "mcp://squilla.local",
+    "eyebrow": "§ MCP showcase",
+    "heading": "Every operation\u003cbr/\u003eis a tool an\u003cbr/\u003eAI can call.",
     "lead": "Squilla exposes ~50 Model Context Protocol tools across 15 domains. An AI agent can drive the entire CMS through structured API calls — create node types, seed content, activate themes, install extensions, preview rendered pages.",
+    "pause_label": "❚❚ pause",
+    "replay_label": "↻ replay",
+    "session_id": "session a4f9e2",
     "stats": [
       {
         "label": "tools",
@@ -144,15 +156,6 @@
         "value": "32ms"
       }
     ],
-    "eyebrow": "§ MCP showcase",
-    "heading": "Every operation<br/>is a tool an<br/>AI can call.",
-    "all_link": {
-      "url": "/docs/mcp-tools",
-      "text": "view all 50 tools →",
-      "target": "_self"
-    },
-    "endpoint": "mcp://squilla.local",
-    "session_id": "session a4f9e2",
     "transcript": [
       {
         "t": "sys",
@@ -167,66 +170,66 @@
         "text": "6-step plan: theme → activation → nodetype → seed → preview → menu"
       },
       {
-        "t": "call",
-        "dur": 14,
-        "tool": "core.theme.list",
+        "args_text": "tags: [\"recipe\", \"food\"]",
         "color": "teal",
-        "args_text": "tags: [\"recipe\", \"food\"]"
+        "dur": 14,
+        "t": "call",
+        "tool": "core.theme.list"
       },
       {
         "t": "res",
         "text": "found 3 themes · selecting hello-vietnam (best schema match)"
       },
       {
-        "t": "call",
-        "dur": 31,
-        "tool": "core.theme.activate",
+        "args_text": "id: \"hello-vietnam\"",
         "color": "lime",
-        "args_text": "id: \"hello-vietnam\""
+        "dur": 31,
+        "t": "call",
+        "tool": "core.theme.activate"
       },
       {
         "t": "res",
         "text": "activated · seeded 4 node types · 1 menu · 12 settings"
       },
       {
-        "t": "call",
-        "dur": 22,
-        "tool": "core.nodetype.create",
+        "args_text": "slug: \"recipe\", fields: 7",
         "color": "violet",
-        "args_text": "slug: \"recipe\", fields: 7"
+        "dur": 22,
+        "t": "call",
+        "tool": "core.nodetype.create"
       },
       {
         "t": "res",
         "text": "recipe type registered · table content_recipes created"
       },
       {
-        "t": "call",
-        "dur": 84,
-        "tool": "core.node.create",
+        "args_text": "type: \"recipe\", batch: 10",
         "color": "magenta",
-        "args_text": "type: \"recipe\", batch: 10"
+        "dur": 84,
+        "t": "call",
+        "tool": "core.node.create"
       },
       {
         "t": "res",
         "text": "10 recipes drafted · ids=[101..110]"
       },
       {
-        "t": "call",
-        "dur": 19,
-        "tool": "core.render.node_preview",
+        "args_text": "url: \"/recipes/scallops\"",
         "color": "coral",
-        "args_text": "url: \"/recipes/scallops\""
+        "dur": 19,
+        "t": "call",
+        "tool": "core.render.node_preview"
       },
       {
         "t": "res",
         "text": "rendered · 4.1KB · ttfb=18ms · ok"
       },
       {
-        "t": "call",
-        "dur": 11,
-        "tool": "core.menu.update",
+        "args_text": "items: 4",
         "color": "amber",
-        "args_text": "items: 4"
+        "dur": 11,
+        "t": "call",
+        "tool": "core.menu.update"
       },
       {
         "t": "res",
@@ -236,9 +239,6 @@
         "t": "done",
         "text": "site live at http://localhost:3000 · 10 recipes published in 12.4s"
       }
-    ],
-    "pause_label": "❚❚ pause",
-    "capabilities": "capabilities 24/24",
-    "replay_label": "↻ replay"
+    ]
   }
 }

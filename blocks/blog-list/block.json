@@ -1,15 +1,15 @@
 {
-  "slug": "blog-list",
-  "name": "Blog list (filter + pagination)",
-  "description": "Blog index list with category filter chips and numbered pagination. URL state persisted via ?cat=X&page=N (history.pushState). Initial state matches URL on first paint. Phase 1 has 14 posts baked in.",
   "category": "squilla",
-  "field_schema": [
+  "description": "Blog index list with category filter chips and numbered pagination. URL state persisted via ?cat=X\u0026page=N (history.pushState). Initial state matches URL on first paint. Phase 1 has 14 posts baked in.",
+  "fields": [
     {
-      "key": "page_size",
-      "label": "Posts per page",
+      "name": "page_size",
+      "title": "Posts per page",
       "type": "number"
     }
   ],
+  "name": "Blog list (filter + pagination)",
+  "slug": "blog-list",
   "test_data": {
     "page_size": 6
   }

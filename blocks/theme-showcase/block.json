@@ -1,44 +1,38 @@
 {
-  "slug": "theme-showcase",
-  "name": "Theme showcase (with code preview)",
-  "description": "Two-column section: copy + 'layouts/partials/blocks' explainer rows on the left, faux-IDE code preview on the right. The three rows and the code body are fields so editors can change them without touching code.",
   "category": "squilla",
-  "field_schema": [
+  "description": "Two-column section: copy + 'layouts/partials/blocks' explainer rows on the left, faux-IDE code preview on the right. The three rows and the code body are fields so editors can change them without touching code.",
+  "fields": [
     {
-      "key": "eyebrow",
-      "label": "Eyebrow",
-      "type": "text"
+      "name": "eyebrow",
+      "title": "Eyebrow",
+      "type": "string"
     },
     {
-      "key": "heading",
-      "label": "Heading (HTML)",
+      "name": "heading",
+      "title": "Heading (HTML)",
       "type": "richtext"
     },
     {
-      "key": "lead",
-      "label": "Lead paragraph",
-      "type": "richtext",
-      "help": "May include inline <code> for accent words."
+      "description": "May include inline \u003ccode\u003e for accent words.",
+      "name": "lead",
+      "title": "Lead paragraph",
+      "type": "richtext"
     },
     {
-      "key": "rows",
-      "label": "Explainer rows",
-      "type": "repeater",
-      "help": "Three rows recommended (Layouts / Partials / Blocks). Color: teal | violet | magenta | coral | lime | amber.",
-      "sub_fields": [
+      "description": "Three rows recommended (Layouts / Partials / Blocks). Color: teal | violet | magenta | coral | lime | amber.",
+      "fields": [
         {
-          "label": "Label",
-          "type": "text",
-          "key": "key"
+          "name": "key",
+          "title": "Label",
+          "type": "string"
         },
         {
-          "label": "Description",
-          "type": "text",
-          "key": "value"
+          "name": "value",
+          "title": "Description",
+          "type": "string"
         },
         {
-          "label": "Chip color",
-          "type": "select",
+          "name": "color",
           "options": [
             "teal",
             "violet",
@@ -47,25 +41,29 @@
             "lime",
             "amber"
           ],
-          "key": "color"
+          "title": "Chip color",
+          "type": "select"
         }
-      ]
+      ],
+      "name": "rows",
+      "title": "Explainer rows",
+      "type": "array"
     },
     {
-      "key": "callout",
-      "label": "Italic callout",
-      "type": "text"
+      "name": "callout",
+      "title": "Italic callout",
+      "type": "string"
     },
     {
-      "key": "code_file",
-      "label": "Code header — file path",
-      "type": "text",
-      "help": "Shown at the top of the IDE-style block."
+      "description": "Shown at the top of the IDE-style block.",
+      "name": "code_file",
+      "title": "Code header — file path",
+      "type": "string"
     },
     {
-      "key": "code_language",
-      "label": "Code language",
-      "type": "select",
+      "description": "Auto syntax highlighter applies on render.",
+      "initialValue": "plaintext",
+      "name": "code_language",
       "options": [
         "plaintext",
         "bash",
@@ -96,40 +94,42 @@
         "ini",
         "tengo"
       ],
-      "default": "plaintext",
-      "help": "Auto syntax highlighter applies on render."
+      "title": "Code language",
+      "type": "select"
     },
     {
-      "key": "code_body",
-      "label": "Code body",
-      "type": "richtext",
-      "help": "Use the WYSIWYG code-block button. Highlighter runs on render — no manual span markup."
+      "description": "Use the WYSIWYG code-block button. Highlighter runs on render — no manual span markup.",
+      "name": "code_body",
+      "title": "Code body",
+      "type": "richtext"
     }
   ],
+  "name": "Theme showcase (with code preview)",
+  "slug": "theme-showcase",
   "test_data": {
-    "lead": "A Squilla theme is a self-contained package: layouts, partials, content blocks, assets, Tengo scripts that seed content on activation. Activating a theme runs its <code style=\"color: var(--accent)\">theme.tengo</code> script — registering node types, taxonomies, and seeding pages — with zero server restart.",
+    "callout": "Activate a theme. The CMS reorganizes itself around it. No restart.",
+    "code_body": "\u003cpre\u003e\u003ccode\u003ecore    := import(\"core/cms\")\nnodes   := import(\"core/nodes\")\nevents  := import(\"core/events\")\n\n// register the recipe node type\nnodes.register_type({\n  slug: \"recipe\",\n  fields: [\n    {name: \"hero_image\",   type: \"media\"},\n    {name: \"prep_minutes\", type: \"int\"},\n    {name: \"servings\",     type: \"int\"},\n    {name: \"ingredients\",  type: \"repeater\"},\n    {name: \"instructions\", type: \"richtext\"},\n  ]\n})\n\n// seed a starter recipe\ncore.node_create({\n  type:  \"recipe\",\n  title: \"Caramelized scallops\",\n  fields: { prep_minutes: 18, servings: 2 }\n})\n\nevents.emit(\"theme.seeded\", { theme: \"hello-vietnam\" })\u003c/code\u003e\u003c/pre\u003e",
+    "code_file": "themes/hello-vietnam/theme.tengo",
+    "code_language": "javascript",
+    "eyebrow": "§ themes",
+    "heading": "Themes are\u003cbr/\u003esovereign too.",
+    "lead": "A Squilla theme is a self-contained package: layouts, partials, content blocks, assets, Tengo scripts that seed content on activation. Activating a theme runs its \u003ccode style=\"color: var(--accent)\"\u003etheme.tengo\u003c/code\u003e script — registering node types, taxonomies, and seeding pages — with zero server restart.",
     "rows": [
       {
-        "key": "Layouts",
         "color": "teal",
+        "key": "Layouts",
         "value": "Page-level templates. .node · .app · .user"
       },
       {
-        "key": "Partials",
         "color": "violet",
+        "key": "Partials",
         "value": "Reusable fragments. Same context plus .partial"
       },
       {
-        "key": "Blocks",
         "color": "magenta",
+        "key": "Blocks",
         "value": "Atomic content units. Self-contained, schema-defined, render with their own field data only."
       }
-    ],
-    "callout": "Activate a theme. The CMS reorganizes itself around it. No restart.",
-    "eyebrow": "§ themes",
-    "heading": "Themes are<br/>sovereign too.",
-    "code_body": "<pre><code>core    := import(\"core/cms\")\nnodes   := import(\"core/nodes\")\nevents  := import(\"core/events\")\n\n// register the recipe node type\nnodes.register_type({\n  slug: \"recipe\",\n  fields: [\n    {name: \"hero_image\",   type: \"media\"},\n    {name: \"prep_minutes\", type: \"int\"},\n    {name: \"servings\",     type: \"int\"},\n    {name: \"ingredients\",  type: \"repeater\"},\n    {name: \"instructions\", type: \"richtext\"},\n  ]\n})\n\n// seed a starter recipe\ncore.node_create({\n  type:  \"recipe\",\n  title: \"Caramelized scallops\",\n  fields: { prep_minutes: 18, servings: 2 }\n})\n\nevents.emit(\"theme.seeded\", { theme: \"hello-vietnam\" })</code></pre>",
-    "code_file": "themes/hello-vietnam/theme.tengo",
-    "code_language": "javascript"
+    ]
   }
 }
